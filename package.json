@@ -1,0 +1,14 @@
+{
+  "name": "spotifywrapper",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./styles.css -o ./static/wrapper/css/index.css --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "daisyui": "^4.12.13",
+    "tailwind": "^4.0.0"
+  }
+}

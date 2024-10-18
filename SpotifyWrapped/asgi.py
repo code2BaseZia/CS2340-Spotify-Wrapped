@@ -1,5 +1,5 @@
 """
-ASGI config for Spotify_Wrapped_Site project.
+ASGI config for SpotifyWrapped project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Spotify_Wrapped_Site.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SpotifyWrapped.settings')
 
 application = get_asgi_application()
