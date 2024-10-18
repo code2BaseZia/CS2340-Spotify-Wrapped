@@ -2,7 +2,7 @@
   "name": "spotifywrapper",
   "version": "1.0.0",
   "scripts": {
-    "dev": "npx tailwindcss -i ./styles.css -o ./static/wrapper/css/index.css --watch"
+    "dev": "npx tailwindcss -i ./styles.css -o ./static/wrapper/css/index.css --watch --minify"
   },
   "author": "",
   "license": "ISC",
