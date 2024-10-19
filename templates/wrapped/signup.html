@@ -1,0 +1,8 @@
+
+{% block name %}Sign Up{% endblock %}
+{% block heading %}<h1>Sign Up</h1>{% endblock %}
+{% block form %}
+    {% csrf_token %}
+    {{ form }}
+{% endblock %}
+{% block button %}<button type="submit" class="btn btn-primary">Sign Up</button>{% endblock %}
