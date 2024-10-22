@@ -1,3 +1,99 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    @media (hover: hover) {
+        @supports (color: oklch(0% 0 0)) {
+            .btn-ghost.btn-primary:hover {
+                background-color: var(--fallback-p,oklch(var(--p)/0.3));
+            }
+        }
+    }
+
+    @supports (color: oklch(0% 0 0)) {
+        .btn-ghost.btn-primary {
+            color: var(--fallback-p,oklch(var(--p)));
+        }
+    }
+
+    @media (hover: hover) {
+        @supports (color: oklch(0% 0 0)) {
+            .btn-ghost.btn-secondary:hover {
+                background-color: var(--fallback-s,oklch(var(--s)/0.3));
+            }
+        }
+    }
+
+    @supports (color: oklch(0% 0 0)) {
+        .btn-ghost.btn-secondary {
+            color: var(--fallback-s,oklch(var(--s)));
+        }
+    }
+
+    @media (hover: hover) {
+        @supports (color: oklch(0% 0 0)) {
+            .btn-ghost.btn-error:hover {
+                background-color: var(--fallback-er,oklch(var(--er)/0.3));
+            }
+        }
+    }
+
+    @supports (color: oklch(0% 0 0)) {
+        .btn-ghost.btn-error {
+            color: var(--fallback-er,oklch(var(--er)));
+        }
+    }
+
+    @media (hover: hover) {
+        @supports (color: oklch(0% 0 0)) {
+            .btn-ghost.btn-accent:hover {
+                background-color: var(--fallback-a,oklch(var(--a)/0.3));
+            }
+        }
+    }
+
+    @supports (color: oklch(0% 0 0)) {
+        .btn-ghost.btn-accent {
+            color: var(--fallback-a,oklch(var(--a)));
+        }
+    }
+
+    @media (hover: hover) {
+        @supports (color: oklch(0% 0 0)) {
+            .btn-flat.btn-primary:hover {
+                background-color: var(--fallback-p,oklch(var(--p)/0.75));
+            }
+        }
+    }
+
+    @supports (color: oklch(0% 0 0)) {
+        .btn-flat.btn-primary {
+            color: var(--fallback-pc,oklch(var(--pc)));
+            background-color: var(--fallback-p,oklch(var(--p)/0.5));
+            border: none;
+        }
+    }
+
+    @media (hover: hover) {
+        @supports (color: oklch(0% 0 0)) {
+            .btn-flat.btn-secondary:hover {
+                background-color: var(--fallback-s,oklch(var(--s)/0.75));
+            }
+        }
+    }
+
+    @supports (color: oklch(0% 0 0)) {
+        .btn-flat.btn-secondary {
+            color: var(--fallback-sc,oklch(var(--sc)));
+            background-color: var(--fallback-s,oklch(var(--s)/0.5));
+            border: none;
+        }
+    }
+}
+
+#menuControl
+
+#menuControl.x {
+
+}

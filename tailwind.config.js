@@ -5,27 +5,32 @@ import typography from "@tailwindcss/typography";
 module.exports = {
   content: ["./templates/**/*.html", "./static/**/*.js"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'title': ['area-normal', 'sans-serif'],
+        'body': ['indivisible', 'sans-serif'],
+      },
+    },
   },
   daisyui: {
-    theme: [
+    themes: [
       {
-        'spotify-dark': {
-          'base-100': '#100B12',
-          'base-200': '#2C272E',
+        spotifyDark: {
+          'base-100': '#2C272E',
+          'base-200': '#38323B',
           'base-300': '#47404A',
-          'neutral': '#A39CA6',
+          'neutral': '#6d6670',
           'accent': '#53DD6C',
           'primary': '#753188',
           'secondary': '#E59934',
         }
       },
       {
-        'spotify-light': {
+        spotifyLight: {
           'base-100': '#FBFAFC',
           'base-200': '#F0EDF2',
           'base-300': '#E1DEE3',
-          'neutral': '#BEB8C2',
+          'neutral': '#c1bbc4',
           'accent': '#53DD6C',
           'primary': '#AF53C9',
           'secondary': '#F8AE4C',

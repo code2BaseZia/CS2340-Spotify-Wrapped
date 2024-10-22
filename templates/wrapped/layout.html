@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="spotifyDark">
     <head>
         <meta charset="UTF-8">
         <title>Spotify Wrapped</title>
@@ -9,57 +9,60 @@
         <link rel="stylesheet" href="{% static 'wrapped/css/index.css' %}">
         {% block css %}{% endblock %}
     </head>
-    <body data-theme="spotify-dark" class="h-screen flex flex-col">
+    <body class="h-screen flex flex-col">
         <nav>
-            <div class="navbar bg-base-200 font-heading">
-                <div class="flex-none sm:hidden">
-                    <label class="btn btn-square btn-ghost btn-primary swap swap-rotate">
-                        <input id="menuControl" type="checkbox" />
-                        <svg class="inline-block feather-md swap-off">
-                            <use href="{% static 'wrapped/icons/feather-sprite.svg' %}#menu" />
-                        </svg>
-                        <svg class="inline-block feather-md swap-on">
-                            <use href="{% static 'wrapped/icons/feather-sprite.svg' %}#x" />
-                        </svg>
-                    </label>
+            <div class="navbar bg-base-200 font-title relative justify-between px-4">
+                <div class="absolute inset-0 flex justify-center z-0">
+                    <a href="{% url 'home' %}" class="text-accent text-2xl sm:text-3xl pt-1">Spotify Wrapper</a>
                 </div>
-                <div class="flex-1 justify-center sm:justify-start">
-                    <a href="{% url 'home' %}" class="text-accent text-2xl sm:text-3xl font-title sm:pl-2">Atlanta Food Finder</a>
+                <div class="flex flex-none lg:hidden z-10 min-h-0 size-10 btn btn-ghost p-0" id="menuControl">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" class="hidden" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" class="hidden" />
+                    </svg>
                 </div>
-                <div class="flex-none">
+                <div class="hidden lg:flex z-10">
                     <ul class="menu menu-horizontal px-1 gap-2 items-center">
-                        <li class="hidden sm:flex font-semibold"><a href="{% url 'home' %}">Map</a></li>
-                        {% if user.is_authenticated %}
-                            <li class="hidden sm:flex">
-                                <details class="dropdown dropdown-end">
-                                    <summary class="after:hidden flex flex-row gap-1">
-                                        <span>My Account</span>
-                                        <svg class="feather-sm">
-                                            <use href="{% static 'AtlantaFoodFinder/icons/feather-sprite.svg' %}#chevron-down" />
-                                        </svg>
-                                    </summary>
-                                    <ul class="menu dropdown-content bg-base-200 !mt-2 p-2 w-max right-0 z-50">
-                                        <li><a href="{% url 'home' %}">Reset Password</a></li>
-                                        <li><a href="{% url 'home' %}" class="text-error hover:bg-error hover:bg-opacity-20 active:!text-error active:!bg-error active:!bg-opacity-40">Log Out</a></li>
-                                    </ul>
-                                </details>
-                            </li>
-                        {% else %}
-                            <li class="hidden sm:flex"><a href="{% url 'home' %}" class="btn btn-primary btn-ghost h-9 min-h-0">Log In</a></li>
-                            <li class="hidden sm:flex"><a href="{% url 'home' %}" class="btn btn-primary h-9 min-h-0">Sign Up</a></li>
-                        {% endif %}
+                        <li class="home"><a class="pt-3" href="{% url 'home' %}">Stats</a></li>
+                        <li class="explore"><a class="pt-3" href="{% url 'home' %}">Explore</a></li>
+                        <li class="saved"><a class="pt-3" href="{% url 'home' %}">Saved</a></li>
+                        <li class="help"><a class="pt-3" href="{% url 'home' %}">Help</a></li>
                     </ul>
                 </div>
-            </div>
-            <div id="menu" class="sm:hidden bg-base-300 absolute inset-x-0 top-16 h-0 overflow-hidden z-50">
-                <ul class="menu menu-vertical px-2 gap-2 items-stretch">
-                    <li class="font-semibold"><a href="{% url 'home' %}">Map</a></li>
+                <div class="hidden md:flex flex-row z-10 gap-2">
                     {% if user.is_authenticated %}
+                        <details class="dropdown dropdown-end">
+                            <summary class="after:hidden flex flex-row gap-1">
+                                <span>My Account</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            </summary>
+                            <ul class="menu dropdown-content bg-base-200 !mt-2 p-2 w-max right-0 z-50">
+                                <li><a href="{% url 'home' %}">Reset Password</a></li>
+                                <li><a href="{% url 'home' %}" class="text-error hover:bg-error hover:bg-opacity-20 active:!text-error active:!bg-error active:!bg-opacity-40">Log Out</a></li>
+                            </ul>
+                        </details>
+                    {% else %}
+                        <a href="{% url 'home' %}" class="btn btn-ghost btn-accent h-11 min-h-0 pt-1">Log In</a>
+                        <a href="{% url 'home' %}" class="btn btn-outline btn-accent h-11 min-h-0 pt-1">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div id="menu" class="lg:hidden bg-base-200 absolute inset-x-0 top-16 h-0 overflow-hidden z-50">
+                <ul class="menu menu-vertical px-2 gap-2 items-stretch">
+                    <li class="home"><a href="{% url 'home' %}">Stats</a></li>
+                    <li class="explore"><a href="{% url 'home' %}">Explore</a></li>
+                    <li class="saved"><a href="{% url 'home' %}">Saved</a></li>
+                    <li class="help"><a href="{% url 'home' %}">Help</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'home' %}">Profile</a></li>
                         <li><a href="{% url 'home' %}">Reset Password</a></li>
                         <li><a href="{% url 'home' %}" class="text-error hover:bg-error hover:bg-opacity-20 active:!text-error active:!bg-error active:!bg-opacity-40">Log Out</a></li>
                     {% else %}
-                        <li><a class="text-secondary active:!text-secondary" href="{% url 'home' %}">Log In</a></li>
-                        <li><a class="text-primary active:!text-primary" href="{% url 'home' %}">Sign Up</a></li>
+                        <li class="flex md:hidden"><a class="text-primary active:!text-primary" href="{% url 'home' %}">Log In</a></li>
+                        <li class="flex md:hidden"><a class="text-secondary active:!text-secondary" href="{% url 'home' %}">Sign Up</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -77,6 +80,7 @@
         
         <!-- The following plugins are only available for Club GSAP members.--> 
         <script src="{% static 'wrapped/js/gsap/DrawSVGPlugin.min.js' %}"></script>
+        <script src="{% static 'wrapped/js/gsap/MorphSVGPlugin.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/ScrollSmoother.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/ScrambleTextPlugin.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/SplitText.min.js' %}"></script>
