@@ -16,9 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from wrapped.views import WrappedRedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('SpotifyWrapped/', include("wrapped.urls"))
+    path('wrapped/', include("wrapped.urls")),
+    path('', WrappedRedirectView),
 ]

@@ -1,4 +1,5 @@
 import daisyui from "daisyui";
+import typography from "@tailwindcss/typography";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -32,5 +33,5 @@ module.exports = {
       }
     ]
   },
-  plugins: [daisyui],
+  plugins: [daisyui, typography],
 }

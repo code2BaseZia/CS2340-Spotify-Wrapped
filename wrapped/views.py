@@ -4,7 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django import forms
 from django.contrib.auth.models import User
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, TemplateView, RedirectView
+
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, help_text='Enter a valid email address.')
@@ -20,14 +21,21 @@ class CustomUserCreationForm(UserCreationForm):
             user.save()
         return user
 
+
 # Create your views here.
 class IndexView(TemplateView):
     template_name = 'wrapped/index.html'
 
+
 class LogInView(LoginView):
     template_name = "wrapped/login.html"
+
 
 class SignUpView(CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy("login")
     template_name = "wrapped/signup.html"
+
+
+class WrappedRedirectView(RedirectView):
+    url = reverse_lazy('home')

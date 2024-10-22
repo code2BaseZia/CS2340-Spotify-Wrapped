@@ -4,77 +4,52 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}{% endblock %} | Atlanta Food Finder</title>
+        <title>Spotify Wrapped</title>
+        <link rel="stylesheet" href="https://use.typekit.net/qym2xky.css">
         <link rel="stylesheet" href="{% static 'wrapped/css/index.css' %}">
         {% block css %}{% endblock %}
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Galada&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
     </head>
     <body data-theme="spotify-dark" class="h-screen flex flex-col">
         <nav>
-            <div class="navbar bg-base-200">
-              <div class="navbar-start">
-                <div class="dropdown">
-                  <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 6h16M4 12h16M4 18h7" />
-                    </svg>
-                  </div>
-                  <ul
-                    tabindex="0"
-                    class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                    <li><a>Homepage</a></li>
-                    <li><a>Portfolio</a></li>
-                    <li><a>About</a></li>
-                  </ul>
+            <div class="navbar bg-base-200 font-heading">
+                <div class="flex-none sm:hidden">
+                    <label class="btn btn-square btn-ghost btn-primary swap swap-rotate">
+                        <input id="menuControl" type="checkbox" />
+                        <svg class="inline-block feather-md swap-off">
+                            <use href="{% static 'wrapped/icons/feather-sprite.svg' %}#menu" />
+                        </svg>
+                        <svg class="inline-block feather-md swap-on">
+                            <use href="{% static 'wrapped/icons/feather-sprite.svg' %}#x" />
+                        </svg>
+                    </label>
                 </div>
-              </div>
-              <div class="navbar-center">
-                <a class="btn btn-ghost text-xl">daisyUI</a>
-              </div>
-              <div class="navbar-end">
-                <button class="btn btn-ghost btn-circle">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-                <button class="btn btn-ghost btn-circle">
-                  <div class="indicator">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                    <span class="badge badge-xs badge-primary indicator-item"></span>
-                  </div>
-                </button>
-              </div>
+                <div class="flex-1 justify-center sm:justify-start">
+                    <a href="{% url 'home' %}" class="text-accent text-2xl sm:text-3xl font-title sm:pl-2">Atlanta Food Finder</a>
+                </div>
+                <div class="flex-none">
+                    <ul class="menu menu-horizontal px-1 gap-2 items-center">
+                        <li class="hidden sm:flex font-semibold"><a href="{% url 'home' %}">Map</a></li>
+                        {% if user.is_authenticated %}
+                            <li class="hidden sm:flex">
+                                <details class="dropdown dropdown-end">
+                                    <summary class="after:hidden flex flex-row gap-1">
+                                        <span>My Account</span>
+                                        <svg class="feather-sm">
+                                            <use href="{% static 'AtlantaFoodFinder/icons/feather-sprite.svg' %}#chevron-down" />
+                                        </svg>
+                                    </summary>
+                                    <ul class="menu dropdown-content bg-base-200 !mt-2 p-2 w-max right-0 z-50">
+                                        <li><a href="{% url 'home' %}">Reset Password</a></li>
+                                        <li><a href="{% url 'home' %}" class="text-error hover:bg-error hover:bg-opacity-20 active:!text-error active:!bg-error active:!bg-opacity-40">Log Out</a></li>
+                                    </ul>
+                                </details>
+                            </li>
+                        {% else %}
+                            <li class="hidden sm:flex"><a href="{% url 'home' %}" class="btn btn-primary btn-ghost h-9 min-h-0">Log In</a></li>
+                            <li class="hidden sm:flex"><a href="{% url 'home' %}" class="btn btn-primary h-9 min-h-0">Sign Up</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
             <div id="menu" class="sm:hidden bg-base-300 absolute inset-x-0 top-16 h-0 overflow-hidden z-50">
                 <ul class="menu menu-vertical px-2 gap-2 items-stretch">
@@ -89,13 +64,25 @@
                 </ul>
             </div>
         </nav>
-        <main class="grow shrink overflow-hidden relative font-body">
+        <main class="grow shrink overflow-hidden relative bg-base-100 prose lg:prose-lg xl:prose-xl">
             {% block content %}
             {% endblock %}
         </main>
 
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-        <script src="{% static 'AtlantaFoodFinder/js/menu.js' %}"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/TextPlugin.min.js"></script>
+        
+        <!-- The following plugins are only available for Club GSAP members.--> 
+        <script src="{% static 'wrapped/js/gsap/DrawSVGPlugin.min.js' %}"></script>
+        <script src="{% static 'wrapped/js/gsap/ScrollSmoother.min.js' %}"></script>
+        <script src="{% static 'wrapped/js/gsap/ScrambleTextPlugin.min.js' %}"></script>
+        <script src="{% static 'wrapped/js/gsap/SplitText.min.js' %}"></script>
+        
+        <script src="{% static 'wrapped/js/gsap.js' %}"></script>
+        <script src="{% static 'wrapped/js/menu.js' %}"></script>
         {% block scripts %}
         {% endblock %}
     </body>
