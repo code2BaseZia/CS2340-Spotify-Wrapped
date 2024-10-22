@@ -1,12 +1,11 @@
-import os
+import os, random, string
 from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from requests import Request, post
-from django.urls import reverse_lazy
+from django.urls import reverse
 from .util import update_or_create_user_tokens, is_spotify_authenticated
-
 
 
 # Create your views here.
@@ -17,11 +16,12 @@ class AuthURL(APIView):
         url = Request('GET', 'https://accounts.spotify.com/authorize', params={
             'scope': scopes,
             'response_type': 'code',
-            'redirect_uri': reverse_lazy("wrapped:home"),
-            'client_id': os.getenv('SPOTIPY_CLIENT_ID')
+            'redirect_uri': os.getenv('REDIRECT_URI'),
+            'client_id': os.getenv('SPOTIFY_CLIENT_ID')
         }).prepare().url
 
         return Response({'url': url}, status=status.HTTP_200_OK)
+
 
 def spotify_callback(request, format=None):
     code = request.GET.get('code')
@@ -30,9 +30,9 @@ def spotify_callback(request, format=None):
     response = post('https://accounts.spotify.com/api/token', data={
         'grant_type': 'authorization_code',
         'code': code,
-        'redirect_uri': reverse_lazy("wrapped:home"),
-        'client_id': os.getenv('SPOTIPY_CLIENT_ID'),
-        'client_secret': os.getenv('SPOTIPY_CLIENT_SECRET')
+        'redirect_uri': os.getenv('REDIRECT_URI'),
+        'client_id': os.getenv('SPOTIFY_CLIENT_ID'),
+        'client_secret': os.getenv('SPOTIFY_CLIENT_SECRET')
     }).json()
 
     access_token = response.get('access_token')
@@ -40,12 +40,14 @@ def spotify_callback(request, format=None):
     refresh_token = response.get('refresh_token')
     expires_in = response.get('expires_in')
     error = response.get('error')
+    print(error)
 
     if not request.session.exists(request.session.session_key):
         request.session.create()
     update_or_create_user_tokens(request.session.session_key, access_token, token_type, expires_in, refresh_token)
 
     return redirect('wrapped:home')
+
 
 class IsAuthenticated(APIView):
     def get(self, request, format=None):

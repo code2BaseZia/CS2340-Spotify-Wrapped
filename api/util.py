@@ -36,10 +36,9 @@ def is_spotify_authenticated(session_id):
 
     expiry = tokens.expires_in
 
-    if expiry > timezone.now():
-        return False
+    if expiry <= timezone.now():
+        refresh_spotify_token(tokens)
 
-    refresh_spotify_token(tokens)
     return True
 
 
@@ -49,7 +48,7 @@ def refresh_spotify_token(tokens):
         'grant_type': 'refresh_token',
         'refresh_token': refresh_token,
         'client_id': os.getenv('SPOTIFY_CLIENT_ID'),
-        'client_secret': os.getenv('SPOTIFY_API_KEY'),
+        'client_secret': os.getenv('SPOTIFY_CLIENT_SECRET'),
     }).json()
 
     access_token = response.get('access_token')

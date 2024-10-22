@@ -22,6 +22,6 @@ from .views import AuthURL, spotify_callback, IsAuthenticated
 urlpatterns = [
 
     path('authenticate', AuthURL.as_view()),
-    path('redirect', spotify_callback),
+    path('redirect', spotify_callback, name='redirect'),
     path('authenticated', IsAuthenticated.as_view()),
 ]
