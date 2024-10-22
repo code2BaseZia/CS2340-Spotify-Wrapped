@@ -21,5 +21,5 @@ from wrapped.views import WrappedRedirectView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('wrapped/', include("wrapped.urls")),
-    path('', WrappedRedirectView),
+    path('', WrappedRedirectView.as_view()),
 ]
