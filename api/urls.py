@@ -16,10 +16,12 @@ Including another URLconf
 """
 
 from django.urls import path
-from .views import AuthURL
+from .views import AuthURL, spotify_callback, IsAuthenticated
 
 
 urlpatterns = [
 
-    path('auth', AuthURL.as_view()),
+    path('authenticate', AuthURL.as_view()),
+    path('redirect', spotify_callback),
+    path('authenticated', IsAuthenticated.as_view()),
 ]

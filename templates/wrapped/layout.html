@@ -24,11 +24,11 @@
                     </label>
                 </div>
                 <div class="flex-1 justify-center sm:justify-start">
-                    <a href="{% url 'home' %}" class="text-accent text-2xl sm:text-3xl font-title sm:pl-2">Atlanta Food Finder</a>
+                    <a href="{% url 'wrapped:home' %}" class="text-accent text-2xl sm:text-3xl font-title sm:pl-2">Atlanta Food Finder</a>
                 </div>
                 <div class="flex-none">
                     <ul class="menu menu-horizontal px-1 gap-2 items-center">
-                        <li class="hidden sm:flex font-semibold"><a href="{% url 'home' %}">Map</a></li>
+                        <li class="hidden sm:flex font-semibold"><a href="{% url 'wrapped:home' %}">Map</a></li>
                         {% if user.is_authenticated %}
                             <li class="hidden sm:flex">
                                 <details class="dropdown dropdown-end">
@@ -39,27 +39,27 @@
                                         </svg>
                                     </summary>
                                     <ul class="menu dropdown-content bg-base-200 !mt-2 p-2 w-max right-0 z-50">
-                                        <li><a href="{% url 'home' %}">Reset Password</a></li>
-                                        <li><a href="{% url 'home' %}" class="text-error hover:bg-error hover:bg-opacity-20 active:!text-error active:!bg-error active:!bg-opacity-40">Log Out</a></li>
+                                        <li><a href="{% url 'wrapped:home' %}">Reset Password</a></li>
+                                        <li><a href="{% url 'wrapped:home' %}" class="text-error hover:bg-error hover:bg-opacity-20 active:!text-error active:!bg-error active:!bg-opacity-40">Log Out</a></li>
                                     </ul>
                                 </details>
                             </li>
                         {% else %}
-                            <li class="hidden sm:flex"><a href="{% url 'home' %}" class="btn btn-primary btn-ghost h-9 min-h-0">Log In</a></li>
-                            <li class="hidden sm:flex"><a href="{% url 'home' %}" class="btn btn-primary h-9 min-h-0">Sign Up</a></li>
+                            <li class="hidden sm:flex"><a href="{% url 'wrapped:home' %}" class="btn btn-primary btn-ghost h-9 min-h-0">Log In</a></li>
+                            <li class="hidden sm:flex"><a href="{% url 'wrapped:home' %}" class="btn btn-primary h-9 min-h-0">Sign Up</a></li>
                         {% endif %}
                     </ul>
                 </div>
             </div>
             <div id="menu" class="sm:hidden bg-base-300 absolute inset-x-0 top-16 h-0 overflow-hidden z-50">
                 <ul class="menu menu-vertical px-2 gap-2 items-stretch">
-                    <li class="font-semibold"><a href="{% url 'home' %}">Map</a></li>
+                    <li class="font-semibold"><a href="{% url 'wrapped:home' %}">Map</a></li>
                     {% if user.is_authenticated %}
-                        <li><a href="{% url 'home' %}">Reset Password</a></li>
-                        <li><a href="{% url 'home' %}" class="text-error hover:bg-error hover:bg-opacity-20 active:!text-error active:!bg-error active:!bg-opacity-40">Log Out</a></li>
+                        <li><a href="{% url 'wrapped:home' %}">Reset Password</a></li>
+                        <li><a href="{% url 'wrapped:home' %}" class="text-error hover:bg-error hover:bg-opacity-20 active:!text-error active:!bg-error active:!bg-opacity-40">Log Out</a></li>
                     {% else %}
-                        <li><a class="text-secondary active:!text-secondary" href="{% url 'home' %}">Log In</a></li>
-                        <li><a class="text-primary active:!text-primary" href="{% url 'home' %}">Sign Up</a></li>
+                        <li><a class="text-secondary active:!text-secondary" href="{% url 'wrapped:home' %}">Log In</a></li>
+                        <li><a class="text-primary active:!text-primary" href="{% url 'wrapped:home' %}">Sign Up</a></li>
                     {% endif %}
                 </ul>
             </div>

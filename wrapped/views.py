@@ -38,4 +38,4 @@ class SignUpView(CreateView):
 
 
 class WrappedRedirectView(RedirectView):
-    url = reverse_lazy("home")
+    url = reverse_lazy("wrapped:home")

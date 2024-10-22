@@ -1,6 +1,7 @@
 from django.urls import path, include
-
 from .views import IndexView, SignUpView, LogInView
+
+app_name = 'wrapped'
 
 urlpatterns = [
     path("signup/", SignUpView.as_view(), name="signup"),
