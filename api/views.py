@@ -1,11 +1,11 @@
 import os, random, string
 from django.shortcuts import render, redirect
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from requests import Request, post
-from django.urls import reverse
-from .util import update_or_create_user_tokens, is_spotify_authenticated
+from .util import update_or_create_user_tokens, is_spotify_authenticated, link_user_token
 
 
 # Create your views here.
@@ -42,15 +42,30 @@ def spotify_callback(request, format=None):
     error = response.get('error')
     print(error)
 
-    if not request.session.exists(request.session.session_key):
+    if request.session.exists(request.session.session_key):
         request.session.create()
     update_or_create_user_tokens(request.session.session_key, access_token, token_type, expires_in, refresh_token)
 
-    return redirect('wrapped:home')
+    return redirect('wrapped:link_token')
 
 
 class IsAuthenticated(APIView):
+    authentication_classes = [SessionAuthentication]
+
     def get(self, request, format=None):
-        is_authenticated = is_spotify_authenticated(self.request.session.session_key)
+        if request.user is not None and request.user.is_authenticated:
+            is_authenticated = is_spotify_authenticated(self.request.session.session_key, user=request.user)
+        else:
+            is_authenticated = is_spotify_authenticated(self.request.session.session_key)
 
         return Response({'status': is_authenticated}, status=status.HTTP_200_OK)
+
+
+class LinkSpotifyToken(APIView):
+    authentication_classes = [SessionAuthentication]
+
+    def get(self, request, format=None):
+        if link_user_token(request.session.session_key, request.user):
+            return Response({'message': 'Token successfully linked to user account'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'Token does not exist'}, status=status.HTTP_400_BAD_REQUEST)

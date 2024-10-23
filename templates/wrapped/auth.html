@@ -1,0 +1,19 @@
+{% extends 'wrapped/layout.html' %}
+{% load static %}
+
+{% block title %}{% block name %}{% endblock %}{% endblock %}
+{% block css %}{% endblock %}
+    
+{% block content %}
+    <form class="card bg-base-200 shadow-xl col-span-4 md:col-span-6 col-start-1 md:col-start-2 lg:col-start-4" method="POST">
+        <div class="card-body">
+            {% block heading %}{% endblock %}
+            {% block form %}{% endblock %}
+            <div class="card-actions justify-center">
+                {% block button %}{% endblock %}
+            </div>
+        </div>
+    </form>
+{% endblock %}
+        
+{% block scripts %}{% endblock %}

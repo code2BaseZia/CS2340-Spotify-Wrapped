@@ -1,0 +1,24 @@
+{% extends 'wrapped/layout.html' %}
+{% load static %}
+
+{% block title %}Connecting{% endblock %}
+{% block css %}{% endblock %}
+    
+{% block content %}
+    <div class="col-span-4 col-start-1 md:col-start-3 lg:col-start-5 text-center flex flex-col items-center gap-3">
+        {% if not user.is_authenticated %}
+            <h3>Unable to Link Your Spotify Account</h3>
+            <p>Your Spotify account could not be linked because you are not logged into Spotify Wrapper.</p>
+            <a id="goHome" href="{% url 'wrapped:home' %}" class="btn btn-accent">Go Back Home</a>
+        {% else %}
+            <h3>Linking Your Spotify Account</h3>
+            <p>You should be redirected automatically on success.</p>
+            <a id="goHome" href="{% url 'wrapped:home' %}" class="btn btn-accent">Go Back Home</a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'wrapped/js/request.js' %}"></script>
+    <script>document.addEventListener('DOMContentLoaded', getLinkToken)</script>
+{% endblock %}

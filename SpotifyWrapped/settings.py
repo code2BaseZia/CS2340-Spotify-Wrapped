@@ -23,6 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_KEY')
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -39,8 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'wrapped.apps.WrappedConfig',
+    'api.apps.ApiConfig',
     'rest_framework',
-    'api.apps.ApiConfig'
 ]
 
 MIDDLEWARE = [
@@ -130,7 +132,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = "home"
-LOGOUT_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "wrapped:home"
+LOGOUT_REDIRECT_URL = "wrapped:home"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

@@ -2,6 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    h1 {
+        @apply font-semibold font-title;
+        @apply text-2xl md:text-3xl lg:text-4xl;
+    }
+
+    h2 {
+        @apply font-thin font-title;
+        @apply text-xl md:text-2xl lg:text-3xl;
+    }
+
+    h3 {
+        @apply font-thin font-title;
+        @apply text-lg md:text-xl lg:text-2xl;
+    }
+
+    h4 {
+        @apply font-light font-body;
+        @apply text-lg md:text-xl;
+    }
+
+    h5 {
+        @apply font-light font-body;
+        @apply md:text-lg;
+    }
+
+    h6 {
+        @apply italic font-body;
+    }
+}
+
 @layer components {
     @media (hover: hover) {
         @supports (color: oklch(0% 0 0)) {
@@ -61,6 +92,20 @@
 
     @media (hover: hover) {
         @supports (color: oklch(0% 0 0)) {
+            .btn-ghost.btn-neutral:hover {
+                background-color: var(--fallback-n,oklch(var(--n)/0.3));
+            }
+        }
+    }
+
+    @supports (color: oklch(0% 0 0)) {
+        .btn-ghost.btn-neutral {
+            color: var(--fallback-n,oklch(var(--n)));
+        }
+    }
+
+    @media (hover: hover) {
+        @supports (color: oklch(0% 0 0)) {
             .btn-flat.btn-primary:hover {
                 background-color: var(--fallback-p,oklch(var(--p)/0.75));
             }
@@ -90,10 +135,52 @@
             border: none;
         }
     }
+
+    .input {
+        @apply transition-colors bg-opacity-60 hover:bg-opacity-100 focus-within:bg-opacity-80;
+    }
+
+    .grid-content {
+        @apply grid gap-3 place-content-center items-baseline grid-cols-content-sm md:grid-cols-content-md lg:grid-cols-content-lg;
+    }
+
+    .col-span-full {
+        @apply col-start-1 col-end-4 md:col-end-8 lg:col-end-12;
+    }
 }
 
-#menuControl
+:not(li) > form input {
+    @apply input input-bordered input-accent w-full row-start-2;
+}
 
-#menuControl.x {
+:not(li) > form label {
+    @apply label row-start-1 p-0 font-light md:text-lg;
+}
 
+:not(li) > form .helptext {
+    @apply text-sm italic text-neutral mb-2 row-start-3;
+}
+
+:not(li) > form > div > div {
+    @apply grid grid-cols-1 gap-1;
+}
+
+:not(li) > form ul.errorlist {
+    @apply text-error text-center text-sm pl-0;
+}
+
+:not(li) > form ul.errorlist > li {
+    @apply pl-0;
+}
+
+.helptext ul {
+    @apply my-0 list-disc pl-4;
+}
+
+.helptext li {
+    @apply my-0;
+}
+
+details[open] summary svg.chevron {
+    transform: rotate(180deg);
 }

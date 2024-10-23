@@ -1,8 +1,30 @@
 {% extends 'wrapped/layout.html' %}
 {% load static %}
 
-{% block title %}Home{% endblock %}
-{% block css %}{% endblock %}
+{% block title %}{% if user.is_authenticated %}Stats{% else %}Home{% endif %}{% endblock %}
+{% block css %}
+    <style>
+        .home {
+            font-weight: 600;
+        }
+    </style>
+{% endblock %}
     
 {% block content %}
+    {% if not user.is_authenticated %}
+        
+    {% elif linked %}
+        
+    {% else %}
+        <div class="col-span-4 col-start-1 md:col-start-3 lg:col-start-5 text-center flex flex-col items-center gap-3">
+            <h3>Link Your Spotify Account</h3>
+            <p>You must link your spotify account to access stats and create a wrapped.</p>
+            <a id="authLink" href="" class="btn btn-accent">Log in With Spotify</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'wrapped/js/request.js' %}"></script>
+    <script>document.addEventListener('DOMContentLoaded', getAuthenticationLink)</script>
 {% endblock %}

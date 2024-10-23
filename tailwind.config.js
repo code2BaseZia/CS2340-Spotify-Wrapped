@@ -1,5 +1,4 @@
 import daisyui from "daisyui";
-import typography from "@tailwindcss/typography";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -10,6 +9,11 @@ module.exports = {
         'title': ['area-normal', 'sans-serif'],
         'body': ['indivisible', 'sans-serif'],
       },
+      gridTemplateColumns: {
+        'content-lg': 'repeat(12, 4.5rem)',
+        'content-md': 'repeat(8, 4.5rem)',
+        'content-sm': 'repeat(4, 4.5rem)',
+      }
     },
   },
   daisyui: {
@@ -38,5 +42,5 @@ module.exports = {
       }
     ]
   },
-  plugins: [daisyui, typography],
+  plugins: [daisyui],
 }

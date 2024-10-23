@@ -9,11 +9,11 @@
         <link rel="stylesheet" href="{% static 'wrapped/css/index.css' %}">
         {% block css %}{% endblock %}
     </head>
-    <body class="h-screen flex flex-col">
+    <body class="h-screen flex flex-col items-stretch overflow-hidden">
         <nav>
             <div class="navbar bg-base-200 font-title relative justify-between px-4">
                 <div class="absolute inset-0 flex justify-center z-0">
-                    <a href="{% url 'wrapped:home' %}" class="text-accent text-2xl sm:text-3xl pt-1">Spotify Wrapper</a>
+                    <a href="{% url 'wrapped:home' %}" class="text-accent pt-1"><h1>Spotify Wrapper</h1></a>
                 </div>
                 <div class="flex flex-none lg:hidden z-10 min-h-0 size-10 btn btn-ghost p-0" id="menuControl">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -24,52 +24,90 @@
                 </div>
                 <div class="hidden lg:flex z-10">
                     <ul class="menu menu-horizontal px-1 gap-2 items-center">
-                        <li class="home"><a class="pt-3" href="{% url 'wrapped:home' %}">Stats</a></li>
+                        <li class="home"><a class="pt-3" href="{% url 'wrapped:home' %}">
+                            {% if user.is_authenticated %}
+                                Stats
+                            {% else %}
+                                Home
+                            {% endif %}
+                        </a></li>
                         <li class="explore"><a class="pt-3" href="{% url 'wrapped:home' %}">Explore</a></li>
-                        <li class="saved"><a class="pt-3" href="{% url 'wrapped:home' %}">Saved</a></li>
+                        {% if user.is_authenticated %}
+                            <li class="saved"><a class="pt-3" href="{% url 'wrapped:home' %}">Saved</a></li>
+                        {% endif %}
                         <li class="help"><a class="pt-3" href="{% url 'wrapped:home' %}">Help</a></li>
                     </ul>
                 </div>
                 <div class="hidden md:flex flex-row z-10 gap-2">
                     {% if user.is_authenticated %}
                         <details class="dropdown dropdown-end">
-                            <summary class="after:hidden flex flex-row gap-1">
-                                <span>My Account</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <summary class="after:hidden flex flex-row gap-2 items-center btn btn-neutral btn-ghost !text-base-content">
+                                <div class="avatar placeholder">
+                                    <div class="bg-neutral text-neutral-content w-10 rounded-full">
+                                        <span class="text-xl">{{ user|make_list|first }}</span>
+                                    </div>
+                                </div>
+                                <span class="pt-1">{{ user.username }}</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 chevron transition-transform">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                 </svg>
                             </summary>
-                            <ul class="menu dropdown-content bg-base-200 !mt-2 p-2 w-max right-0 z-50">
-                                <li><a href="{% url 'wrapped:home' %}">Reset Password</a></li>
-                                <li><a href="{% url 'wrapped:home' %}" class="text-error hover:bg-error hover:bg-opacity-20 active:!text-error active:!bg-error active:!bg-opacity-40">Log Out</a></li>
+                            <ul class="menu dropdown-content rounded-lg bg-base-200 !mt-5 p-2 w-max right-0 z-50 gap-1">
+                                <li><a href="{% url 'wrapped:home' %}" class="pt-3">Profile</a></li>
+                                <li><a href="{% url 'wrapped:home' %}" class="pt-3">Reset Password</a></li>
+                                <li>
+                                    <form method="post" action="{% url 'wrapped:logout' %}" class="p-0 flex flex-col items-stretch hover:bg-error hover:bg-opacity-20 active:!bg-error active:!bg-opacity-40">
+                                        {% csrf_token %}
+                                        <input class="h-full pb-2 pt-3 px-4 text-error text-left active:!text-error" type="submit" value="Log Out" />
+                                    </form>
+                                </li>
                             </ul>
                         </details>
                     {% else %}
-                        <a href="{% url 'wrapped:home' %}" class="btn btn-ghost btn-accent h-11 min-h-0 pt-1">Log In</a>
-                        <a href="{% url 'wrapped:home' %}" class="btn btn-outline btn-accent h-11 min-h-0 pt-1">Sign Up</a>
+                        <a href="{% url 'wrapped:login' %}" class="btn btn-ghost btn-accent h-11 min-h-0 pt-1">Log In</a>
+                        <a href="{% url 'wrapped:signup' %}" class="btn btn-outline btn-accent h-11 min-h-0 pt-1">Sign Up</a>
                     {% endif %}
                 </div>
             </div>
-            <div id="menu" class="lg:hidden bg-base-200 absolute inset-x-0 top-16 h-0 overflow-hidden z-50">
+            <div id="menu" class="lg:hidden bg-base-200 absolute inset-x-0 top-16 h-0 overflow-hidden z-10">
                 <ul class="menu menu-vertical px-2 gap-2 items-stretch">
-                    <li class="home"><a href="{% url 'wrapped:home' %}">Stats</a></li>
+                    <li class="home"><a href="{% url 'wrapped:home' %}">
+                        {% if user.is_authenticated %}
+                            Stats
+                        {% else %}
+                            Home
+                        {% endif %}
+                    </a></li>
                     <li class="explore"><a href="{% url 'wrapped:home' %}">Explore</a></li>
-                    <li class="saved"><a href="{% url 'wrapped:home' %}">Saved</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="saved"><a href="{% url 'wrapped:home' %}">Saved</a></li>
+                    {% endif %}
                     <li class="help"><a href="{% url 'wrapped:home' %}">Help</a></li>
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'wrapped:home' %}">Profile</a></li>
                         <li><a href="{% url 'wrapped:home' %}">Reset Password</a></li>
-                        <li><a href="{% url 'wrapped:home' %}" class="text-error hover:bg-error hover:bg-opacity-20 active:!text-error active:!bg-error active:!bg-opacity-40">Log Out</a></li>
+                        <li><a href="{% url 'wrapped:logout' %}" class="text-error hover:bg-error hover:bg-opacity-20 active:!text-error active:!bg-error active:!bg-opacity-40">Log Out</a></li>
                     {% else %}
-                        <li class="flex md:hidden"><a class="text-primary active:!text-primary" href="{% url 'wrapped:home' %}">Log In</a></li>
-                        <li class="flex md:hidden"><a class="text-secondary active:!text-secondary" href="{% url 'wrapped:home' %}">Sign Up</a></li>
+                        <li class="flex md:hidden"><a class="text-primary active:!text-primary" href="{% url 'wrapped:login' %}">Log In</a></li>
+                        <li class="flex md:hidden"><a class="text-secondary active:!text-secondary" href="{% url 'wrapped:signup' %}">Sign Up</a></li>
                     {% endif %}
                 </ul>
             </div>
         </nav>
-        <main class="grow shrink overflow-hidden relative bg-base-100 prose lg:prose-lg xl:prose-xl">
+        <main class="grow shrink max-h-screen relative bg-base-100 font-body grid-content p-3">
             {% block content %}
             {% endblock %}
+            <button class="btn btn-primary fixed right-4 bottom-4 size-12 flex justify-center items-center rounded-full z-20" id="theme">
+                <label class="swap swap-rotate size-8">
+                    <input type="checkbox" id="themeControl" />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 swap-on">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 swap-off">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+                    </svg>
+                </label>
+            </button>
         </main>
 
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
@@ -87,6 +125,7 @@
         
         <script src="{% static 'wrapped/js/gsap.js' %}"></script>
         <script src="{% static 'wrapped/js/menu.js' %}"></script>
+        <script src="{% static 'wrapped/js/theme.js' %}"></script>
         {% block scripts %}
         {% endblock %}
     </body>
