@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<h2>Log In</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form }}
-  <button type="submit">Log In</button>
-</form>
+{% extends 'wrapped/auth.html' %}
+
+{% block name %}Log In{% endblock %}
+{% block heading %}<h1 class="text-center">Log In</h1>{% endblock %}
+{% block form %}
+    {% csrf_token %}
+    {{ form }}
+    <a class="!link !link-accent text-center" href="{% url 'wrapped:password_reset' %}">Forgot Password</a>
+{% endblock %}
+{% block button %}<button type="submit" class="btn btn-accent">Log In</button>{% endblock %}
