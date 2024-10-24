@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django import forms
 from django.contrib.auth.models import User
 from django.views.generic import CreateView, TemplateView, RedirectView
+from django.contrib.messages.views import SuccessMessageMixin
 from .models import Profile
 
 
@@ -43,6 +44,14 @@ class SignUpView(CreateView):
     template_name = "wrapped/signup.html"
 
 
+class ResetPasswordView(PasswordResetView):
+    template_name = "wrapped/password_reset.html"
+    email_template_name = "wrapped/password_reset_email.html"
+    success_template_name = "wrapped/messages.html"
+    success_url = reverse_lazy("wrapped:login")
+
+class ResetPasswordConfirmView(PasswordResetConfirmView):
+    template_name = "wrapped/password_reset_confirm.html"
 class WrappedRedirectView(RedirectView):
     url = reverse_lazy("wrapped:home")
 

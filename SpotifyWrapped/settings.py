@@ -136,3 +136,5 @@ LOGIN_REDIRECT_URL = "wrapped:home"
 LOGOUT_REDIRECT_URL = "wrapped:home"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"

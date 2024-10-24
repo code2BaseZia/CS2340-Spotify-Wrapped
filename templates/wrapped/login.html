@@ -5,6 +5,6 @@
 {% block form %}
     {% csrf_token %}
     {{ form }}
-    <a class="!link !link-accent text-center" href="{% url 'wrapped:home' %}">Forgot Password</a>
+    <a class="!link !link-accent text-center" href="{% url 'wrapped:reset_password' %}">Forgot Password</a>
 {% endblock %}
 {% block button %}<button type="submit" class="btn btn-accent">Log In</button>{% endblock %}
