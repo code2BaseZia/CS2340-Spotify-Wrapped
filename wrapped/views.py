@@ -26,7 +26,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 # Create your views here.
 class IndexView(TemplateView):
-    template_name = 'wrapped/index.html'
+    template_name = 'wrapped/pages/index.html'
 
     def get_context_data(self, **kwargs):
         if self.request.user.is_authenticated and self.request.user.profile.token is not None:
@@ -35,26 +35,26 @@ class IndexView(TemplateView):
 
 
 class LogInView(LoginView):
-    template_name = "wrapped/login.html"
+    template_name = "wrapped/auth/login.html"
 
 
 class SignUpView(CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy("wrapped:login")
-    template_name = "wrapped/signup.html"
+    template_name = "wrapped/auth/signup.html"
 
 
 class ResetPasswordView(PasswordResetView):
-    template_name = "wrapped/password_reset.html"
-    email_template_name = "wrapped/password_reset_email.html"
-    success_template_name = "wrapped/messages.html"
+    template_name = "wrapped/auth/password_reset.html"
+    email_template_name = "wrapped/auth/password_reset_email.html"
+    success_template_name = "wrapped/messages/success.html"
     success_url = reverse_lazy("wrapped:login")
 
 class ResetPasswordConfirmView(PasswordResetConfirmView):
-    template_name = "wrapped/password_reset_confirm.html"
+    template_name = "wrapped/auth/password_reset_confirm.html"
 class WrappedRedirectView(RedirectView):
     url = reverse_lazy("wrapped:home")
 
 
 class LinkTokenView(TemplateView):
-    template_name = "wrapped/linking.html"
+    template_name = "wrapped/pages/linking.html"
