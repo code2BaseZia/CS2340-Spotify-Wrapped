@@ -58,3 +58,6 @@ class WrappedRedirectView(RedirectView):
 
 class LinkTokenView(TemplateView):
     template_name = "wrapped/pages/linking.html"
+
+class DeveloperContactView(TemplateView):
+    template_name = "wrapped/pages/help.html"

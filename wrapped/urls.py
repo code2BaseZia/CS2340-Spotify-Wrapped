@@ -1,6 +1,6 @@
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from .views import IndexView, SignUpView, LogInView, LinkTokenView, ResetPasswordView, ResetPasswordConfirmView
+from .views import IndexView, SignUpView, LogInView, LinkTokenView, ResetPasswordView, ResetPasswordConfirmView, DeveloperContactView
 
 app_name = 'wrapped'
 
@@ -11,5 +11,8 @@ urlpatterns = [
     path("reset/", ResetPasswordView.as_view(), name="reset_password"),
     path("reset/<uidb64>/<token>/", ResetPasswordConfirmView.as_view(), name="password_reset_confirm"),
     path("", IndexView.as_view(), name="home"),
+    path("help/", DeveloperContactView.as_view(), name="developer"),
     path('', include('django.contrib.auth.urls')),
+
+
 ]
