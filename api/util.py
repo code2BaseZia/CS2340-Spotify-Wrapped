@@ -1,5 +1,4 @@
 from .models import SpotifyToken
-from wrapped.models import Profile
 from django.utils import timezone
 from datetime import timedelta
 from requests import post
@@ -8,11 +7,7 @@ import os
 
 def get_user_tokens(session_id, user=None):
     if user is not None:
-        profile = user.profile
-        try:
-            user_tokens = [profile.token]
-        except:
-            return None
+        user_tokens = [user.profile.token]
     else:
         user_tokens = SpotifyToken.objects.filter(session=session_id)
         if not user_tokens.exists():
@@ -66,10 +61,9 @@ def refresh_spotify_token(tokens, user=None):
     access_token = response.get('access_token')
     token_type = response.get('token_type')
     expires_in = response.get('expires_in')
-    refresh_token = response.get('refresh_token')
 
     # If this doesn't work, he changes the method to use session_id instead of passing in tokens
-    update_or_create_user_tokens(tokens.sesson_id, access_token, token_type, expires_in, refresh_token, user)
+    update_or_create_user_tokens(tokens.session, access_token, token_type, expires_in, refresh_token, user)
 
 
 def link_user_token(session_id, user):
