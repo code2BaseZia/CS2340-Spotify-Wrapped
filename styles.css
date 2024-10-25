@@ -78,6 +78,20 @@
 
     @media (hover: hover) {
         @supports (color: oklch(0% 0 0)) {
+            .btn-ghost.btn-success:hover {
+                background-color: var(--fallback-su,oklch(var(--su)/0.3));
+            }
+        }
+    }
+
+    @supports (color: oklch(0% 0 0)) {
+        .btn-ghost.btn-success {
+            color: var(--fallback-su,oklch(var(--su)));
+        }
+    }
+
+    @media (hover: hover) {
+        @supports (color: oklch(0% 0 0)) {
             .btn-ghost.btn-accent:hover {
                 background-color: var(--fallback-a,oklch(var(--a)/0.3));
             }

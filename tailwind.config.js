@@ -3,6 +3,7 @@ import daisyui from "daisyui";
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./templates/**/*.html", "./static/**/*.js"],
+  safelist: ['text-success', 'text-danger'],
   theme: {
     extend: {
       fontFamily: {

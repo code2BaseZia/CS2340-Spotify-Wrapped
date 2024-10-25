@@ -1,10 +1,10 @@
-{% extends 'wrapped/index.html' %}
+{% extends 'wrapped/auth/index.html' %}
 
 {% block name %}Sign Up{% endblock %}
 {% block heading %}<h1 class="text-center">Sign Up</h1>{% endblock %}
 {% block form %}
     {% csrf_token %}
     {{ form }}
-    <a class="!link !link-accent text-center" href="{% url 'wrapped:home' %}">Already have an account</a>
+    <a class="!link !link-accent text-center" href="{% url 'wrapped:login' %}">Already have an account</a>
 {% endblock %}
 {% block button %}<button type="submit" class="btn btn-accent">Sign Up</button>{% endblock %}

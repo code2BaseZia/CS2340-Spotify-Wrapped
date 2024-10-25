@@ -96,17 +96,28 @@
         </nav>
         <main class="grow shrink max-h-screen relative bg-base-100 font-body grid-content p-3">
             {% if messages %}
-                <ul class="absolute inset-x-0 top-20 flex-col items-center">
+                <div id="messages" class="absolute inset-x-0 top-0 flex flex-col items-center pt-2">
                     {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-                            {{ message }}
-                        </li>
+                        <div class="pb-2 z-40 message">
+                            <div class="card shadow-xl text-center flex flex-row items-center gap-2 p-2 h-10 text-{{ message.tags }} {% if message.tags == 'success' %}bg-green-200{% elif message.tags == 'error' %}bg-red-200{% else %}bg-base-300{% endif %}">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                                </svg>
+                                <span>{{ message }}</span>
+                                <button class="btn btn-{{ message.tags }} btn-ghost min-h-0 h-6 min-w-0 px-1 close" type="button" data-dismiss="alert" aria-hidden="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
                     {% endfor %}
-                </ul>
+                </div>
             {% endif %}
+            
             {% block content %}
             {% endblock %}
+        
             <button class="btn btn-primary fixed right-4 bottom-4 size-12 flex justify-center items-center rounded-full z-20" id="theme">
                 <label class="swap swap-rotate size-8">
                     <input type="checkbox" id="themeControl" />
@@ -136,6 +147,7 @@
         <script src="{% static 'wrapped/js/gsap.js' %}"></script>
         <script src="{% static 'wrapped/js/menu.js' %}"></script>
         <script src="{% static 'wrapped/js/theme.js' %}"></script>
+        <script src="{% static 'wrapped/js/messages.js' %}"></script>
         {% block scripts %}
         {% endblock %}
     </body>
