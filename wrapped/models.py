@@ -13,5 +13,12 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
+class Feedback(models.Model):
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
+    email = models.EmailField(max_length=50)
+    subject = models.CharField(max_length=100)
+    message = models.CharField(max_length=10000)
+
 
 post_save.connect(create_user_profile, sender=User)
