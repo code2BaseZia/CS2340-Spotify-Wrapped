@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, RedirectView
+from django.views.generic import CreateView, TemplateView, RedirectView, FormView
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import FeedbackForm, CustomUserCreationForm
+from .forms import FeedbackForm, CustomUserCreationForm, AccountForm
 from django.http import HttpResponseRedirect
-
+from django.contrib.auth import update_session_auth_hash
 from .models import Feedback
+from django.shortcuts import redirect
+from django.contrib.auth import logout
 
 """def get_feedback(request):
     if request.method == 'POST':
@@ -69,3 +71,69 @@ class LinkTokenView(TemplateView):
 
 class DeveloperContactView(TemplateView):
     template_name = "wrapped/pages/help.html"
+
+
+class AccountView(TemplateView, FormView):
+    template_name = "wrapped/pages/account.html"
+    form_class = AccountForm
+    success_url = reverse_lazy("wrapped:account")
+    success_message = "Account settings updated successfully."
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['username'] = self.request.user.username
+        initial['email'] = self.request.user.email
+        return initial
+
+    def form_valid(self, form):
+        user = self.request.user
+        username = form.cleaned_data['username']
+        email = form.cleaned_data['email']
+        current_password = form.cleaned_data['current_password']
+        new_password = form.cleaned_data['new_password']
+        confirm_password = form.cleaned_data['confirm_password']
+
+        if username and username != user.username:
+            user.username = username
+        if email and email != user.email:
+            user.email = email
+
+        if current_password and new_password and confirm_password:
+            if user.check_password(current_password):
+                if new_password == confirm_password:
+                    user.set_password(new_password)
+                    update_session_auth_hash(self.request, user)
+                else:
+                    form.add_error('confirm_password', 'The two password fields do not match.')
+                    return self.form_invalid(form)
+            else:
+                form.add_error('current_password', 'Your current password was entered incorrectly.')
+                return self.form_invalid(form)
+
+        user.save()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['username'] = self.request.user.username
+        context['email'] = self.request.user.email
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if "delete_account" in request.POST:
+            return self.delete_account()
+        else:
+            form = self.get_form()
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
+
+    def delete_account(self):
+        user = self.request.user
+        user.delete()
+        logout(self.request)
+        return redirect(reverse_lazy('wrapped:home'))
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))

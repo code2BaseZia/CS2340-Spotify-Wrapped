@@ -5,6 +5,8 @@ from django.contrib.auth.forms import UserCreationForm
 
 from wrapped.models import Feedback
 
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import UserChangeForm
 
 class FeedbackForm(forms.ModelForm):
     first_name = forms.CharField(label="First Name", max_length=20)
@@ -31,3 +33,12 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class AccountForm(forms.Form):
+    username = forms.CharField(max_length=150, required=False)
+    email = forms.EmailField(required=False)
+    current_password = forms.CharField(widget=forms.PasswordInput)
+    new_password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)
+
