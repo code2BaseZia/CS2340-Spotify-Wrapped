@@ -1,26 +1,29 @@
 from django.shortcuts import render
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView
-from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
-from django import forms
-from django.contrib.auth.models import User
 from django.views.generic import CreateView, TemplateView, RedirectView
 from django.contrib.messages.views import SuccessMessageMixin
+from .forms import FeedbackForm, CustomUserCreationForm
+from django.http import HttpResponseRedirect
 
+from .models import Feedback
 
-class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True, help_text='Enter a valid email address.')
+"""def get_feedback(request):
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect(reverse_lazy("/thanks/"))
+    else:
+        form = FeedbackForm()
 
-    class Meta:
-        model = User
-        fields = ("username", "email", "password1", "password2")
+    return render(request, "wrapped/pages/feedback.html", {"form": form})
+"""
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.email = self.cleaned_data["email"]
-        if commit:
-            user.save()
-        return user
+class FeedbackView(CreateView, SuccessMessageMixin):
+    form_class = FeedbackForm
+    success_url = reverse_lazy("wrapped:feedback")
+    success_message = "Your feedback has been recorded. We will get back to you shortly. o7"
+    template_name = "wrapped/pages/feedback.html"
 
 
 # Create your views here.
