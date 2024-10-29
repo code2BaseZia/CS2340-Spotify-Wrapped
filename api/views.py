@@ -4,7 +4,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from requests import Request, post
+from requests import Request, post, get
 from .util import update_or_create_user_tokens, is_spotify_authenticated, link_user_token
 
 
@@ -54,9 +54,9 @@ class IsAuthenticated(APIView):
 
     def get(self, request, format=None):
         if request.user is not None and request.user.is_authenticated:
-            is_authenticated = is_spotify_authenticated(self.request.session.session_key, user=request.user)
+            is_authenticated = is_spotify_authenticated(session_id=self.request.session.session_key, user=request.user)
         else:
-            is_authenticated = is_spotify_authenticated(self.request.session.session_key)
+            is_authenticated = is_spotify_authenticated(session_id=self.request.session.session_key)
 
         return Response({'status': is_authenticated}, status=status.HTTP_200_OK)
 
@@ -69,3 +69,29 @@ class LinkSpotifyToken(APIView):
             return Response({'message': 'Token successfully linked to user account'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'Token does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserStats(APIView):
+    authentication_classes = [SessionAuthentication]
+
+    def get(self, request, format=None):
+        type = request.GET.get('type')
+        term = request.GET.get('term')
+
+        if type is None:
+            return Response({'message': 'Please provide type to get stats'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if term is None:
+            return Response({'message': 'Please provide term for stats'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not is_spotify_authenticated(session_id=request.session.session_key, user=request.user):
+            return Response({'message': 'User is not logged into Spotify.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        response = get('https://api.spotify.com/v1/me/top/' + type, params={
+            'time_range': term,
+            'limit': '50',
+        }, headers={
+            'Authorization': 'Bearer ' + request.user.profile.token.access_token
+        }).json()
+
+        return Response(response, status=status.HTTP_200_OK)

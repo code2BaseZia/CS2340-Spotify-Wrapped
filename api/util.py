@@ -5,14 +5,15 @@ from requests import post
 import os
 
 
-def get_user_tokens(session_id, user=None):
+def get_user_tokens(session_id=None, user=None):
     if user is not None:
-        user_tokens = [user.profile.token]
-    else:
+        return user.profile.token
+    if session_id is not None:
         user_tokens = SpotifyToken.objects.filter(session=session_id)
         if not user_tokens.exists():
             return None
-    return user_tokens[0]
+        return user_tokens[0]
+    return None
 
 
 def update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token, user=None):
@@ -36,7 +37,7 @@ def update_or_create_user_tokens(session_id, access_token, token_type, expires_i
             profile.save(update_fields=['token'])
 
 
-def is_spotify_authenticated(session_id, user=None):
+def is_spotify_authenticated(session_id=None, user=None):
     tokens = get_user_tokens(session_id, user)
     if not tokens:
         return False
