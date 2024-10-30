@@ -8,7 +8,6 @@
         <div class="card-body">
             <h1 class="text-3xl font-semibold text-center">Account Settings</h1>
 
-            <!-- Username and Email fields -->
             <div class="form-group mb-4">
                 <label for="id_username">Username:</label>
                 <div class="helptext" id="id_username_helptext">150 characters or fewer. Letters, digits, and @/./+/-/_ only.</div>
@@ -27,7 +26,6 @@
                 {% endif %}
             </div>
 
-            <!-- Password section -->
             <h2 class="text-2xl font-medium mt-4">Change Password</h2>
             <div>
                 <label for="id_current_password">Current Password:</label>
@@ -62,33 +60,37 @@
                 {% endif %}
             </div>
 
-            <!-- Submit button -->
+            {% if form.non_field_errors %}
+                <div class="error text-red-600 font-bold mb-4">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <div class="card-actions justify-center">
                 <button type="submit" class="btn btn-accent">Save Changes</button>
             </div>
 
-            <!-- Delete Account Button -->
             <div class="card-actions justify-center mt-4">
                 <button type="button" class="btn btn-error" onclick="confirmDeletion()">Delete Account</button>
             </div>
         </div>
     </form>
-    <!-- Should edit confirmation button to match the theme of the website!!!! -->
+    
     <script>
         function confirmDeletion() {
             if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = "";  // Use the current URL
+                form.action = ""; 
 
-                // Create a hidden input for CSRF token
                 const csrfInput = document.createElement('input');
                 csrfInput.type = 'hidden';
-                csrfInput.name = 'csrfmiddlewaretoken';  // Name must match Django's CSRF input
-                csrfInput.value = '{{ csrf_token }}';  // Get CSRF token from Django template
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = '{{ csrf_token }}';
                 form.appendChild(csrfInput);
 
-                // Add the delete account input
                 const deleteInput = document.createElement('input');
                 deleteInput.type = 'hidden';
                 deleteInput.name = 'delete_account';

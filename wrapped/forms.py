@@ -38,7 +38,7 @@ class CustomUserCreationForm(UserCreationForm):
 class AccountForm(forms.Form):
     username = forms.CharField(max_length=150, required=False)
     email = forms.EmailField(required=False)
-    current_password = forms.CharField(widget=forms.PasswordInput)
-    new_password = forms.CharField(widget=forms.PasswordInput)
-    confirm_password = forms.CharField(widget=forms.PasswordInput)
+    current_password = forms.CharField(widget=forms.PasswordInput, required=False)
+    new_password = forms.CharField(widget=forms.PasswordInput, required=False)
+    confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
 

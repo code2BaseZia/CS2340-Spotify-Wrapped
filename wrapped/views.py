@@ -98,13 +98,17 @@ class AccountView(TemplateView, FormView):
         if email and email != user.email:
             user.email = email
 
-        if current_password and new_password and confirm_password:
+        if current_password or new_password or confirm_password:
+            if not (current_password and new_password and confirm_password):
+                form.add_error(None, 'Please fill in all password fields to change your password.')
+                return self.form_invalid(form)
+
             if user.check_password(current_password):
                 if new_password == confirm_password:
                     user.set_password(new_password)
                     update_session_auth_hash(self.request, user)
                 else:
-                    form.add_error('confirm_password', 'The two password fields do not match.')
+                    form.add_error('confirm_password', 'The new passwords do not match.')
                     return self.form_invalid(form)
             else:
                 form.add_error('current_password', 'Your current password was entered incorrectly.')
