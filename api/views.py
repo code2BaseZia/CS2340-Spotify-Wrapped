@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from requests import Request, post, get
-from .util import update_or_create_user_tokens, is_spotify_authenticated, link_user_token
+from .util import update_or_create_user_tokens, is_spotify_authenticated, link_user_token, spotify_request
 
 
 # Create your views here.
@@ -75,7 +75,6 @@ class UserStats(APIView):
     authentication_classes = [SessionAuthentication]
 
     def get(self, request, format=None):
-        type = request.GET.get('type')
         term = request.GET.get('term')
 
         if type is None:
@@ -87,11 +86,20 @@ class UserStats(APIView):
         if not is_spotify_authenticated(session_id=request.session.session_key, user=request.user):
             return Response({'message': 'User is not logged into Spotify.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        response = get('https://api.spotify.com/v1/me/top/' + type, params={
+        tracks = spotify_request(request.user, 'me/top/tracks', params={
             'time_range': term,
             'limit': '50',
-        }, headers={
-            'Authorization': 'Bearer ' + request.user.profile.token.access_token
-        }).json()
+        })
+
+        artists = spotify_request(request.user, 'me/top/artists', params={
+            'time_range': term,
+            'limit': '50',
+        })
+
+        for item in tracks['items']:
+            item['album'].pop('available_markets')
+            item.pop('available_markets')
+
+        response = {'tracks': tracks['items'], 'artists': artists['items']}
 
         return Response(response, status=status.HTTP_200_OK)
