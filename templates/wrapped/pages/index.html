@@ -14,7 +14,39 @@
     {% if not user.is_authenticated %}
         
     {% elif linked %}
-        
+        <div class="card bg-base-200 col-start-1 row-start-1 col-span-6 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Artists</h2>
+                <p>...</p>
+            </div>
+        </div>
+        <div class="card bg-base-200 col-start-7 row-start-1 col-span-6 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Tracks</h2>
+                <p>...</p>
+            </div>
+        </div>
+        <div class="card bg-base-200 col-start-1 row-start-2 col-span-4 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Albums</h2>
+                <p>...</p>
+            </div>
+        </div>
+        <div class="card bg-base-200 col-start-5 row-start-2 col-span-4 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Wrapped</h2>
+                <p>...</p>
+                <div class="card-actions justify-end">
+                    <button class="btn btn-primary">Create Wrapped</button>
+                </div>
+            </div>
+        </div>
+        <div class="card bg-base-200 col-start-9 row-start-2 col-span-4 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Genres</h2>
+                <p>...</p>
+            </div>
+        </div>
     {% else %}
         <div class="col-span-4 col-start-1 md:col-start-3 lg:col-start-5 text-center flex flex-col items-center gap-3">
             <h3>Link Your Spotify Account</h3>
