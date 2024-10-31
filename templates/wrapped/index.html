@@ -54,7 +54,7 @@
                             </summary>
                             <ul class="menu dropdown-content rounded-lg bg-base-200 !mt-5 p-2 w-max right-0 z-50 gap-1">
                                 <li><a href="{% url 'wrapped:home' %}" class="pt-3">Profile</a></li>
-                                <li><a href="{% url 'wrapped:home' %}" class="pt-3">Reset Password</a></li>
+                                <li><a href="{% url 'wrapped:account' %}" class="pt-3">Account</a></li>
                                 <li>
                                     <form method="post" action="{% url 'wrapped:logout' %}" class="p-0 flex flex-col items-stretch hover:bg-error hover:bg-opacity-20 active:!bg-error active:!bg-opacity-40">
                                         {% csrf_token %}
@@ -85,7 +85,7 @@
                     <li class="help"><a href="{% url 'wrapped:home' %}">Help</a></li>
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'wrapped:home' %}">Profile</a></li>
-                        <li><a href="{% url 'wrapped:home' %}">Reset Password</a></li>
+                        <li><a href="{% url 'wrapped:account' %}">Account</a></li>
                         <li><a href="{% url 'wrapped:logout' %}" class="text-error hover:bg-error hover:bg-opacity-20 active:!text-error active:!bg-error active:!bg-opacity-40">Log Out</a></li>
                     {% else %}
                         <li class="flex md:hidden"><a class="text-primary active:!text-primary" href="{% url 'wrapped:login' %}">Log In</a></li>

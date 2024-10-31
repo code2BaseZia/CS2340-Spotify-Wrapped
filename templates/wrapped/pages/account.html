@@ -1,0 +1,106 @@
+{% extends "wrapped/index.html" %}
+{% block title %}Account Settings{% endblock %}
+{% block css %}{% endblock %}
+
+{% block content %}
+    <form class="card bg-base-200 shadow-xl w-full max-w-md mt-16 mb-8" method="POST">
+        {% csrf_token %}
+        <div class="card-body">
+            <h1 class="text-3xl font-semibold text-center">Account Settings</h1>
+
+            <div class="form-group mb-4">
+                <label for="id_username">Username:</label>
+                <div class="helptext" id="id_username_helptext">150 characters or fewer. Letters, digits, and @/./+/-/_ only.</div>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="error text-red-600 font-bold">{{ form.username.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="id_email">Email:</label>
+                <div class="helptext" id="id_email_helptext">Enter a valid email address.</div>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="error text-red-600 font-bold">{{ form.email.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <h2 class="text-2xl font-medium mt-4">Change Password</h2>
+            <div>
+                <label for="id_current_password">Current Password:</label>
+                <div class="helptext" id="id_current_password_helptext">Enter current password</div>
+                {{ form.current_password }}
+                {% if form.current_password.errors %}
+                    <div class="error text-red-600 font-bold">{{ form.current_password.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="form-control mb-4">
+                <label for="id_new_password">New Password:</label>
+                {{ form.new_password }}
+                <div class="helptext" id="id_new_password_helptext">Enter new password</div>
+                <div class="helptext" id="id_password1_helptext">
+                    <ul>
+                        <li>Your password cannot be similar to your personal information</li>
+                        <li>Your password must contain at least 8 characters.</li>
+                        <li>Your password cannot be commonly used or guessable.</li>
+                        <li>Your password cannot be entirely numeric.</li>
+                    </ul>
+                </div>
+                {% if form.new_password.errors %}
+                    <div class="error text-red-600 font-bold">{{ form.new_password.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="mb-4">
+                <label for="id_confirm_password">Password confirmation:</label>
+                <div class="helptext" id="id_password2_helptext">Re-enter new password</div>
+                {{ form.confirm_password }}
+                {% if form.confirm_password.errors %}
+                    <div class="error text-red-600 font-bold">{{ form.confirm_password.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="error text-red-600 font-bold mb-4">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="card-actions justify-center">
+                <button type="submit" class="btn btn-accent">Save Changes</button>
+            </div>
+
+            <div class="card-actions justify-center mt-4">
+                <button type="button" class="btn btn-error" onclick="confirmDeletion()">Delete Account</button>
+            </div>
+        </div>
+    </form>
+    
+    <script>
+        function confirmDeletion() {
+            if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = ""; 
+
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = '{{ csrf_token }}';
+                form.appendChild(csrfInput);
+
+                const deleteInput = document.createElement('input');
+                deleteInput.type = 'hidden';
+                deleteInput.name = 'delete_account';
+                deleteInput.value = '1'; // Arbitrary value to identify the request
+                form.appendChild(deleteInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+{% endblock %}
+{% block scripts %}{% endblock %}
