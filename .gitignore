@@ -5,3 +5,6 @@
 db.sqlite3
 static/wrapped/js/gsap
 package-lock.json
+*/__pycache__
+*/migrations
+node_modules
