@@ -1,0 +1,22 @@
+{% extends "wrapped/index.html" %}
+{% block title %}Profile{% endblock %}
+{% block css %}{% endblock %}
+
+{% block content %}
+    <div class="profile-container flex items-center mt-16 mb-8">
+    <!-- Profile Picture -->
+    <div class="profile-pic relative w-32 h-32 rounded-full overflow-hidden cursor-pointer hover:bg-gray-700">
+        <img src="{% static 'path/to/default-profile.jpg' %}" alt="Profile Picture" class="w-full h-full object-cover">
+        <!-- Hidden input for profile picture upload -->
+        <input type="file" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" id="profile-upload">
+    </div>
+
+    <!-- Display Name Field -->
+    <div class="ml-6">
+        <label for="display_name" class="block text-lg font-medium">Display Name</label>
+        <input type="text" name="display_name" id="display_name" class="input input-bordered w-full max-w-xs" value="{{ display_name }}">
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}{% endblock %}

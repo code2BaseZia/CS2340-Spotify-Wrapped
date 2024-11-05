@@ -1,7 +1,45 @@
 {%  extends "wrapped/index.html" %}
+{% load static %}
+{% block title %}Help{% endblock %}
+{% block css %}{% endblock %}
+
 {% block content %}
-    <body>
-    <button type="button" onclick="location.href='http://localhost:8000/wrapped/feedback/'"> Contact the Developers</button>
-    </body>
+    <div class="col-span-full max-w-4xl mx-auto px-4">
+        <!-- About Section -->
+        <h1 class="text-4xl font-bold text-center mb-4">About</h1>
+        <p class="text-lg text-center mb-12">
+        We're a team of passionate developers, and designers with a mission is to bring data and design together in a fun, engaging way, letting users relive their music journey with a personalized Spotify Wrapped experience. No matter the time of year, anyone can get real-time data on their
+        </p>
+
+        <!-- Meet the Team Section -->
+        <h1 class="text-4xl font-bold text-center mb-6">Meet the Team</h1>
+        <div class="flex justify-center gap-8 mb-8">
+            <!-- Team Member Photos -->
+            <div class="team-member">
+                <img src="{% static '/wrapped/img/camtien.jpg' %}" alt="Team Member: Camtien Nguyen" class="w-32 h-32 rounded-full object-cover">
+                <p class="mt-2 font-medium">Camtien Nguyen</p>
+            </div>
+            <div class="team-member">
+                <img src="{% static 'path/to/member2.jpg' %}" alt="Team Member 2" class="w-32 h-32 rounded-full object-cover">
+                <p class="mt-2 font-medium">Member Name</p>
+            </div>
+            <div class="team-member">
+                <img src="{% static 'path/to/member3.jpg' %}" alt="Team Member 3" class="w-32 h-32 rounded-full object-cover">
+                <p class="mt-2 font-medium">Member Name</p>
+            </div>
+            <div class="team-member">
+                <img src="{% static '/wrapped' %}" alt="Team Member 4" class="w-32 h-32 rounded-full object-cover">
+                <p class="mt-2 font-medium">Member Name</p>
+            </div>
+            <div class="team-member">
+                <img src="{% static 'path/to/member5.jpg' %}" alt="Team Member 5" class="w-32 h-32 rounded-full object-cover">
+                <p class="mt-2 font-medium">Member Name</p>
+            </div>
+        </div>
+        <!-- Contact Button -->
+        <div class="text-center">
+            <button type="button" class="btn btn-accent" onclick="location.href='http://localhost:8000/wrapped/feedback/'">Contact the Developers</button>
+        </div>
+    </div>
 
 {% endblock content %}
