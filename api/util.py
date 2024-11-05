@@ -1,8 +1,10 @@
 from .models import SpotifyToken
 from django.utils import timezone
 from datetime import timedelta
-from requests import post
+from requests import post, put, get
 import os
+
+BASE_URL = 'https://api.spotify.com/v1/'
 
 
 def get_user_tokens(session_id=None, user=None):
@@ -82,3 +84,19 @@ def link_user_token(session_id, user):
     profile.save(update_fields=['token'])
 
     return True
+
+
+def spotify_request(user, endpoint, post_=False, put_=False, params=None, body=None):
+    tokens = get_user_tokens(user=user)
+    headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tokens.access_token}
+
+    if post_:
+        post(BASE_URL + endpoint, headers=headers, data=body, params=params)
+    if put_:
+        put(BASE_URL + endpoint, headers=headers, data=body, params=params)
+
+    response = get(BASE_URL + endpoint, headers=headers, params=params)
+    try:
+        return response.json()
+    except:
+        return {'Error': 'Issue with request'}
