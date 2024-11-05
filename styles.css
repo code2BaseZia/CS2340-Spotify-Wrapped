@@ -154,6 +154,10 @@
         @apply transition-colors bg-opacity-60 hover:bg-opacity-100 focus-within:bg-opacity-80;
     }
 
+    .textarea {
+        @apply transition-colors bg-opacity-60 hover:bg-opacity-100 focus-within:bg-opacity-80;
+    }
+
     .grid-content {
         @apply grid gap-3 place-content-center items-baseline grid-cols-content-sm md:grid-cols-content-md lg:grid-cols-content-lg;
     }
@@ -165,6 +169,10 @@
 
 :not(li) > form input {
     @apply input input-bordered input-accent w-full row-start-2;
+}
+
+:not(li) > form textarea {
+    @apply textarea textarea-bordered textarea-accent w-full row-start-2;
 }
 
 :not(li) > form label {
