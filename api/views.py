@@ -77,9 +77,6 @@ class UserStats(APIView):
     def get(self, request, format=None):
         term = request.GET.get('term')
 
-        if type is None:
-            return Response({'message': 'Please provide type to get stats'}, status=status.HTTP_400_BAD_REQUEST)
-
         if term is None:
             return Response({'message': 'Please provide term for stats'}, status=status.HTTP_400_BAD_REQUEST)
 
