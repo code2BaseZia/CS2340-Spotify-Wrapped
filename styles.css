@@ -159,7 +159,7 @@
     }
 
     .col-span-full {
-        @apply col-start-1 col-end-4 md:col-end-8 lg:col-end-12;
+        @apply col-start-1 col-span-4 md:col-span-8 lg:col-span-12;
     }
 }
 
