@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="{% static 'wrapped/css/index.css' %}">
         {% block css %}{% endblock %}
     </head>
-    <body class="h-screen flex flex-col items-stretch overflow-hidden">
+    <body class="h-screen flex flex-col items-stretch">
         <nav>
             <div class="navbar bg-base-200 font-title relative justify-between px-4">
                 <div class="absolute inset-0 flex justify-center z-0">
@@ -94,7 +94,7 @@
                 </ul>
             </div>
         </nav>
-        <main class="grow shrink max-h-screen relative bg-base-100 font-body p-3 overflow-y-scroll grid-content">
+        <main class="grow shrink max-h-screen relative bg-base-100 font-body w-full overflow-y-scroll grid-content">
             {% if messages %}
                 <div id="messages" class="absolute inset-x-0 top-0 flex flex-col items-center pt-2">
                     {% for message in messages %}
@@ -114,10 +114,10 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            
+
             {% block content %}
             {% endblock %}
-        
+
             <button class="btn btn-primary fixed right-4 bottom-4 size-12 flex justify-center items-center rounded-full z-20" id="theme">
                 <label class="swap swap-rotate size-8">
                     <input type="checkbox" id="themeControl" />
@@ -136,14 +136,14 @@
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/TextPlugin.min.js"></script>
-        
-        <!-- The following plugins are only available for Club GSAP members.--> 
+
+        <!-- The following plugins are only available for Club GSAP members.-->
         <script src="{% static 'wrapped/js/gsap/DrawSVGPlugin.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/MorphSVGPlugin.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/ScrollSmoother.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/ScrambleTextPlugin.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/SplitText.min.js' %}"></script>
-        
+
         <script src="{% static 'wrapped/js/gsap.js' %}"></script>
         <script src="{% static 'wrapped/js/menu.js' %}"></script>
         <script src="{% static 'wrapped/js/theme.js' %}"></script>

@@ -1,45 +1,53 @@
-{%  extends "wrapped/index.html" %}
+{% extends "wrapped/index.html" %}
 {% load static %}
 {% block title %}Help{% endblock %}
 {% block css %}{% endblock %}
 
 {% block content %}
-    <div class="col-span-full">
+    <!-- Main Container using the existing grid structure -->
+    <div class="col-span-full grid grid-cols-12 gap-4 pt-16 pb-8">
         <!-- About Section -->
-        <h1 class="text-4xl font-bold text-center mb-4">About</h1>
-        <p class="text-lg text-center mb-12">
-        We're a team of passionate developers, and designers with a mission is to bring data and design together in a fun, engaging way, letting users relive their music journey with a personalized Spotify Wrapped experience. No matter the time of year, anyone can get real-time data on their
-        </p>
+        <section id="about-section" class="col-span-12 lg:col-start-3 lg:col-span-8 text-center space-y-4">
+            <h1 class="text-4xl font-bold">About</h1>
+            <p class="text-lg">
+                We're a team of passionate developers and designers. Our mission is to bring data and design together in a fun, engaging way, letting users relive their music journey with a personalized Spotify Wrapped experience. No matter the time of year, anyone can get real-time data on their listening habits.
+            </p>
+        </section>
 
         <!-- Meet the Team Section -->
-        <h1 class="text-4xl font-bold text-center mb-6">Meet the Team</h1>
-        <div class="flex justify-center gap-8 mb-8">
-            <!-- Team Member Photos -->
-            <div class="team-member">
-                <img src="{% static '/wrapped/img/camtien.jpg' %}" alt="Team Member: Camtien Nguyen" class="w-32 h-32 rounded-full object-cover">
-                <p class="mt-2 font-medium">Camtien Nguyen</p>
+        <section id="meet-the-team-section" class="col-span-12 lg:col-start-2 lg:col-span-10 space-y-12 mt-16">
+            <h2 class="text-4xl font-bold text-center">Meet the Team</h2>
+
+            <!-- Member 1 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
+                <div class="md:order-1">
+                    <img src="{% static '/wrapped/img/camtien.jpg' %}" alt="Team Member 1" class="w-48 h-48 rounded-full object-cover mx-auto">
+                </div>
+                <div class="text-center md:text-left space-y-2 md:order-2">
+                    <h3 class="text-2xl font-semibold">Member Name 1</h3>
+                    <h4 class="text-lg font-medium">Position</h4>
+                    <p>Brief description about Member 1. This could include their role, experience, and any interesting facts.</p>
+                </div>
             </div>
-            <div class="team-member">
-                <img src="{% static 'path/to/member2.jpg' %}" alt="Team Member 2" class="w-32 h-32 rounded-full object-cover">
-                <p class="mt-2 font-medium">Member Name</p>
+
+            <!-- Member 2 (Alternate Layout) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
+                <div class="text-center md:text-right space-y-2 order-2 md:order-1">
+                    <h3 class="text-2xl font-semibold">Member Name 2</h3>
+                    <h4 class="text-lg font-medium">Position</h4>
+                    <p>Brief description about Member 2. This could include their role, experience, and any interesting facts.</p>
+                </div>
+                <div class="order-1 md:order-2">
+                    <img src="{% static '/wrapped/img/member2.jpg' %}" alt="Team Member 2" class="w-48 h-48 rounded-full object-cover mx-auto">
+                </div>
             </div>
-            <div class="team-member">
-                <img src="{% static 'path/to/member3.jpg' %}" alt="Team Member 3" class="w-32 h-32 rounded-full object-cover">
-                <p class="mt-2 font-medium">Member Name</p>
-            </div>
-            <div class="team-member">
-                <img src="{% static '/wrapped' %}" alt="Team Member 4" class="w-32 h-32 rounded-full object-cover">
-                <p class="mt-2 font-medium">Member Name</p>
-            </div>
-            <div class="team-member">
-                <img src="{% static 'path/to/member5.jpg' %}" alt="Team Member 5" class="w-32 h-32 rounded-full object-cover">
-                <p class="mt-2 font-medium">Member Name</p>
-            </div>
-        </div>
-        <!-- Contact Button -->
-        <div class="text-center">
-            <button type="button" class="btn btn-accent" onclick="location.href='http://localhost:8000/wrapped/feedback/'">Contact the Developers</button>
+        </section>
+
+        <!-- Contact Button Section -->
+        <div class="col-span-12 text-center mt-16">
+            <a href="{% url 'wrapped:feedback' %}" class="btn btn-accent">
+                Contact the Developers
+            </a>
         </div>
     </div>
-
 {% endblock content %}
