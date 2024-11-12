@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from requests import Request, post, get
 from .util import update_or_create_user_tokens, is_spotify_authenticated, link_user_token, spotify_request
-
+from collections import Counter
 
 # Create your views here.
 class AuthURL(APIView):
@@ -92,11 +92,32 @@ class UserStats(APIView):
             'time_range': term,
             'limit': '50',
         })
+#Added a dictionary here to count albums
+        albumCnt = Counter()
+        albumTitles = [track['album']['name'] for track in tracks['items']]
+        rankFactor = 1
+        for albumTitle in albumTitles:
+            albumCnt[albumTitle] += rankFactor
+            rankFactor -= .02
+
+        topAlbums = albumCnt.most_common(5)
+#Created a list for top artists and top tracks
+        genreCnt = Counter()
+        genres = [artist['genres'] for artist in artists]
+        rankFactor = 1
+        for genre in genres:
+            genreCnt[genre] += rankFactor
+            rankFactor -= .02
+
+        topGenres = genreCnt.most_common(5)
+
+        topArtists = [{'name': artist['name'], 'popularity': artist['popularity']} for artist in artists['items']]
+        topTracks = [{'name': track['name'], 'popularity': track['popularity'], 'album': track['album']['name']} for track in tracks['items']]
 
         for item in tracks['items']:
             item['album'].pop('available_markets')
             item.pop('available_markets')
 
-        response = {'tracks': tracks['items'], 'artists': artists['items']}
+        response = {'tracks': tracks['items'], 'artists': artists['items'],  'topAlbums': topAlbums, 'topArtists': topArtists, 'topTracks':topTracks, 'topGenres': topGenres,}
 
         return Response(response, status=status.HTTP_200_OK)
