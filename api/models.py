@@ -26,6 +26,6 @@ class SpotifyAlbum(models.Model):
 class SpotifyTrack(models.Model):
     id = models.CharField(max_length=50, unique=True, primary_key=True)
     title = models.CharField(max_length=100)
-    artists = models.ManyToManyField(SpotifyArtist, on_delete=models.CASCADE, related_name='tracks')
+    artists = models.ManyToManyField(SpotifyArtist, related_name='tracks')
     album = models.ForeignKey(SpotifyAlbum, on_delete=models.CASCADE, related_name='tracks')
     preview = models.URLField(max_length=500)
