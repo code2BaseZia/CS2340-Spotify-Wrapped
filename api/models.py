@@ -8,3 +8,24 @@ class SpotifyToken(models.Model):
     access_token = models.CharField(max_length=150)
     expires_in = models.DateTimeField()
     token_type = models.CharField(max_length=50)
+
+
+class SpotifyArtist(models.Model):
+    id = models.CharField(max_length=50, unique=True, primary_key=True)
+    name = models.CharField(max_length=100)
+    followers = models.IntegerField(default=0)
+    photo = models.URLField(max_length=500)
+
+
+class SpotifyAlbum(models.Model):
+    id = models.CharField(max_length=50, unique=True, primary_key=True)
+    title = models.CharField(max_length=100)
+    artists = models.ManyToManyField(SpotifyArtist, related_name='releases')
+
+
+class SpotifyTrack(models.Model):
+    id = models.CharField(max_length=50, unique=True, primary_key=True)
+    title = models.CharField(max_length=100)
+    artists = models.ManyToManyField(SpotifyArtist, on_delete=models.CASCADE, related_name='tracks')
+    album = models.ForeignKey(SpotifyAlbum, on_delete=models.CASCADE, related_name='tracks')
+    preview = models.URLField(max_length=500)

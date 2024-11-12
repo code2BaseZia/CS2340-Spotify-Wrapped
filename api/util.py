@@ -1,4 +1,4 @@
-from .models import SpotifyToken
+from .models import SpotifyToken, SpotifyTrack, SpotifyArtist, SpotifyAlbum
 from django.utils import timezone
 from datetime import timedelta
 from requests import post, put, get
@@ -100,3 +100,32 @@ def spotify_request(user, endpoint, post_=False, put_=False, params=None, body=N
         return response.json()
     except:
         return {'Error': 'Issue with request'}
+
+
+def get_or_create_artist(user, id):
+    artists = SpotifyArtist.objects.filter(id=id)
+    if artists.exists():
+        return artists.first()
+    else:
+        response = spotify_request(user, '/tracks/' + id)
+        artist = SpotifyArtist(id=id, name=response['name'], followers=response['preview_url'],
+                               photo=response['images'][0]['url'])
+        artist.save()
+        return artist
+
+
+def get_or_create_album(user, id):
+    pass
+
+
+def get_or_create_track(user, id):
+    tracks = SpotifyTrack.objects.filter(id=id)
+    if tracks.exists():
+        return tracks.first()
+    else:
+        response = spotify_request(user, '/tracks/' + id)
+        artists = [get_or_create_artist(user, item['id']) for item in response['artists']]
+        track = SpotifyTrack(id=id, title=response['name'], artists=artists,
+                             album=get_or_create_album(user, response['album']['id']), preview=response['preview_url'])
+        track.save()
+        return track
