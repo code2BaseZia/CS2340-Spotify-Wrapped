@@ -103,7 +103,9 @@ class UserStats(APIView):
         topAlbums = albumCnt.most_common(5)
 #Created a list for top artists and top tracks
         genreCnt = Counter()
-        genres = [artist['genres'] for artist in artists]
+        genres=[]
+        #counting genres (top genres) for each artist and for each genre count the genres and add them to our counter
+        genres.extend( [artist['genres'] for artist in artists['items']])
         rankFactor = 1
         for genre in genres:
             genreCnt[genre] += rankFactor
