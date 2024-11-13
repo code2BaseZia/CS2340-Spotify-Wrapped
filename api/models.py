@@ -32,9 +32,9 @@ class SpotifyTrack(models.Model):
     artists = models.ManyToManyField(SpotifyArtist, related_name='tracks')
     album = models.ForeignKey(SpotifyAlbum, on_delete=models.CASCADE, related_name='tracks')
     preview = models.URLField(max_length=500)
-    popularity = models.IntegerField()
+    popularity = models.PositiveIntegerField()
 
-    duration = models.IntegerField()
+    duration = models.PositiveIntegerField()
     key = models.IntegerField()
     mode = models.IntegerField()
     tempo = models.IntegerField()

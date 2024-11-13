@@ -5,8 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from requests import Request, post, get
-from .util import update_or_create_user_tokens, is_spotify_authenticated, link_user_token, spotify_request, create_wrapped
-from collections import Counter
+from .util import (update_or_create_user_tokens, is_spotify_authenticated, link_user_token, spotify_request,
+                   create_wrapped, get_all_user_wraps, get_wrap_by_id, calculate_top_albums_and_genres)
 
 # Create your views here.
 class AuthURL(APIView):
@@ -92,35 +92,26 @@ class UserStats(APIView):
             'time_range': term,
             'limit': '50',
         })
-#Added a dictionary here to count albums
-        albumCnt = Counter()
-        albumTitles = [track['album']['name'] for track in tracks['items']]
-        rankFactor = 1
-        for albumTitle in albumTitles:
-            albumCnt[albumTitle] += rankFactor
-            rankFactor -= .02
 
-        topAlbums = albumCnt.most_common(5)
-#Created a list for top artists and top tracks
-        genreCnt = Counter()
-        genres=[]
-        #counting genres (top genres) for each artist and for each genre count the genres and add them to our counter
-        genres.extend( [artist['genres'] for artist in artists['items']])
-        rankFactor = 1
-        for genre in genres:
-            genreCnt[genre] += rankFactor
-            rankFactor -= .02
+        top_albums, top_genres = calculate_top_albums_and_genres(tracks['items'], artists['items'])
 
-        topGenres = genreCnt.most_common(5)
-
-        topArtists = [{'name': artist['name'], 'popularity': artist['popularity']} for artist in artists['items']]
-        topTracks = [{'name': track['name'], 'popularity': track['popularity'], 'album': track['album']['name']} for track in tracks['items']]
+        albums = spotify_request(request.user, 'albums', params={
+            'ids': ','.join([album[0] for album in top_albums])
+        })
 
         for item in tracks['items']:
             item['album'].pop('available_markets')
             item.pop('available_markets')
 
-        response = {'tracks': tracks['items'], 'artists': artists['items']}
+        for item in albums['albums']:
+            item.pop('available_markets')
+            item.pop('tracks')
+
+        response = {
+            'tracks': tracks['items'], 'artists': artists['items'],
+            'albums': albums['albums'],
+            'genres': [{'name': genre[0], 'freq': genre[1] / top_genres[0][1]} for genre in top_genres]
+        }
 
         return Response(response, status=status.HTTP_200_OK)
 
@@ -141,4 +132,22 @@ class UserWrapped(APIView):
         wrapped = create_wrapped(request.user, term)
         return Response({'id': wrapped}, status=status.HTTP_200_OK)
         #except:
-        #    return Response({'message': 'Failed to wrap'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            #return Response({'message': 'Failed to wrap'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def get(self, request, format=None):
+        try:
+            wraps = get_all_user_wraps(request.user)
+            return Response({'wraps': wraps}, status=status.HTTP_200_OK)
+        except:
+            return Response({'message': 'Failed to get wraps'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class SingleWrapped(APIView):
+    authentication_classes = [SessionAuthentication]
+
+    def get(self, request, id, format=None):
+        try:
+            wrap = get_wrap_by_id(request.user, id)
+            return Response(wrap, status=status.HTTP_200_OK)
+        except:
+            return Response({'message': 'Failed to wrap'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

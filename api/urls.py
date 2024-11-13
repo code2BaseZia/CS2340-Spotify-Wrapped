@@ -16,7 +16,7 @@ Including another URLconf
 """
 
 from django.urls import path
-from .views import AuthURL, spotify_callback, IsAuthenticated, LinkSpotifyToken, UserStats, UserWrapped
+from .views import AuthURL, spotify_callback, IsAuthenticated, LinkSpotifyToken, UserStats, UserWrapped, SingleWrapped
 
 
 urlpatterns = [
@@ -25,5 +25,6 @@ urlpatterns = [
     path('authenticated', IsAuthenticated.as_view()),
     path('link', LinkSpotifyToken.as_view()),
     path('taste', UserStats.as_view()),
-    path('wrap', UserWrapped.as_view())
+    path('wrap', UserWrapped.as_view()),
+    path('wrap/<int:id>', SingleWrapped.as_view())
 ]
