@@ -94,7 +94,7 @@ class UserStats(APIView):
         })
 #Added a dictionary here to count albums
         albumCnt = Counter()
-        albumTitles = [track['album']['name'] for track in tracks['items']]
+        albumTitles = [track['album']['name'] for track in tracks['items'] if track['album']['album_type'] == 'album']
         rankFactor = 1
         for albumTitle in albumTitles:
             albumCnt[albumTitle] += rankFactor
@@ -103,13 +103,12 @@ class UserStats(APIView):
         topAlbums = albumCnt.most_common(5)
 #Created a list for top artists and top tracks
         genreCnt = Counter()
-        genres=[]
-        #counting genres (top genres) for each artist and for each genre count the genres and add them to our counter
-        genres.extend( [artist['genres'] for artist in artists['items']])
         rankFactor = 1
-        for genre in genres:
-            genreCnt[genre] += rankFactor
-            rankFactor -= .02
+        #counting genres (top genres) for each artist and for each genre count the genres and add them to our counter to decrement
+        for artist in artists['items']:
+            for genre in artist['genres']:
+                genreCnt[genre] += rankFactor
+            rankFactor -= 0.02
 
         topGenres = genreCnt.most_common(5)
 
@@ -120,6 +119,6 @@ class UserStats(APIView):
             item['album'].pop('available_markets')
             item.pop('available_markets')
 
-        response = {'tracks': tracks['items'], 'artists': artists['items'],  'topAlbums': topAlbums, 'topArtists': topArtists, 'topTracks':topTracks, 'topGenres': topGenres,}
+        response = {'tracks': tracks['items'], 'artists': artists['items'],  'topAlbums': topAlbums, 'topArtists': topArtists, 'topTracks':topTracks, 'topGenres':topGenres,}
 
         return Response(response, status=status.HTTP_200_OK)
