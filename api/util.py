@@ -1,4 +1,5 @@
 from .models import SpotifyToken, SpotifyTrack, SpotifyArtist, SpotifyAlbum
+from wrapped.models import SpotifyUserWrap, TopTrackItem, TopArtistItem
 from django.utils import timezone
 from datetime import timedelta
 from requests import post, put, get
@@ -107,15 +108,24 @@ def get_or_create_artist(user, id):
     if artists.exists():
         return artists.first()
     else:
-        response = spotify_request(user, '/tracks/' + id)
-        artist = SpotifyArtist(id=id, name=response['name'], followers=response['preview_url'],
-                               photo=response['images'][0]['url'])
+        response = spotify_request(user, 'artists/' + id)
+        artist = SpotifyArtist(id=id, name=response['name'], followers=response['followers']['total'],
+                               photo=response['images'][0]['url'], popularity=response['popularity'])
         artist.save()
         return artist
 
 
 def get_or_create_album(user, id):
-    pass
+    albums = SpotifyTrack.objects.filter(id=id)
+    if albums.exists():
+        return albums.first()
+    else:
+        response = spotify_request(user, 'albums/' + id)
+        album = SpotifyAlbum(id=id, title=response['name'], photo=response['images'][0]['url'], popularity=response['popularity'])
+        album.save()
+        for item in response['artists']:
+            album.artists.add(get_or_create_artist(user, item['id']))
+        return album
 
 
 def get_or_create_track(user, id):
@@ -123,9 +133,45 @@ def get_or_create_track(user, id):
     if tracks.exists():
         return tracks.first()
     else:
-        response = spotify_request(user, '/tracks/' + id)
-        artists = [get_or_create_artist(user, item['id']) for item in response['artists']]
-        track = SpotifyTrack(id=id, title=response['name'], artists=artists,
-                             album=get_or_create_album(user, response['album']['id']), preview=response['preview_url'])
+        response = spotify_request(user, 'tracks/' + id)
+        features = spotify_request(user, 'audio-features/' + id)
+
+        track = SpotifyTrack(id=id, title=response['name'], popularity=response['popularity'],
+                             album=get_or_create_album(user, response['album']['id']), preview=response['preview_url'],
+                             duration=features['duration_ms'], key=features['key'], mode=features['mode'],
+                             tempo=features['tempo'], loudness=features['loudness'],danceability=features['danceability'],
+                             energy=features['energy'], instrumentalness=features['instrumentalness'],
+                             speechiness=features['speechiness'], valence=features['valence'])
         track.save()
+        print(response['artists'])
+        for item in response['artists']:
+            print(item['id'])
+            track.artists.add(get_or_create_artist(user, item['id']))
         return track
+
+
+def create_wrapped(user, term):
+    wrapped = SpotifyUserWrap(user=user.profile)
+    wrapped.save()
+
+    tracks = spotify_request(user, 'me/top/tracks', params={
+        'time_range': term,
+        'limit': '50',
+    })
+
+    artists = spotify_request(user, 'me/top/artists', params={
+        'time_range': term,
+        'limit': '50',
+    })
+
+    for i in range(5):
+        track = get_or_create_track(user, tracks['items'][i]['id'])
+        top_track = TopTrackItem(wrapped=wrapped, track=track, order=i)
+
+        artist = get_or_create_artist(user, artists['items'][i]['id'])
+        top_artist = TopArtistItem(wrapped=wrapped, artist=artist, order=i)
+
+        top_track.save()
+        top_artist.save()
+
+    return wrapped.id

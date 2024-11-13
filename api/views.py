@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from requests import Request, post, get
-from .util import update_or_create_user_tokens, is_spotify_authenticated, link_user_token, spotify_request
+from .util import update_or_create_user_tokens, is_spotify_authenticated, link_user_token, spotify_request, create_wrapped
 
 
 # Create your views here.
@@ -100,3 +100,22 @@ class UserStats(APIView):
         response = {'tracks': tracks['items'], 'artists': artists['items']}
 
         return Response(response, status=status.HTTP_200_OK)
+
+
+class UserWrapped(APIView):
+    authentication_classes = [SessionAuthentication]
+
+    def post(self, request, format=None):
+        term = request.data.get('term')
+
+        if term is None:
+            return Response({'message': 'Please provide term for stats'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not is_spotify_authenticated(session_id=request.session.session_key, user=request.user):
+            return Response({'message': 'User is not logged into Spotify.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        #try:
+        wrapped = create_wrapped(request.user, term)
+        return Response({'id': wrapped}, status=status.HTTP_200_OK)
+        #except:
+        #    return Response({'message': 'Failed to wrap'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -26,22 +26,21 @@ post_save.connect(create_user_profile, sender=User)
 
 
 class SpotifyUserWrap(models.Model):
-    THEME = {
-        "no": "None",
-        "ch": "Christmas",
-        "hw": "Halloween",
-        "ea": "Easter",
-    }
+    THEME = (
+        ("no", "None"),
+        ("ch", "Christmas"),
+        ("hw", "Halloween"),
+        ("ea", "Easter"),
+    )
 
-    wrapped_id = models.CharField(max_length=50, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    theme = models.CharField(default="no", max_length=2, choices=THEME.items())
+    theme = models.CharField(default="no", max_length=2, choices=THEME)
     # When the user who generated these wraps deletes their account, the on_delete will delete their wraps
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='wraps')
 
 
 class TopTrackItem(models.Model):
-    wrapped = models.ForeignKey(SpotifyTrack, on_delete=models.CASCADE, related_name='top_tracks')
+    wrapped = models.ForeignKey(SpotifyUserWrap, on_delete=models.CASCADE, related_name='top_tracks')
     track = models.ForeignKey(SpotifyTrack, on_delete=models.CASCADE)
     order = models.PositiveIntegerField()
 
