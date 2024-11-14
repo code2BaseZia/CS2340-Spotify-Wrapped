@@ -9,6 +9,7 @@ from django.contrib.auth import update_session_auth_hash
 from .models import Feedback
 from django.shortcuts import redirect
 from django.contrib.auth import logout
+from django.contrib import messages
 
 """def get_feedback(request):
     if request.method == 'POST':
@@ -108,13 +109,14 @@ class AccountView(TemplateView, FormView):
                     user.set_password(new_password)
                     update_session_auth_hash(self.request, user)
                 else:
-                    form.add_error('confirm_password', 'The new passwords do not match.')
+                    messages.error(self.request, "The new passwords do not match. Try again.")
                     return self.form_invalid(form)
             else:
-                form.add_error('current_password', 'Your current password was entered incorrectly.')
+                messages.error(self.request, "Your current password was entered incorrectly.")
                 return self.form_invalid(form)
 
         user.save()
+        messages.success(self.request, "Your account information has been updated successfully!")
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
