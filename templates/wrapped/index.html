@@ -94,7 +94,7 @@
                 </ul>
             </div>
         </nav>
-        <main class="grow shrink max-h-screen relative bg-base-100 font-body p-3 overflow-y-scroll grid-content">
+        <main class="grow shrink max-h-screen relative bg-base-100 font-body p-3 pt-16 overflow-y-scroll">
             {% if messages %}
                 <div id="messages" class="absolute inset-x-0 top-0 flex flex-col items-center pt-2">
                     {% for message in messages %}
@@ -114,9 +114,11 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            
-            {% block content %}
-            {% endblock %}
+            <div class="grid-content w-full">
+                {% block content %}
+                {% endblock %}
+            </div>
+
         
             <button class="btn btn-primary fixed right-4 bottom-4 size-12 flex justify-center items-center rounded-full z-20" id="theme">
                 <label class="swap swap-rotate size-8">
