@@ -114,7 +114,6 @@ class AccountView(TemplateView, FormView):
             else:
                 messages.error(self.request, "Your current password was entered incorrectly.")
                 return self.form_invalid(form)
-
         user.save()
         messages.success(self.request, "Your account information has been updated successfully!")
         return super().form_valid(form)
