@@ -4,49 +4,98 @@
 {% block css %}{% endblock %}
 
 {% block content %}
+    <div class="col-span-full space-y-16">
     <!-- About Section -->
         <section id="about-section" class="col-span-full">
-            <h1 class="text-4xl font-bold text-center">About</h1>
-            <p class="text-lg text-center">
-                We're a team of passionate developers and designers. Our mission is to bring data and design together in a fun, engaging way, letting users relive their music journey with a personalized Spotify Wrapped experience. No matter the time of year, anyone can get real-time data on their listening habits.
+            <h1 class="text-4xl font-bold text-center mb-4">About</h1>
+            <p class="text-lg mb-8 max-w-3xl mx-auto text-center">
+                We're a team of passionate developers and designers. Our mission is to bring data and design together in
+                a fun, engaging way, letting users relive their music journey with a personalized Spotify Wrapped
+                experience. No matter the time of year, anyone can get real-time data on their listening habits.
             </p>
         </section>
 
 
         <!-- Meet the Team Section -->
         <section id="meet-the-team-section" class="col-span-full">
-            <h2 class="text-4xl font-bold text-center">Meet the Team</h2>
+            <h2 class="text-4xl font-bold text-center mb-8">Meet the Team</h2>
 
-            <!-- Member 1 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
-                <div class="md:order-1">
-                    <img src="{% static '/wrapped/img/camtien.jpg' %}" alt="Team Member 1" class="w-48 h-48 rounded-full object-cover mx-auto">
-                </div>
-                <div class="text-center md:text-left space-y-2 md:order-2">
-                    <h3 class="text-2xl font-semibold">Member Name 1</h3>
-                    <h4 class="text-lg font-medium">Position</h4>
-                    <p>Brief description about Member 1. This could include their role, experience, and any interesting facts.</p>
-                </div>
+             <!-- Member 1 -->
+        <div class="flex flex-col md:flex-row items-center gap-8 mb-8 px-4 md:px-0">
+            <div class="flex-shrink-0">
+                <img src="{% static '/wrapped/img/camtien.jpg' %}" alt="Team Member 1" class="w-48 h-48 rounded-full
+                object-cover">
             </div>
+            <div class="text-center md:text-left space-y-2 flex-grow">
+                <h3 class="text-2xl font-semibold">Camtien Nguyen</h3>
+                <h4 class="text-lg font-medium">Front-End Developer</h4>
+                <p>Hi I'm Camtien! As the front-end developer, I am responsible for designing and implementing the user
+                    interface, ensuring smooth, visually appealing, and intuitive user experience. My role involves
+                    working closely with design specifications to create responsive layouts and style components using
+                    Figma, Tailwind CSS, and GSAP. I work closely with the back-end team to integrate design and data
+                    seamlessly for you!
+                </p>
+            </div>
+        </div>
 
-            <!-- Member 2 (Alternate Layout) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
-                <div class="text-center md:text-right space-y-2 order-2 md:order-1">
-                    <h3 class="text-2xl font-semibold">Member Name 2</h3>
-                    <h4 class="text-lg font-medium">Position</h4>
-                    <p>Brief description about Member 2. This could include their role, experience, and any interesting facts.</p>
-                </div>
-                <div class="order-1 md:order-2">
-                    <img src="{% static '/wrapped/img/member2.jpg' %}" alt="Team Member 2" class="w-48 h-48 rounded-full object-cover mx-auto">
-                </div>
+            <!-- Member 2 (Matthew) -->
+        <div class="flex flex-col md:flex-row-reverse items-center gap-8 mb-12">
+            <div class="flex-shrink-0 mb-4 md:mb-0">
+                <img src="{% static '/wrapped/img/dev_matthew.png' %}" alt="Team Member 2, Matthew" class="w-48 h-48 rounded-full object-cover">
             </div>
+            <div class="text-center md:text-left space-y-2 flex-grow">
+                <h3 class="text-2xl font-semibold">Matthew Nehme</h3>
+                <h4 class="text-lg font-medium">Full-Stack Developer</h4>
+                <p>Matthew's info here</p>
+            </div>
+        </div>
+
+            <!-- Member 3 (Aidan) -->
+        <div class="flex flex-col md:flex-row items-center gap-8 mb-12">
+            <div class="flex-shrink-0">
+                <img src="{% static '/wrapped/img/' %}" alt="Team Member 3, Aidan" class="w-48 h-48 rounded-full object-cover">
+            </div>
+            <div class="text-center md:text-left space-y-2 flex-grow">
+                <h3 class="text-2xl font-semibold">Aidan Mascoli</h3>
+                <h4 class="text-lg font-medium">Full-Stack Developer</h4>
+                <p> Aidan's info here
+                </p>
+            </div>
+        </div>
+
+            <!-- Member 4 (Temi) -->
+        <div class="flex flex-col md:flex-row-reverse items-center gap-8 mb-12">
+            <div class="flex-shrink-0 mb-4 md:mb-0">
+                <img src="{% static '/wrapped/img/TemiPic.jpg' %}" alt="Team Member 4, Temi" class="w-48 h-48 rounded-full object-cover">
+            </div>
+            <div class="text-center md:text-left space-y-2 flex-grow">
+            <h3 class="text-2xl font-semibold">Temi Cole</h3>
+            <h4 class="text-lg font-medium">Backend Developer</h4>
+            <p>Temi's info here</p>
+            </div>
+        </div>
+
+            <!-- Member 5 (Elijah) -->
+        <div class="flex flex-col md:flex-row items-center gap-8 mb-12">
+            <div class="flex-shrink-0">
+                <img src="{% static '/wrapped/img/dev_elijah.jpg' %}" alt="Team Member 5, Elijah" class="w-48 h-48 rounded-full object-cover">
+            </div>
+            <div class="text-center md:text-left space-y-2 flex-grow">
+                <h3 class="text-2xl font-semibold">Elijah Rabinovich</h3>
+                <h4 class="text-lg font-medium">Backend Developer</h4>
+                <p>Elijah's info here
+                </p>
+            </div>
+        </div>
+
         </section>
 
         <!-- Contact Button Section -->
-        <div class="col-span-12 text-center mt-16">
-            <a href="{% url 'wrapped:feedback' %}" class="btn btn-accent">
+        <div class="col-span-12 text-center mt-16 mb-12 pt-4">
+            <a href="{% url 'wrapped:feedback' %}" class="btn btn-accent mb-8">
                 Contact the Developers
             </a>
         </div>
     </div>
+
 {% endblock content %}
