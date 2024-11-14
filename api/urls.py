@@ -26,5 +26,5 @@ urlpatterns = [
     path('link', LinkSpotifyToken.as_view()),
     path('taste', UserStats.as_view()),
     path('wrap', UserWrapped.as_view()),
-    path('wrap/<int:id>', SingleWrapped.as_view())
+    path('wrap/<int:id>', SingleWrapped.as_view(), name='wrap'),
 ]

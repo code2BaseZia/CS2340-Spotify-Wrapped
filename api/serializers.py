@@ -1,0 +1,87 @@
+from rest_framework import serializers
+from wrapped.models import (SpotifyUserWrap, TopTrackItem, TopArtistItem, TopAlbumItem, TopGenreItem, TopArtistOfGenre,
+                            TopTrackOfAlbum)
+from .models import SpotifyTrack, SpotifyArtist, SpotifyAlbum
+
+
+class TrackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpotifyTrack
+        fields = '__all__'
+        depth = 2
+
+
+class ArtistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpotifyArtist
+        fields = '__all__'
+        depth = 2
+
+
+class AlbumSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpotifyAlbum
+        fields = '__all__'
+
+
+class TrackOfAlbumSerializer(serializers.ListSerializer):
+    child = TrackSerializer(read_only=True)
+
+    def to_representation(self, instance):
+        return [self.child.to_representation(item.track) for item in instance.all()]
+
+
+class ArtistOfGenreSerializer(serializers.ListSerializer):
+    child = ArtistSerializer(read_only=True)
+
+    def to_representation(self, instance):
+        return [self.child.to_representation(item.artist) for item in instance.all()]
+
+    class Meta:
+        depth = 2
+
+
+class AlbumItemSerializer(serializers.ModelSerializer):
+    top_tracks = TrackOfAlbumSerializer(read_only=True)
+
+    class Meta:
+        model = TopAlbumItem
+        fields = ['album', 'top_tracks']
+        depth = 2
+
+
+class GenreItemSerializer(serializers.ModelSerializer):
+    top_artists = ArtistOfGenreSerializer(read_only=True)
+
+    class Meta:
+        model = TopGenreItem
+        fields = ['name', 'top_artists']
+        depth = 2
+
+
+class TrackItemSerializer(serializers.ListSerializer):
+    child = TrackSerializer(read_only=True)
+
+    def to_representation(self, instance):
+        return [self.child.to_representation(item.track) for item in instance.all()]
+
+
+class ArtistItemSerializer(serializers.ListSerializer):
+    child = ArtistSerializer(read_only=True)
+
+    def to_representation(self, instance):
+        return [self.child.to_representation(item.artist) for item in instance.all()]
+
+
+class WrappedSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(source='user.user.username', read_only=True)
+    url = serializers.HyperlinkedIdentityField(view_name='wrap', lookup_field='id')
+    top_tracks = TrackItemSerializer(read_only=True)
+    top_artists = ArtistItemSerializer(read_only=True)
+    top_albums = AlbumItemSerializer(many=True, read_only=True)
+    top_genres = GenreItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = SpotifyUserWrap
+        fields = '__all__'
+        depth = 3

@@ -16,6 +16,7 @@ class SpotifyArtist(models.Model):
     followers = models.IntegerField(default=0)
     photo = models.URLField(max_length=500)
     popularity = models.IntegerField()
+    url = models.URLField(max_length=500)
 
 
 class SpotifyAlbum(models.Model):
@@ -24,6 +25,7 @@ class SpotifyAlbum(models.Model):
     artists = models.ManyToManyField(SpotifyArtist, related_name='releases')
     photo = models.URLField(max_length=500)
     popularity = models.IntegerField()
+    url = models.URLField(max_length=500)
 
 
 class SpotifyTrack(models.Model):
@@ -33,6 +35,7 @@ class SpotifyTrack(models.Model):
     album = models.ForeignKey(SpotifyAlbum, on_delete=models.CASCADE, related_name='tracks')
     preview = models.URLField(max_length=500)
     popularity = models.PositiveIntegerField()
+    url = models.URLField(max_length=500)
 
     duration = models.PositiveIntegerField()
     key = models.IntegerField()

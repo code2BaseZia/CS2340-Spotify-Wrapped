@@ -7,6 +7,7 @@ from rest_framework import status
 from requests import Request, post, get
 from .util import (update_or_create_user_tokens, is_spotify_authenticated, link_user_token, spotify_request,
                    create_wrapped, get_all_user_wraps, get_wrap_by_id, calculate_top_albums_and_genres)
+from .serializers import WrappedSerializer
 
 # Create your views here.
 class AuthURL(APIView):
@@ -128,16 +129,17 @@ class UserWrapped(APIView):
         if not is_spotify_authenticated(session_id=request.session.session_key, user=request.user):
             return Response({'message': 'User is not logged into Spotify.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        #try:
-        wrapped = create_wrapped(request.user, term)
-        return Response({'id': wrapped}, status=status.HTTP_200_OK)
-        #except:
-            #return Response({'message': 'Failed to wrap'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        try:
+            wrapped = create_wrapped(request.user, term)
+            return Response({'id': wrapped}, status=status.HTTP_200_OK)
+        except:
+            return Response({'message': 'Failed to wrap'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def get(self, request, format=None):
         try:
             wraps = get_all_user_wraps(request.user)
-            return Response({'wraps': wraps}, status=status.HTTP_200_OK)
+            resp = WrappedSerializer(wraps, many=True, context={'request': request})
+            return Response({'wraps': resp.data}, status=status.HTTP_200_OK)
         except:
             return Response({'message': 'Failed to get wraps'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -146,8 +148,9 @@ class SingleWrapped(APIView):
     authentication_classes = [SessionAuthentication]
 
     def get(self, request, id, format=None):
-        try:
-            wrap = get_wrap_by_id(request.user, id)
-            return Response(wrap, status=status.HTTP_200_OK)
-        except:
-            return Response({'message': 'Failed to wrap'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        #try:
+        wrap = get_wrap_by_id(request.user, id)
+        resp = WrappedSerializer(wrap, context={'request': request})
+        return Response(resp.data, status=status.HTTP_200_OK)
+        #except:
+            #return Response({'message': 'Failed to wrap'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

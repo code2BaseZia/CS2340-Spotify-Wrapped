@@ -1,7 +1,8 @@
 from django.db import transaction
 
 from .models import SpotifyToken, SpotifyTrack, SpotifyArtist, SpotifyAlbum
-from wrapped.models import SpotifyUserWrap, TopTrackItem, TopArtistItem, TopAlbumItem, TopGenreItem, TopArtistOfGenre
+from wrapped.models import (SpotifyUserWrap, TopTrackItem, TopArtistItem, TopAlbumItem, TopGenreItem, TopArtistOfGenre,
+                            TopTrackOfAlbum)
 from django.utils import timezone
 from datetime import timedelta
 from requests import post, put, get
@@ -116,7 +117,7 @@ def get_or_create_artist(user, id, data=None):
         response = spotify_request(user, 'artists/' + id) if data is None else data
         image = static('wrapped/img/placeholder.png') if len(response['images']) == 0 else response['images'][0]['url']
         artist = SpotifyArtist(id=id, name=response['name'], followers=response['followers']['total'],
-                               photo=image, popularity=response['popularity'])
+                               photo=image, popularity=response['popularity'], url=response['external_urls']['spotify'])
         artist.save()
         return artist
 
@@ -128,7 +129,8 @@ def get_or_create_album(user, id, data=None):
     else:
         response = spotify_request(user, 'albums/' + id) if data is None else data
         image = static('wrapped/img/placeholder.png') if len(response['images']) == 0 else response['images'][0]['url']
-        album = SpotifyAlbum(id=id, title=response['name'], photo=image, popularity=response['popularity'])
+        album = SpotifyAlbum(id=id, title=response['name'], photo=image, popularity=response['popularity'],
+                             url=response['external_urls']['spotify'])
         album.save()
         for item in response['artists']:
             album.artists.add(get_or_create_artist(user, item['id']))
@@ -144,8 +146,9 @@ def get_or_create_track(user, id, data=None):
 
         track = SpotifyTrack(id=id, title=response['name'], popularity=response['popularity'],
                              album=get_or_create_album(user, response['album']['id']), preview=response['preview_url'],
-                             duration=features['duration_ms'], key=features['key'], mode=features['mode'],
-                             tempo=features['tempo'], loudness=features['loudness'],danceability=features['danceability'],
+                             url=response['external_urls']['spotify'], duration=features['duration_ms'],
+                             key=features['key'], mode=features['mode'], tempo=features['tempo'],
+                             loudness=features['loudness'],danceability=features['danceability'],
                              energy=features['energy'], instrumentalness=features['instrumentalness'],
                              speechiness=features['speechiness'], valence=features['valence'])
         track.save()
@@ -158,17 +161,18 @@ def get_or_create_track(user, id, data=None):
 
 def create_items(user, tracks=None, artists=None, albums=None):
     if artists is not None:
-        artists = spotify_request(user, 'artists', params={'ids': ','.join(artists)})
-        for artist in artists['artists']:
+        artists_data = spotify_request(user, 'artists', params={'ids': ','.join(artists)})
+        for artist in artists_data['artists']:
             get_or_create_artist(user, artist['id'], artist)
     if albums is not None:
-        albums = spotify_request(user, 'albums', params={'ids': ','.join(albums)})
-        for album in albums['albums']:
+        albums_data = spotify_request(user, 'albums', params={'ids': ','.join(albums)})
+        for album in albums_data['albums']:
             get_or_create_album(user, album['id'], album)
     if tracks is not None:
-        tracks = spotify_request(user, 'tracks', params={'ids': ','.join(tracks)})
-        for track in tracks['tracks']:
-            get_or_create_track(user, track['id'], track)
+        tracks_data = spotify_request(user, 'tracks', params={'ids': ','.join(tracks)})
+        features = spotify_request(user, 'audio-features', params={'ids': ','.join(tracks)})
+        for i in range(len(tracks)):
+            get_or_create_track(user, tracks[i], (tracks_data['tracks'][i], features['audio_features'][i]))
 
 
 def calculate_top_albums_and_genres(tracks, artists):
@@ -226,7 +230,7 @@ def add_top_albums_and_genres(user, wrapped, albums, genres):
 
 
 def get_top_artists_per_genre(user, wrapped, artists, genres):
-    top_artists_of_genre = [[]] * 10
+    top_artists_of_genre = [[], [], [], [], [], [], [], [], [], []]
     for artist in artists:
         intersection = set(artist['genres']) & set(genres)
         if len(intersection) > 0:
@@ -235,7 +239,7 @@ def get_top_artists_per_genre(user, wrapped, artists, genres):
                 index = genres.index(item)
                 new_index = len(top_artists_of_genre[index])
                 if new_index < 3:
-                    genre_item = TopGenreItem.objects.filter(wrapped=wrapped, name=item).first()
+                    genre_item = TopGenreItem.objects.filter(wrapped=wrapped, order=index).first()
                     genre_artist = TopArtistOfGenre(genre=genre_item, artist=api_artist, order=new_index)
                     genre_artist.save()
                     top_artists_of_genre[index].append(api_artist)
@@ -359,10 +363,20 @@ def create_wrapped(user, term):
             if top_track_by_top_artist_of_top_genre is None:
                 top_track_by_top_artist_of_top_genre = api_track
 
-        if track['album']['id'] == albums[0]:
-            tracks_in_top_album += 1
-            if top_track_in_top_album is None:
-                top_track_in_top_album = api_track
+        if track['album']['id'] in albums:
+            album_id = track['album']['id']
+            index = albums.index(album_id)
+
+            if index == 0:
+                tracks_in_top_album += 1
+                if top_track_in_top_album is None:
+                    top_track_in_top_album = api_track
+
+            album_item = TopAlbumItem.objects.filter(wrapped=wrapped, order=index).first()
+            new_index = album_item.top_tracks.count()
+            if new_index < 3:
+                album_track = TopTrackOfAlbum(album=album_item, track=api_track, order=new_index)
+                album_track.save()
 
     average_popularity /= 50
 
@@ -406,7 +420,7 @@ def create_wrapped(user, term):
 
 def get_all_user_wraps(user):
     wraps = SpotifyUserWrap.objects.filter(user=user.profile).all()
-    return [str(wrap) for wrap in wraps]
+    return wraps
 
 
 def get_wrap_by_id(user, wrap_id):
@@ -416,5 +430,5 @@ def get_wrap_by_id(user, wrap_id):
         wrap = SpotifyUserWrap.objects.filter(Q(id=wrap_id), Q(public=True) | Q(user=user.profile))
 
     if not wrap.exists():
-        return {'error': 'Wrap does not exist, or is private and not owned by you'}
-    return {'wrap': str(wrap.first())}
+        return 'Wrap does not exist, or is private and not owned by you'
+    return wrap.first()
