@@ -10,7 +10,7 @@ from .models import Feedback
 from django.shortcuts import redirect
 from django.contrib.auth import logout
 from django.contrib import messages
-
+from django.contrib import messages
 """def get_feedback(request):
     if request.method == 'POST':
         form = FeedbackForm(request.POST)
@@ -143,3 +143,7 @@ class AccountView(TemplateView, FormView):
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
+
+
+class WrappedView(TemplateView):
+    template_name = "wrapped/pages/wrappedview.html"
