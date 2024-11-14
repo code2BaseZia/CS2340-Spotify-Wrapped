@@ -141,3 +141,7 @@ class AccountView(TemplateView, FormView):
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
+
+
+class WrappedView(TemplateView):
+    template_name = "wrapped/pages/wrappedview.html"

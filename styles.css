@@ -159,7 +159,7 @@
     }
 
     .grid-content {
-        @apply grid gap-3 place-content-center items-baseline grid-cols-content-sm md:grid-cols-content-md lg:grid-cols-content-lg;
+        @apply grid gap-3 place-content-center grid-cols-content-sm md:grid-cols-content-md lg:grid-cols-content-lg;
     }
 
     .col-span-full {
