@@ -94,7 +94,8 @@ class UserStats(APIView):
         })
 #Added a dictionary here to count albums
         albumCnt = Counter()
-        albumTitles = [track['album']['name'] for track in tracks['items'] if track['album']['album_type'] == 'album']
+        albumTitles = [track['album']['name'] for track in tracks['items'] if track['album']['album_type'] == 'album' or
+       (track['album']['album_type'] == 'single' and track['album']['total_tracks'] > 1)]
         rankFactor = 1
         for albumTitle in albumTitles:
             albumCnt[albumTitle] += rankFactor
