@@ -115,9 +115,13 @@
         <div class="hidden lg:card bg-base-200 col-start-5 row-start-2 col-span-4 shadow-xl h-72">
             <div class="card-body">
                 <h2 class="card-title">Wrapped</h2>
-                <p>...</p>
-                <div class="card-actions justify-end">
-                    <button class="btn btn-primary">Create Wrapped</button>
+                <div class="grow shrink relative flex flex-col items-center">
+                    <div class="aspect-square h-full relative z-20 scale-90"><div class="transition-transform bg-primary size-full hover:scale-110 duration-500 shadow-lg"></div></div>
+                    <div class="aspect-square h-full absolute z-10 scale-75 -translate-x-2/3 translate-y-1.5 hover:z-30"><div class="transition-transform bg-secondary size-full hover:scale-125 hover:-translate-y-2 duration-500 shadow-lg"></div></div>
+                    <div class="aspect-square h-full absolute z-10 scale-75 translate-x-2/3 translate-y-1.5 hover:z-30"><div class="transition-transform bg-accent size-full hover:scale-125 hover:-translate-y-2 duration-500 shadow-lg"></div></div>
+                </div>
+                <div class="card-actions justify-center">
+                    <button class="btn btn-primary create-wrapped min-w-36">Create Wrapped</button>
                 </div>
             </div>
         </div>
@@ -151,7 +155,7 @@
             </div>
         </div>
         <div class="lg:hidden row-start-6 md:row-start-4 col-span-full flex flex-row justify-center">
-            <button class="btn btn-primary">Create Wrapped</button>
+            <button class="btn btn-primary create-wrapped min-w-36">Create Wrapped</button>
         </div>
         <div class="row-start-5 md:row-start-3 col-span-4 col-start-1 md:col-start-3 lg:col-start-5 flex flex-row justify-center">
             <div class="btm-nav relative h-10 bg-transparent">

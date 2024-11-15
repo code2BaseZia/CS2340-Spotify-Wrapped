@@ -6,10 +6,14 @@ const tables = {
     genres: document.getElementById('genres')
 }
 const volume = document.getElementById('volume')
+const create = document.getElementsByClassName('create-wrapped')
+
 const audio = new Audio();
 let lastControls = null;
 let listener = null;
 let interval = null;
+
+let term = 'medium';
 
 function handlePlayClick(target) {
     const controls = {
@@ -160,10 +164,23 @@ function updateStats(data) {
 
 radios.forEach((radio) => {
     radio.addEventListener('change', (e) => {
-        if (e.target.checked) getStats(e.target.value).then(updateStats)
+        if (e.target.checked) {
+            term = e.target.value
+            getStats(term).then(updateStats)
+        }
     })
 })
 
 volume.addEventListener('input', (e) => audio.volume = e.target.value / 100)
+
+for (let button of create) {
+    button.addEventListener('click', (e) => {
+        e.target.innerHTML = '<span class="loading loading-spinner loading-md"></span>'
+        e.target.disabled = true
+        createWrap(term).then((id) => {
+            window.location.href = '../api/wrap/' + id;
+        })
+    })
+}
 
 document.addEventListener("DOMContentLoaded", () => getStats('medium').then(updateStats))
