@@ -85,12 +85,12 @@ class UserStats(APIView):
             return Response({'message': 'User is not logged into Spotify.'}, status=status.HTTP_401_UNAUTHORIZED)
 
         tracks = spotify_request(request.user, 'me/top/tracks', params={
-            'time_range': term,
+            'time_range': term + '_term',
             'limit': '50',
         })
 
         artists = spotify_request(request.user, 'me/top/artists', params={
-            'time_range': term,
+            'time_range': term + '_term',
             'limit': '50',
         })
 
@@ -130,7 +130,7 @@ class UserWrapped(APIView):
             return Response({'message': 'User is not logged into Spotify.'}, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            wrapped = create_wrapped(request.user, term)
+            wrapped = create_wrapped(request.user, term + '_term')
             return Response({'id': wrapped}, status=status.HTTP_200_OK)
         except:
             return Response({'message': 'Failed to wrap'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -148,9 +148,9 @@ class SingleWrapped(APIView):
     authentication_classes = [SessionAuthentication]
 
     def get(self, request, id, format=None):
-        #try:
-        wrap = get_wrap_by_id(request.user, id)
-        resp = WrappedSerializer(wrap, context={'request': request})
-        return Response(resp.data, status=status.HTTP_200_OK)
-        #except:
-            #return Response({'message': 'Failed to wrap'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        try:
+            wrap = get_wrap_by_id(request.user, id)
+            resp = WrappedSerializer(wrap, context={'request': request})
+            return Response(resp.data, status=status.HTTP_200_OK)
+        except:
+            return Response({'message': 'Failed to wrap'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

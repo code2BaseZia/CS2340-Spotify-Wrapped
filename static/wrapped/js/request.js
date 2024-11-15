@@ -15,3 +15,8 @@ async function getLinkToken() {
         window.location.replace(url);
     }
 }
+
+async function getStats(term) {
+    const response = await fetch(`http://localhost:8000/api/taste?term=${term}`);
+    return await response.json();
+}
