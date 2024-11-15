@@ -20,3 +20,9 @@ async function getStats(term) {
     const response = await fetch(`http://localhost:8000/api/taste?term=${term}`);
     return await response.json();
 }
+
+async function getProfilePicture() {
+    const response = await fetch('http://localhost:8000/api/picture');
+    const json = await response.json();
+    return json.url;
+}

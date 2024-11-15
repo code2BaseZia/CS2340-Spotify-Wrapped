@@ -154,3 +154,18 @@ class SingleWrapped(APIView):
             return Response(resp.data, status=status.HTTP_200_OK)
         except:
             return Response({'message': 'Failed to wrap'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ProfilePicture(APIView):
+    authentication_classes = [SessionAuthentication]
+
+    def get(self, request, format=None):
+        if not is_spotify_authenticated(session_id=request.session.session_key, user=request.user):
+            return Response({'message': 'User is not logged into Spotify.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            response = spotify_request(request.user, 'me')
+            image = response['images'][0]['url']
+            return Response({'url': image}, status=status.HTTP_200_OK)
+        except:
+            return Response({'message': 'Failed to get profile picture'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

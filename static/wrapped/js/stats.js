@@ -5,40 +5,59 @@ const tables = {
     artists: document.getElementById('artists'),
     genres: document.getElementById('genres')
 }
+const volume = document.getElementById('volume')
 const audio = new Audio();
 let lastControls = null;
+let listener = null;
+let interval = null;
 
 function handlePlayClick(target) {
     const controls = {
         play: target.getElementsByClassName('play').item(0),
-        pause: target.getElementsByClassName('pause').item(0)
-    }
+        pause: target.getElementsByClassName('pause').item(0),
+        progress: target.getElementsByClassName('radial-progress').item(0)
+    };
 
     if (audio.currentSrc === target.getAttribute('data-preview')) {
         if (audio.paused) {
-            audio.play()
-            controls.play.classList.add('hidden')
-            controls.pause.classList.remove('hidden')
+            audio.play();
+            controls.play.classList.add('hidden');
+            controls.pause.classList.remove('hidden');
+            controls.progress.classList.remove('invisible');
+            setInterval(listener, 10);
         }
         else {
             audio.pause()
-            controls.play.classList.remove('hidden')
-            controls.pause.classList.add('hidden')
+            controls.play.classList.remove('hidden');
+            controls.pause.classList.add('hidden');
+            controls.progress.classList.add('invisible');
+            clearInterval(interval);
         }
     } else {
         audio.pause();
         audio.src = target.getAttribute('data-preview');
         audio.play();
-        if (lastControls) {
-            lastControls.play.classList.remove('hidden')
-            lastControls.pause.classList.add('hidden')
+
+        if (interval) {
+            clearInterval(interval);
         }
-        controls.play.classList.add('hidden')
-        controls.pause.classList.remove('hidden')
+        listener = () => controls.progress.style.setProperty('--value', audio.currentTime / audio.duration * 100);
+        interval = setInterval(listener, 10);
+
+        if (lastControls) {
+            lastControls.play.classList.remove('hidden');
+            lastControls.pause.classList.add('hidden');
+            lastControls.progress.classList.add('invisible');
+        }
+        controls.play.classList.add('hidden');
+        controls.pause.classList.remove('hidden');
+        controls.progress.classList.remove('invisible');
         lastControls = controls;
         audio.addEventListener('ended', () => {
-            controls.play.classList.remove('hidden')
-            controls.pause.classList.add('hidden')
+            controls.play.classList.remove('hidden');
+            controls.pause.classList.add('hidden');
+            controls.progress.classList.add('invisible');
+            clearInterval(interval);
         })
     }
 }
@@ -51,15 +70,16 @@ function updateStats(data) {
                 <div class="flex items-center gap-3">
                     <div class="avatar relative">
                         <div class="h-12 w-12 relative z-10">
-                            <img src="${track.album.images[0]?.url}" alt="Album Photo"/>
+                            <img src="${track.album.images[0]?.url || placeholder}" alt="Album Photo"/>
                         </div>
                         <button class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 flex justify-center items-center z-20" data-preview="${track.preview_url}" onclick="handlePlayClick(this);">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="stroke-accent size-6 pause hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="stroke-accent size-6 pause hidden">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
                             </svg>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="stroke-accent fill-accent size-6 play">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
                             </svg>
+                            <div class="radial-progress text-accent absolute inset-1.5 invisible" style="--value:0; --size: 2.25rem; --thickness: 0.25rem;" role="progressbar"></div>
                         </button>
                     </div>
                     <div>
@@ -83,7 +103,7 @@ function updateStats(data) {
                 <div class="flex items-center gap-3">
                     <div class="avatar relative">
                         <div class="h-12 w-12 relative z-10">
-                            <img src="${album.images[0]?.url}" alt="Album Photo"/>
+                            <img src="${album.images[0]?.url || placeholder}" alt="Album Photo"/>
                         </div>
                     </div>
                     <div>
@@ -109,7 +129,7 @@ function updateStats(data) {
                 <div class="flex items-center gap-3">
                     <div class="avatar">
                         <div class="mask mask-circle h-12 w-12">
-                            <img src="${artist.images[0]?.url}" alt="Artist Photo"/>
+                            <img src="${artist.images[0]?.url || placeholder}" alt="Artist Photo"/>
                         </div>
                     </div>
                     <div>
@@ -143,5 +163,7 @@ radios.forEach((radio) => {
         if (e.target.checked) getStats(e.target.value).then(updateStats)
     })
 })
+
+volume.addEventListener('input', (e) => audio.volume = e.target.value / 100)
 
 document.addEventListener("DOMContentLoaded", () => getStats('medium').then(updateStats))

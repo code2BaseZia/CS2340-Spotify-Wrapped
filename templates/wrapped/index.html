@@ -42,9 +42,10 @@
                     {% if user.is_authenticated %}
                         <details class="dropdown dropdown-end">
                             <summary class="after:hidden flex flex-row gap-2 items-center btn btn-neutral btn-ghost !text-base-content">
-                                <div class="avatar placeholder">
+                                <div class="avatar placeholder" id="avatar">
                                     <div class="bg-neutral text-neutral-content w-10 rounded-full">
                                         <span class="text-xl">{{ user|make_list|first }}</span>
+                                        <img alt="Profile Picture" class="hidden" src="" />
                                     </div>
                                 </div>
                                 <span class="pt-1">{{ user.username }}</span>
@@ -145,7 +146,11 @@
         <script src="{% static 'wrapped/js/gsap/ScrollSmoother.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/ScrambleTextPlugin.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/SplitText.min.js' %}"></script>
-        
+
+        <script>
+            placeholder = '{% static 'wrapped/img/placeholder.png' %}';
+        </script>
+
         <script src="{% static 'wrapped/js/globals.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap.js' %}"></script>
         <script src="{% static 'wrapped/js/menu.js' %}"></script>
