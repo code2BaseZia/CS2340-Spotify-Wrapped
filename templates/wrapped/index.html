@@ -94,7 +94,7 @@
                 </ul>
             </div>
         </nav>
-        <main class="grow shrink max-h-screen relative bg-base-100 font-body p-3 pt-16 overflow-y-scroll">
+        <main class="grow shrink max-h-screen relative bg-base-100 font-body p-3 overflow-y-scroll">
             {% if messages %}
                 <div id="messages" class="absolute inset-x-0 top-0 flex flex-col items-center pt-2">
                     {% for message in messages %}
@@ -146,6 +146,7 @@
         <script src="{% static 'wrapped/js/gsap/ScrambleTextPlugin.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/SplitText.min.js' %}"></script>
         
+        <script src="{% static 'wrapped/js/globals.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap.js' %}"></script>
         <script src="{% static 'wrapped/js/menu.js' %}"></script>
         <script src="{% static 'wrapped/js/theme.js' %}"></script>
