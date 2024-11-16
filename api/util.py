@@ -177,8 +177,7 @@ def create_items(user, tracks=None, artists=None, albums=None):
 
 def calculate_top_albums_and_genres(tracks, artists):
     album_count = Counter()
-    album_ids = [track['album']['id'] for track in tracks if track['album']['album_type'] != 'single' or
-                 track['album']['total_tracks'] > 1]
+    album_ids = [track['album']['id'] for track in tracks if track['album']['total_tracks'] > 1]
     rank_factor = 1
     for album_id in album_ids:
         album_count[album_id] += rank_factor

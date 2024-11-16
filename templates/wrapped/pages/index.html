@@ -3,6 +3,7 @@
 
 {% block title %}{% if user.is_authenticated %}Stats{% else %}Home{% endif %}{% endblock %}
 {% block css %}
+    <link rel="stylesheet" href="{% static 'wrapped/css/sliders.css' %}"></link>
     <style>
         .home {
             font-weight: 600;
@@ -14,37 +15,162 @@
     {% if not user.is_authenticated %}
         
     {% elif linked %}
-        <div class="card bg-base-200 col-start-1 row-start-1 col-span-6 shadow-xl">
-            <div class="card-body">
-                <h2 class="card-title">Artists</h2>
-                <p>...</p>
-            </div>
-        </div>
-        <div class="card bg-base-200 col-start-7 row-start-1 col-span-6 shadow-xl">
-            <div class="card-body">
-                <h2 class="card-title">Tracks</h2>
-                <p>...</p>
-            </div>
-        </div>
-        <div class="card bg-base-200 col-start-1 row-start-2 col-span-4 shadow-xl">
-            <div class="card-body">
-                <h2 class="card-title">Albums</h2>
-                <p>...</p>
-            </div>
-        </div>
-        <div class="card bg-base-200 col-start-5 row-start-2 col-span-4 shadow-xl">
-            <div class="card-body">
-                <h2 class="card-title">Wrapped</h2>
-                <p>...</p>
-                <div class="card-actions justify-end">
-                    <button class="btn btn-primary">Create Wrapped</button>
+        <div class="card bg-base-200 col-start-1 row-start-1 col-span-4 md:col-span-5 lg:col-span-6 shadow-xl h-72">
+            <div class="card-body max-h-full p-2">
+                <div class="p-4 pb-0 flex flex-row justify-between">
+                    <h2 class="card-title">Tracks</h2>
+                    <span class="flex flex-row gap-2 items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+                        </svg>
+                        <input type="range" min="0" max="100" value="100" class="text-accent" id="volume" />
+                    </span>
+                </div>
+
+                <div class="overflow-y-scroll grow shrink scroll-shadow top">
+                    <table class="table">
+                        <tbody id="tracks">
+                            {% for i in '12345'|make_list %}
+                                <tr class="group bg-black bg-opacity-0 border-base-300 hover:bg-opacity-5">
+                                    <th class="pr-0 py-2 text-center"><h4>#{{ i }}</h4></th>
+                                    <td class="py-2">
+                                        <div class="flex items-center gap-4">
+                                            <div class="skeleton h-12 w-12 shrink-0"></div>
+                                            <div class="flex flex-col gap-2">
+                                                <div class="skeleton h-4 w-20"></div>
+                                                <div class="skeleton h-4 w-28"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><div class="skeleton h-4 w-28"></div></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-        <div class="card bg-base-200 col-start-9 row-start-2 col-span-4 shadow-xl">
+        <div class="card bg-base-200 col-start-1 row-start-2 md:col-start-4 lg:col-start-7 lg:row-start-1 col-span-4 md:col-span-5 lg:col-span-6 shadow-xl h-72">
+            <div class="card-body max-h-full p-2">
+                <h2 class="card-title p-4 pb-0">Albums</h2>
+                <div class="overflow-y-scroll grow shrink scroll-shadow offset top">
+                    <table class="table table-pin-rows">
+                        <thead>
+                            <tr class="z-30" style="background: linear-gradient(to top, var(--fallback-b3,oklch(var(--b3)/var(--tw-bg-opacity))) 0, var(--fallback-b3,oklch(var(--b3)/var(--tw-bg-opacity))) 1px, var(--fallback-b2,oklch(var(--b2)/var(--tw-bg-opacity))) 1px);">
+                                <th>#</th>
+                                <th>Album</th>
+                                <th>Type</th>
+                                <th>Tracks</th>
+                                <th>Released</th>
+                            </tr>
+                        </thead>
+                        <tbody id="albums">
+                            {% for i in '12345'|make_list %}
+                                <tr class="group bg-black bg-opacity-0 border-base-300 hover:bg-opacity-5">
+                                    <th class="pr-0 py-2 text-center"><h4>#{{ i }}</h4></th>
+                                    <td class="py-2">
+                                        <div class="flex items-center gap-4">
+                                            <div class="skeleton h-12 w-12 shrink-0"></div>
+                                            <div class="flex flex-col gap-2">
+                                                <div class="skeleton h-4 w-20"></div>
+                                                <div class="skeleton h-4 w-28"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><div class="skeleton h-4 w-10"></div></td>
+                                    <td><div class="skeleton h-4 w-7"></div></td>
+                                    <td><div class="skeleton h-4 w-9"></div></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card bg-base-200 col-start-1 row-start-3 md:row-start-1 lg:row-start-2 col-span-4 md:col-span-3 lg:col-span-4 shadow-xl h-72">
+            <div class="card-body max-h-full p-2">
+                <h2 class="card-title p-4 pb-0">Artists</h2>
+                <div class="overflow-y-scroll grow shrink scroll-shadow top">
+                    <table class="table">
+                        <tbody id="artists">
+                            {% for i in '12345'|make_list %}
+                                <tr class="bg-black bg-opacity-0 border-base-300 hover:bg-opacity-5">
+                                    <th class="pr-0 py-2 text-center"><h4>#{{ i }}</h4></th>
+                                    <td class="py-2">
+                                        <div class="flex items-center gap-4">
+                                            <div class="skeleton h-12 w-12 shrink-0 rounded-full"></div>
+                                            <div class="flex flex-col gap-2">
+                                                <div class="skeleton h-4 w-20"></div>
+                                                <div class="skeleton h-4 w-28"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="hidden lg:card bg-base-200 col-start-5 row-start-2 col-span-4 shadow-xl h-72">
             <div class="card-body">
-                <h2 class="card-title">Genres</h2>
-                <p>...</p>
+                <h2 class="card-title">Wrapped</h2>
+                <div class="grow shrink relative flex flex-col items-center">
+                    <div class="aspect-square h-full relative z-20 scale-90"><div class="transition-transform bg-primary size-full hover:scale-110 duration-500 shadow-lg"></div></div>
+                    <div class="aspect-square h-full absolute z-10 scale-75 -translate-x-2/3 translate-y-1.5 hover:z-30"><div class="transition-transform bg-secondary size-full hover:scale-125 hover:-translate-y-2 duration-500 shadow-lg"></div></div>
+                    <div class="aspect-square h-full absolute z-10 scale-75 translate-x-2/3 translate-y-1.5 hover:z-30"><div class="transition-transform bg-accent size-full hover:scale-125 hover:-translate-y-2 duration-500 shadow-lg"></div></div>
+                </div>
+                <div class="card-actions justify-center">
+                    <button class="btn btn-primary create-wrapped min-w-36">Create Wrapped</button>
+                </div>
+            </div>
+        </div>
+        <div class="card bg-base-200 col-start-1 row-start-4 md:row-start-2 lg:col-start-9 lg:row-start-2 col-span-4 md:col-span-3 lg:col-span-4 shadow-xl h-72">
+            <div class="card-body max-h-full p-2">
+                <h2 class="card-title p-4 pb-0">Genres</h2>
+                <div class="overflow-y-scroll grow shrink scroll-shadow top">
+                    <table class="table table-xs">
+                        <tbody id="genres">
+                            {% for i in '12345'|make_list %}
+                                <tr class="bg-black bg-opacity-0 border-base-300 hover:bg-opacity-5">
+                                    <th class="pr-0 py-2 text-center"><h5>#{{ i }}</h5></th>
+                                    <td><div class="skeleton h-4 w-20"></div></td>
+                                    <td class="w-full">
+                                        <div class="skeleton h-2 w-full"></div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% for i in '0123456789'|make_list %}
+                                <tr class="bg-black bg-opacity-0 border-base-300 hover:bg-opacity-5">
+                                    <th class="pr-0 text-center"><h5>#{{ i }}</h5></th>
+                                    <td class="whitespace-nowrap">genre name</td>
+                                    <td class="w-full">
+                                        <progress class="progress progress-accent" value="72" max="100"></progress>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="lg:hidden row-start-6 md:row-start-4 col-span-full flex flex-row justify-center">
+            <button class="btn btn-primary create-wrapped min-w-36">Create Wrapped</button>
+        </div>
+        <div class="row-start-5 md:row-start-3 col-span-4 col-start-1 md:col-start-3 lg:col-start-5 flex flex-row justify-center mb-4">
+            <div class="btm-nav relative h-10 bg-transparent">
+                <label class="text-accent bg-transparent" for="short">
+                    4 weeks
+                    <input type="radio" name="term" value="short" id="short" class="hidden">
+                </label>
+                <label class="text-accent bg-transparent" for="medium">
+                    6 months
+                    <input type="radio" name="term" value="medium" id="medium" checked class="hidden">
+                </label>
+                <label class="text-accent bg-transparent" for="long">
+                    1 year
+                    <input type="radio" name="term" value="long" id="long" class="hidden">
+                </label>
             </div>
         </div>
     {% else %}
@@ -58,5 +184,7 @@
 
 {% block scripts %}
     <script src="{% static 'wrapped/js/request.js' %}"></script>
+    <script src="{% static 'wrapped/js/stats.js' %}"></script>
+    <script src="{% static 'wrapped/js/shadow.js' %}"></script>
     <script>document.addEventListener('DOMContentLoaded', getAuthenticationLink)</script>
 {% endblock %}
