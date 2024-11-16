@@ -197,6 +197,19 @@
     .scroll-shadow.offset.top {
         mask-image: linear-gradient(#000 calc(100% - 40px),transparent);
     }
+
+    .arrow path {
+        @apply transition-all duration-200 origin-center hidden md:block;
+    }
+
+    .arrow:hover path {
+        @apply opacity-80;
+    }
+
+    .arrow:active:hover path, .arrow:active:focus path {
+        animation: button-pop 0s ease-out;
+        transform: scale(var(--btn-focus-scale, 0.97));
+    }
 }
 
 :not(li) > form input {

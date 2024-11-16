@@ -1,0 +1,53 @@
+{% extends 'wrapped/index.html' %}
+{% load static %}
+
+{% block title %}{% if user.is_authenticated %}Stats{% else %}Home{% endif %}{% endblock %}
+{% block css %}{% endblock %}
+    
+{% block content %}
+    <span class="col-span-full flex flew-row items-center gap-1">
+        <progress value="100" max="100" class="progress opacity-50 h-1.5"></progress>
+        <progress value="100" max="100" class="progress opacity-50 h-1.5"></progress>
+        <progress value="100" max="100" class="progress opacity-50 h-1.5"></progress>
+        <progress value="70" max="100" class="progress h-2"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
+    </span>
+    <div id="slides" class="my-16 row-start-2 col-start-1 col-span-4 md:col-start-2 md:col-span-6 lg:col-start-3 lg:col-span-8 aspect-square carousel">
+        <div class="carousel-item size-full bg-red-500">
+            {% include 'wrapped/wraps/slide1v1.html' %}
+        </div>
+        <div class="carousel-item size-full bg-orange-500"></div>
+        <div class="carousel-item size-full bg-yellow-500"></div>
+        <div class="carousel-item size-full bg-green-500"></div>
+        <div class="carousel-item size-full bg-blue-500"></div>
+        <div class="carousel-item size-full bg-purple-500"></div>
+        <div class="carousel-item size-full bg-red-500"></div>
+        <div class="carousel-item size-full bg-orange-500"></div>
+        <div class="carousel-item size-full bg-yellow-500"></div>
+        <div class="carousel-item size-full bg-green-500"></div>
+        <div class="carousel-item size-full bg-blue-500"></div>
+    </div>
+    <button class="row-start-2 col-start-1 lg:col-start-2 my-16 mr-[-0.75rem] flex flex-col items-center justify-center arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 drop-shadow-lg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+        </svg>
+    </button>
+    <button class="row-start-2 col-start-4 md:col-start-8 lg:col-start-11 my-16 ml-[-0.75rem] flex flex-col items-center justify-center arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 drop-shadow-lg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+        </svg>
+    </button>
+{% endblock %}
+
+{% block scripts %}
+    <script></script>
+    <script src="{% static 'wrapped/js/request.js' %}"></script>
+    <script src="{% static 'wrapped/js/wrap.js' %}"></script>
+    <script>document.addEventListener('DOMContentLoaded', loadWrap)</script>
+{% endblock %}
