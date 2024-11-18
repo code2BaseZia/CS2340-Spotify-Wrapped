@@ -28,7 +28,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['e1zpsimne1.execute-api.us-east-1.amazonaws.com']
+ALLOWED_HOSTS = ['localhost','e1zpsimne1.execute-api.us-east-1.amazonaws.com', '54ijdxhtxd.execute-api.us-east-1.amazonaws.com']
 
 
 # Application definition
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'rest_framework',
     'django_social_share',
+    'django_s3_storage',
 ]
 
 MIDDLEWARE = [
@@ -83,8 +84,12 @@ WSGI_APPLICATION = 'SpotifyWrapped.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "spotifywrappedzappadatabase",
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': '5432',
     }
 }
 
@@ -123,7 +128,37 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+# S3 Storage Config
+YOUR_S3_BUCKET = "spotify-wrapped-zappa-static"
+
+AWS_S3_BUCKET_NAME_STATIC = YOUR_S3_BUCKET
+
+# These next two lines will serve the static files directly
+# from the s3 bucket
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % YOUR_S3_BUCKET
+AWS_S3_REGION_NAME = 'us-east-1'
+STATIC_URL = "https://%s/static/" % AWS_S3_CUSTOM_DOMAIN
+PROJECT_ROOT = Path(__file__).resolve().parent
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": AWS_S3_BUCKET_NAME_STATIC,
+        },
+    },
+}
+
+
+# STATIC_URL = '/static/'
+
+# OR...if you create a fancy custom domain for your static files use:
+#AWS_S3_PUBLIC_URL_STATIC = "https://static.zappaguide.com/"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
