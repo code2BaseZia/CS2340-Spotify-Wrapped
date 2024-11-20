@@ -81,6 +81,18 @@ class SlidesSerializer(serializers.ModelSerializer):
         exclude = ('wrapped',)
 
 
+class PopularitySerializer(serializers.ListSerializer):
+    child = serializers.IntegerField()
+
+    def to_representation(self, instance):
+        return [int(instance[2 * i:2 * i + 2]) for i in range(5)]
+
+
+class MaxPopularitySerializer(serializers.IntegerField):
+    def to_representation(self, instance):
+        return max([int(instance[2 * i:2 * i + 2]) for i in range(5)])
+
+
 class WrappedSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.user.username', read_only=True)
     url = serializers.HyperlinkedIdentityField(view_name='wrapped:wrap', lookup_field='pk')
@@ -89,6 +101,8 @@ class WrappedSerializer(serializers.ModelSerializer):
     top_albums = AlbumItemSerializer(many=True, read_only=True)
     top_genres = GenreItemSerializer(many=True, read_only=True)
     slides = SlidesSerializer(many=True, read_only=True)
+    track_popularity = PopularitySerializer(read_only=True)
+    max_popularity = MaxPopularitySerializer(source='track_popularity', read_only=True)
 
     class Meta:
         model = SpotifyUserWrap

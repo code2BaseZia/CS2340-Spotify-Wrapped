@@ -6,7 +6,7 @@ const buttons = {
     right: document.getElementById("right"),
 };
 
-let current = 4;
+let current = 5;
 let progress = 0;
 
 const audio = new Audio();

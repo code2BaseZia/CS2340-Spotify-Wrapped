@@ -67,6 +67,11 @@
         @apply font-display-body;
         font-variation-settings: "wdth" 100, "wght" 100;
     }
+
+    .display small {
+        @apply text-xs md:text-base lg:text-xl;
+        @apply font-display-heading;
+    }
 }
 
 @layer components {

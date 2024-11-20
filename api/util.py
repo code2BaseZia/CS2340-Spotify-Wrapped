@@ -314,7 +314,7 @@ def create_wrapped(user, term):
     top_track_by_top_artist_of_top_genre = None
 
     most_popular_track = None
-    track_popularity = [0] * 5
+    track_popularity = [0, 0, 0, 0, 0]
     average_popularity = 0
 
     keys = Counter()
