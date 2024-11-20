@@ -288,12 +288,12 @@ def create_wrapped(user, term):
     wrapped.save()
 
     all_tracks = spotify_request(user, 'me/top/tracks', params={
-        'time_range': term,
+        'time_range': term + '_term',
         'limit': '50',
     })
 
     all_artists = spotify_request(user, 'me/top/artists', params={
-        'time_range': term,
+        'time_range': term + '_term',
         'limit': '50',
     })
 

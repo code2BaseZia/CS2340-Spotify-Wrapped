@@ -130,7 +130,7 @@ class UserWrapped(APIView):
             return Response({'message': 'User is not logged into Spotify.'}, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            wrapped = create_wrapped(request.user, term + '_term')
+            wrapped = create_wrapped(request.user, term)
             return Response({'id': wrapped}, status=status.HTTP_200_OK)
         except:
             return Response({'message': 'Failed to wrap'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

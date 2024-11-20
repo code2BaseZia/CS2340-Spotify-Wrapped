@@ -9,7 +9,9 @@ module.exports = {
       fontFamily: {
         'title': ['area-normal', 'sans-serif'],
         'body': ['indivisible', 'sans-serif'],
-        'display': ['area-extended', 'sans-serif']
+        'display': ['area-extended', 'sans-serif'],
+        'display-heading': ['futura-pt', 'sans-serif'],
+        'display-body': ['sztos-variable', 'sans-serif'],
       },
       gridTemplateColumns: {
         'content-lg': 'repeat(12, 4.5rem)',
@@ -51,6 +53,7 @@ module.exports = {
           'accent': '#FFC600',
           'primary': '#5800FF',
           'secondary': '#E900FF',
+          'base-content': '#FFFFFF',
         },
         wrapped2: {
           'base-100': '#000000',
@@ -60,6 +63,7 @@ module.exports = {
           'accent': '#EBF400',
           'primary': '#F72798',
           'secondary': '#F57D1F',
+          'base-content': '#FFFFFF',
         },
         wrapped3: {
           'base-100': '#1C2321',
@@ -69,6 +73,7 @@ module.exports = {
           'accent': '#FF6D28',
           'primary': '#EA047E',
           'secondary': '#FCE700',
+          'base-content': '#FFFFFF',
         },
         wrapped4: {
           'base-100': '#1a0033',
@@ -78,6 +83,7 @@ module.exports = {
           'accent': '#F5004F',
           'primary': '#FFAF00',
           'secondary': '#F9E400',
+          'base-content': '#FFFFFF',
         },
         wrapped5: {
           'base-100': '#FFB84C',
@@ -86,7 +92,8 @@ module.exports = {
           'neutral': '#BFFFBC',
           'accent': '#2CD3E1',
           'primary': '#F266AB',
-          'secondary': '#A459D1'
+          'secondary': '#A459D1',
+          'base-content': '#000000',
         },
         wrapped6: {
           'base-100': '#FF85B3',
@@ -95,7 +102,8 @@ module.exports = {
           'neutral': '#F900BF',
           'accent': '#73EEDC',
           'primary': '#4700D8',
-          'secondary': '#9900F0'
+          'secondary': '#9900F0',
+          'base-content': '#000000',
         },
       }
     ]
