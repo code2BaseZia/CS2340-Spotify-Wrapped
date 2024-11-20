@@ -178,7 +178,7 @@ for (let button of create) {
         e.target.innerHTML = '<span class="loading loading-spinner loading-md"></span>'
         e.target.disabled = true
         createWrap(term).then((id) => {
-            window.location.href = '../api/wrap/' + id;
+            window.location.href = './wrap/' + id;
         })
     })
 }

@@ -6,32 +6,27 @@
     
 {% block content %}
     <span class="col-span-full flex flew-row items-center gap-1">
-        <progress value="100" max="100" class="progress opacity-50 h-1.5"></progress>
-        <progress value="100" max="100" class="progress opacity-50 h-1.5"></progress>
-        <progress value="100" max="100" class="progress opacity-50 h-1.5"></progress>
-        <progress value="70" max="100" class="progress h-2"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1.5"></progress>
+        <progress value="100" max="100" class="progress opacity-50 h-1"></progress>
+        <progress value="100" max="100" class="progress opacity-50 h-1"></progress>
+        <progress value="100" max="100" class="progress opacity-50 h-1"></progress>
+        <progress value="70" max="100" class="progress h-[0.3125rem]"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
+        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
     </span>
     <div id="slides" class="my-16 row-start-2 col-start-1 col-span-4 md:col-start-2 md:col-span-6 lg:col-start-3 lg:col-span-8 aspect-square carousel">
-        <div class="carousel-item size-full bg-red-500">
-            {% include 'wrapped/wraps/slide1v1.html' %}
-        </div>
-        <div class="carousel-item size-full bg-orange-500"></div>
-        <div class="carousel-item size-full bg-yellow-500"></div>
-        <div class="carousel-item size-full bg-green-500"></div>
-        <div class="carousel-item size-full bg-blue-500"></div>
-        <div class="carousel-item size-full bg-purple-500"></div>
-        <div class="carousel-item size-full bg-red-500"></div>
-        <div class="carousel-item size-full bg-orange-500"></div>
-        <div class="carousel-item size-full bg-yellow-500"></div>
-        <div class="carousel-item size-full bg-green-500"></div>
-        <div class="carousel-item size-full bg-blue-500"></div>
+        <script>animations = Array.from({length: 11}, () => ({ start: () => {}, end: () => {} }))</script>
+        {% for slide in slides %}
+            <div class="carousel-item size-full overflow-hidden relative" data-theme="{{ slide.colors }}">
+                {% with "wrapped/wraps/s"|add:slide.number|add:slide.layout|add:".html" as template %}
+                    {% include template %}
+                {% endwith %}
+            </div>
+        {% endfor %}
     </div>
     <button class="row-start-2 col-start-1 lg:col-start-2 my-16 mr-[-0.75rem] flex flex-col items-center justify-center arrow">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 drop-shadow-lg">
