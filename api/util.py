@@ -2,7 +2,7 @@ from django.db import transaction
 
 from .models import SpotifyToken, SpotifyTrack, SpotifyArtist, SpotifyAlbum
 from wrapped.models import (SpotifyUserWrap, TopTrackItem, TopArtistItem, TopAlbumItem, TopGenreItem, TopArtistOfGenre,
-                            TopTrackOfAlbum)
+                            TopTrackOfAlbum, WrappedSlide)
 from django.utils import timezone
 from datetime import timedelta
 from requests import post, put, get
@@ -130,7 +130,8 @@ def get_or_create_album(user, id, data=None):
         response = spotify_request(user, 'albums/' + id) if data is None else data
         image = static('wrapped/img/placeholder.png') if len(response['images']) == 0 else response['images'][0]['url']
         album = SpotifyAlbum(id=id, title=response['name'], photo=image, popularity=response['popularity'],
-                             url=response['external_urls']['spotify'])
+                             url=response['external_urls']['spotify'], type=response['album_type'],
+                             date=response['release_date'], total_tracks=response['tracks']['total'])
         album.save()
         for item in response['artists']:
             album.artists.add(get_or_create_artist(user, item['id']))
@@ -283,7 +284,7 @@ def find_ideal_track(key, features):
 
 
 def create_wrapped(user, term):
-    wrapped = SpotifyUserWrap(user=user.profile)
+    wrapped = SpotifyUserWrap(user=user.profile, term=term)
     wrapped.save()
 
     all_tracks = spotify_request(user, 'me/top/tracks', params={
@@ -410,6 +411,10 @@ def create_wrapped(user, term):
     wrapped.average_valence = average_features['valence']
 
     wrapped.ideal_track = find_ideal_track(ideal_key, average_features)
+
+    for i in range(11):
+        slide = WrappedSlide(wrapped=wrapped, number=i)
+        slide.save()
 
     wrapped.save()
 

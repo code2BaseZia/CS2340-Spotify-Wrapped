@@ -31,6 +31,11 @@
     h6 {
         @apply italic font-body;
     }
+
+    .text-display {
+        @apply text-3xl md:text-5xl lg:text-7xl;
+        @apply font-display font-bold;
+    }
 }
 
 @layer components {

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from wrapped.models import (SpotifyUserWrap, TopTrackItem, TopArtistItem, TopAlbumItem, TopGenreItem, TopArtistOfGenre,
-                            TopTrackOfAlbum)
+                            TopTrackOfAlbum, WrappedSlide)
 from .models import SpotifyTrack, SpotifyArtist, SpotifyAlbum
 
 
@@ -73,13 +73,22 @@ class ArtistItemSerializer(serializers.ListSerializer):
         return [self.child.to_representation(item.artist) for item in instance.all()]
 
 
+class SlidesSerializer(serializers.ModelSerializer):
+    number = serializers.CharField()
+
+    class Meta:
+        model = WrappedSlide
+        exclude = ('wrapped',)
+
+
 class WrappedSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.user.username', read_only=True)
-    url = serializers.HyperlinkedIdentityField(view_name='wrap', lookup_field='id')
+    url = serializers.HyperlinkedIdentityField(view_name='wrapped:wrap', lookup_field='pk')
     top_tracks = TrackItemSerializer(read_only=True)
     top_artists = ArtistItemSerializer(read_only=True)
     top_albums = AlbumItemSerializer(many=True, read_only=True)
     top_genres = GenreItemSerializer(many=True, read_only=True)
+    slides = SlidesSerializer(many=True, read_only=True)
 
     class Meta:
         model = SpotifyUserWrap
