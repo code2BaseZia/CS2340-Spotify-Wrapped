@@ -144,6 +144,7 @@ class UserWrapped(APIView):
             return Response({'message': 'Failed to get wraps'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+# probably not needed in final app version
 class SingleWrapped(APIView):
     authentication_classes = [SessionAuthentication]
 

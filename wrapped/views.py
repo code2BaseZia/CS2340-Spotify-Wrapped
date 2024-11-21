@@ -1,12 +1,15 @@
 from django.shortcuts import render
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, RedirectView, FormView
+from django.views.generic import CreateView, TemplateView, RedirectView, FormView, DetailView
 from django.contrib.messages.views import SuccessMessageMixin
+
+from api.serializers import WrappedSerializer
+from api.util import get_wrap_by_id
 from .forms import FeedbackForm, CustomUserCreationForm, AccountForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth import update_session_auth_hash
-from .models import Feedback
+from .models import Feedback, SpotifyUserWrap
 from django.shortcuts import redirect
 from django.contrib.auth import logout
 from django.contrib import messages
@@ -145,5 +148,10 @@ class AccountView(TemplateView, FormView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class WrappedView(TemplateView):
-    template_name = "wrapped/pages/wrappedview.html"
+class WrappedView(DetailView):
+    model = SpotifyUserWrap
+    template_name = 'wrapped/pages/wrap.html'
+
+    def get_context_data(self, **kwargs):
+        context = WrappedSerializer(self.object, context={'request': self.request}).data
+        return context
