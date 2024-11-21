@@ -50,16 +50,14 @@
 </svg>
 <div class="absolute inset-0 z-10 flex flex-col items-stretch justify-start p-8 display">
     <h3 class="text-left lg:my-4">Here are your top 5 tracks:</h3>
-    <div class="absolute top-[67%] right-[15%] -translate-y-1/2 flex flex-col gap-2.5 items-stretch">
+    <div class="absolute top-[67%] right-[15%] -translate-y-1/2 flex flex-col md:gap-1 lg:gap-2.5 items-stretch">
         {% for track in top_tracks %}
             <div class="flex items-center gap-2">
                 <h3 class="translate-y-2">#{{ forloop.counter }}</h3>
-                <div class="flex flex-col">
+                <div class="flex flex-col -my-2 md:my-0">
                     <h5>{{ track.title }}</h5>
                     <h6 class="-mt-4 opacity-50">
-                        {% for artist in track.artists %}
-                            {{ artist.name }}{% include 'comma.html' %}
-                        {% endfor %}
+                        {% for artist in track.artists %}{% include 'comma.html' %}{{ artist.name }}{% endfor %}
                     </h6>
                 </div>
             </div>

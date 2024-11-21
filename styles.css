@@ -53,17 +53,17 @@
     }
 
     .display h5 {
-        @apply text-xl md:text-2xl lg:text-3xl;
+        @apply text-lg md:text-2xl lg:text-3xl;
         @apply font-display-heading font-medium;
     }
 
     .display h6 {
-        @apply text-lg md:text-xl lg:text-2xl;
+        @apply text-base md:text-xl lg:text-2xl;
         @apply font-display-heading font-medium not-italic;
     }
 
     .display p {
-        @apply text-xl md:text-2xl lg:text-3xl;
+        @apply text-base md:text-xl lg:text-3xl;
         @apply font-display-body;
         font-variation-settings: "wdth" 100, "wght" 100;
     }

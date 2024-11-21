@@ -18,7 +18,16 @@ class ArtistSerializer(serializers.ModelSerializer):
         depth = 2
 
 
+class ReleaseDateSerializer(serializers.IntegerField):
+    def to_representation(self, value):
+        print(value)
+        return int(value.split('-')[0])
+
+
 class AlbumSerializer(serializers.ModelSerializer):
+    date = ReleaseDateSerializer()
+    artists = ArtistSerializer(many=True, read_only=True)
+
     class Meta:
         model = SpotifyAlbum
         fields = '__all__'
@@ -43,6 +52,7 @@ class ArtistOfGenreSerializer(serializers.ListSerializer):
 
 class AlbumItemSerializer(serializers.ModelSerializer):
     top_tracks = TrackOfAlbumSerializer(read_only=True)
+    album = AlbumSerializer(read_only=True)
 
     class Meta:
         model = TopAlbumItem
@@ -93,6 +103,17 @@ class MaxPopularitySerializer(serializers.IntegerField):
         return max([int(instance[2 * i:2 * i + 2]) for i in range(5)])
 
 
+class KeySerializer(serializers.CharField):
+    def to_representation(self, instance):
+        KEYS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'None']
+        return KEYS[instance]
+
+
+class ModeSerializer(serializers.CharField):
+    def to_representation(self, instance):
+        return 'M' if instance == 1 else 'm'
+
+
 class WrappedSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.user.username', read_only=True)
     url = serializers.HyperlinkedIdentityField(view_name='wrapped:wrap', lookup_field='pk')
@@ -103,6 +124,8 @@ class WrappedSerializer(serializers.ModelSerializer):
     slides = SlidesSerializer(many=True, read_only=True)
     track_popularity = PopularitySerializer(read_only=True)
     max_popularity = MaxPopularitySerializer(source='track_popularity', read_only=True)
+    ideal_key = KeySerializer(read_only=True)
+    ideal_mode = ModeSerializer(read_only=True)
 
     class Meta:
         model = SpotifyUserWrap
