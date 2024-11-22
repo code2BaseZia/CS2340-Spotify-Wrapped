@@ -20,7 +20,6 @@ class ArtistSerializer(serializers.ModelSerializer):
 
 class ReleaseDateSerializer(serializers.IntegerField):
     def to_representation(self, value):
-        print(value)
         return int(value.split('-')[0])
 
 
@@ -65,7 +64,7 @@ class GenreItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TopGenreItem
-        fields = ['name', 'top_artists']
+        fields = ['name', 'top_artists', 'freq']
         depth = 2
 
 

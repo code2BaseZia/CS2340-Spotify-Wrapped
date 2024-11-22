@@ -6,7 +6,7 @@ const buttons = {
     right: document.getElementById("right"),
 };
 
-let current = 8;
+let current = 0;
 let progress = 0;
 
 const audio = new Audio();
@@ -16,7 +16,7 @@ function updateSlide() {
 }
 
 function nextSlide() {
-    if (current === 11) return;
+    if (current === 10) return;
 
     indicators[current].classList.remove("active");
     indicators[current].value = 100;
@@ -70,5 +70,4 @@ for (let i = 0; i < indicators.length; i++) {
     indicators[i].addEventListener("click", () => goToSlide(i));
 }
 
-//setInterval(updateProgress, 15);
-updateSlide();
+setInterval(updateProgress, 15);

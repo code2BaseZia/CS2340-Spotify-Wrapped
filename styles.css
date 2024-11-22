@@ -294,13 +294,13 @@ details[open] summary svg.chevron {
 }
 
 #indicators > progress {
-    @apply opacity-90 h-1 cursor-pointer;
+    @apply opacity-80 h-1 cursor-pointer;
 }
 
 #indicators > progress.active {
     @apply opacity-100 h-[0.3125rem];
 }
 
-h1.underline, h2.underline, h3.underline {
+h1.underline, h2.underline, h3.underline, h4.underline, h5.underline, h6.underline {
     @apply decoration-2 md:decoration-4 lg:decoration-[6px];
 }

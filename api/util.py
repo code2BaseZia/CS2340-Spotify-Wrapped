@@ -153,9 +153,7 @@ def get_or_create_track(user, id, data=None):
                              energy=features['energy'], instrumentalness=features['instrumentalness'],
                              speechiness=features['speechiness'], valence=features['valence'])
         track.save()
-        print(response['artists'])
         for item in response['artists']:
-            print(item['id'])
             track.artists.add(get_or_create_artist(user, item['id']))
         return track
 

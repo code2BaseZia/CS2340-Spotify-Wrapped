@@ -60,43 +60,45 @@
         <image x="1575.301" y="1386.663" width="209.503" height="209.503" href="{{ top_albums.3.album.photo }}"/>
     </g>
 </svg>
-<div class="absolute inset-0 z-10 flex flex-col items-stretch justify-start text-left p-8 display relative">
+<div class="absolute inset-0 z-10 flex flex-col items-stretch justify-start text-left p-8 display">
     <h3 class="-mt-6 md:-mt-2 lg:mt-0">That wasn't the only album you loved, here are your top 4:</h3>
     <div class="absolute inset-x-[2.4%] bottom-[1.5%] top-[30.2%] grid grid-cols-2 grid-rows-2 gap-y-[2%] gap-x-[1.6%]">
         {% for item in top_albums %}
             <div class="p-[5%] flex flex-col justify-between">
-                <div class="flex flex-col pr-[30%]">
+                <div class="flex flex-col justify-start pr-[30%] grow lg:grow-0">
                     <h5 class="!leading-4 md:!leading-6 lg:!leading-8">{{ item.album.title }}</h5>
                     <small class="opacity-50 -mt-1 md:-mt-2">
                         {% for artist in item.album.artists %}{% include 'comma.html' %}{{ artist.name }}{% endfor %}
                     </small>
-                    <h6>
-                        {% if top_albums.0.album.type == 'album' %}
-                            Album
-                        {% elif top_albums.0.album.type == 'single' %}
-                            Single
-                        {% else %}
-                            EP
-                        {% endif %}
-                        | {{ top_albums.0.album.date }}
-                    </h6>
                 </div>
-                <div>
-                    <p>Your Top Tracks:</p>
-                    <small>
-                        {% for track in item.top_tracks %}{% include 'comma.html' %}{{ track.title }}{% endfor %}
-                    </small>
-                </div>
+                <h6 class="hidden lg:block grow">
+                    {% if item.album.type == 'album' %}
+                        Album
+                    {% elif item.album.type == 'single' %}
+                        Single
+                    {% else %}
+                        EP
+                    {% endif %}
+                    | {{ item.album.date }}
+                </h6>
+                <p class="hidden md:block">Your Top Tracks:</p>
+                <small class="hidden md:block -mt-1.5 min-h-0 shrink !leading-4 lg:!leading-5">
+                    {% for track in item.top_tracks %}{% include 'comma.html' %}{{ track.title }}{% endfor %}
+                </small>
+                <p class="md:hidden">Your Top Track:</p>
+                <small class="md:hidden -mt-1.5 min-h-0 shrink overflow-hidden !leading-4 lg:!leading-5">
+                    {{ item.top_tracks.0.title }}
+                </small>
             </div>
         {% endfor %}
     </div>
 </div>
 <script>
-    animations[7].start = () => {
+    animations[8].start = () => {
 
     }
 
-    animations[7].end = () => {
+    animations[8].end = () => {
 
     }
 </script>

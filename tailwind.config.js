@@ -3,7 +3,7 @@ import daisyui from "daisyui";
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./templates/**/*.html", "./static/**/*.js"],
-  safelist: ['text-success', 'text-danger'],
+  safelist: ['text-success', 'text-danger', {pattern: /z-[1-3]0/} , {pattern: /row-start-[1-5]/}],
   theme: {
     extend: {
       fontFamily: {
@@ -17,6 +17,8 @@ module.exports = {
         'content-lg': 'repeat(12, 4.5rem)',
         'content-md': 'repeat(8, 4.5rem)',
         'content-sm': 'repeat(4, 4.5rem)',
+        'genres': '11% max-content min-content 1fr',
+        'summary': '13% 10.5% 28% 13% 10.5% 25%'
       }
     },
   },

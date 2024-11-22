@@ -41,7 +41,6 @@ def spotify_callback(request, format=None):
     refresh_token = response.get('refresh_token')
     expires_in = response.get('expires_in')
     error = response.get('error')
-    print(error)
 
     if request.session.exists(request.session.session_key):
         request.session.create()

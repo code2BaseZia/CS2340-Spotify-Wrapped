@@ -47,28 +47,28 @@
         <rect x="1464.283" y="{{ 1334.309|subtract:width4 }}" width="239.158" height="{{ width4 }}"/>
     </g>
 </svg>
-<div class="absolute inset-0 z-10 flex flex-col items-center justify-between p-8 display text-center">
-    <h2 class="md:my-6 lg:my-10">How basic was your top 50?</h2>
+<div class="absolute inset-0 z-10 flex flex-col items-center justify-between p-2 md:p-8 display text-center">
+    <h2 class="my-6 lg:my-10">How basic was your top 50?</h2>
     <div class="absolute inset-x-[9%] top-[40.5%] bottom-[31%] flex gap-4 justify-stretch items-stretch basis-1/6">
         <div class="grow shrink relative">
             <h5 class="absolute inset-x-0" style="bottom: {% widthratio track_popularity.0 max_popularity 100 %}%;">{{ track_popularity.0 }}</h5>
-            <small class="absolute top-full inset-x-0">Best Kept Secret</small>
+            <small class="absolute top-full inset-x-0 !leading-[0.5rem] md:!leading-3 lg:!leading-4 pt-0.5">Best Kept Secret</small>
         </div>
         <div class="grow shrink relative">
             <h5 class="absolute inset-x-0" style="bottom: {% widthratio track_popularity.1 max_popularity 100 %}%;">{{ track_popularity.1 }}</h5>
-            <small class="absolute top-full inset-x-0">Unknown</small>
+            <small class="absolute top-full inset-x-0 !leading-[0.5rem] md:!leading-3 lg:!leading-4 pt-0.5">Unknown</small>
         </div>
         <div class="grow shrink relative">
             <h5 class="absolute inset-x-0" style="bottom: {% widthratio track_popularity.2 max_popularity 100 %}%;">{{ track_popularity.2 }}</h5>
-            <small class="absolute top-full inset-x-0">Up-and-coming</small>
+            <small class="absolute top-full inset-x-0 !leading-[0.5rem] md:!leading-3 lg:!leading-4 pt-0.5">Up and coming</small>
         </div>
         <div class="grow shrink relative">
             <h5 class="absolute inset-x-0" style="bottom: {% widthratio track_popularity.3 max_popularity 100 %}%;">{{ track_popularity.3 }}</h5>
-            <small class="absolute top-full inset-x-0">Basic</small>
+            <small class="absolute top-full inset-x-0 !leading-[0.5rem] md:!leading-3 lg:!leading-4 pt-0.5">Basic</small>
         </div>
         <div class="grow shrink relative">
             <h5 class="absolute inset-x-0" style="bottom: {% widthratio track_popularity.4 max_popularity 100 %}%;">{{ track_popularity.4 }}</h5>
-            <small class="absolute top-full inset-x-0">Very Basic</small>
+            <small class="absolute top-full inset-x-0 !leading-[0.5rem] md:!leading-3 lg:!leading-4 pt-0.5">Very Basic</small>
         </div>
     </div>
     <p class="underline decoration-accent w-1/2">The average popularity of your top 50 tracks was {{ average_popularity }}%</p>
