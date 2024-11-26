@@ -1,10 +1,143 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% load static %}
 
-</body>
-</html>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 2048 2048"
+     class="absolute z-0 inset-[-11.69%]">
+    <defs>
+        <linearGradient id="bg10" x1="0" y1="0" x2="0" y2="100%">
+            <stop offset="0" class="text-base-100"/>
+            <stop offset="1" class="text-base-300"/>
+        </linearGradient>
+        <clipPath id="clippath-12">
+            <rect x="1271.611" y="720.414" width="110.293" height="110.293" rx="55.146" ry="55.146"/>
+        </clipPath>
+        <clipPath id="clippath-13">
+            <rect x="1271.611" y="884.193" width="110.293" height="110.293" rx="55.146" ry="55.146"/>
+        </clipPath>
+        <clipPath id="clippath-14">
+            <rect x="1271.611" y="1048.688" width="110.293" height="110.293" rx="55.146" ry="55.146"/>
+        </clipPath>
+        <clipPath id="clippath-15">
+            <rect x="1271.611" y="1211.752" width="110.293" height="110.293" rx="55.146" ry="55.146"/>
+        </clipPath>
+        <clipPath id="clippath-16">
+            <rect x="1271.611" y="1376.246" width="110.293" height="110.293" rx="55.146" ry="55.146"/>
+        </clipPath>
+    </defs>
+    <style>
+        stop {
+            stop-color: currentColor;
+        }
+    </style>
+    <rect fill="url(#bg10)" x="194" y="194" width="1660" height="1660"/>
+    <use x="0" y="0" width="2048" height="2048" href="{% static 'wrapped/img/dots.svg' %}#g" class="fill-primary opacity-70 -rotate-12 origin-bottom-left scale-110 translate-y-[16%]"/>
+    <g class="fill-secondary">
+        <g>
+            <rect x="471.344" y="708.737" width="134.293" height="134.293"/>
+            <image x="483.344" y="720.737" width="110.293" height="110.293" href="{{ top_tracks.0.album.photo }}"/>
+        </g>
+        <g>
+            <rect x="471.344" y="872.517" width="134.293" height="134.293"/>
+            <image x="483.344" y="885.517" width="110.293" height="110.293" href="{{ top_tracks.1.album.photo }}"/>
+        </g>
+        <g>
+            <rect x="471.344" y="1037.011" width="134.293" height="134.293"/>
+            <image x="483.344" y="1049.011" width="110.293" height="110.293" href="{{ top_tracks.2.album.photo }}"/>
+        </g>
+        <g>
+            <rect x="471.344" y="1200.075" width="134.293" height="134.293"/>
+            <image x="483.344" y="1212.075" width="110.293" height="110.293" href="{{ top_tracks.3.album.photo }}"/>
+        </g>
+        <g>
+            <rect x="471.344" y="1364.57" width="134.293" height="134.293"/>
+            <image x="483.344" y="1376.57" width="110.293" height="110.293" href="{{ top_tracks.4.album.photo }}"/>
+        </g>
+    </g>
+    <g class="fill-accent">
+        <g>
+            <rect x="1259.611" y="708.414" width="134.293" height="134.293" rx="67.146" ry="67.146"/>
+            <image clip-path="url(#clippath-12)" x="1271.611" y="720.414" width="111" height="111" href="{{ top_artists.0.photo }}"/>
+        </g>
+        <g>
+            <rect x="1259.611" y="872.193" width="134.293" height="134.293" rx="67.146" ry="67.146"/>
+            <image clip-path="url(#clippath-13)" x="1271.611" y="884.193" width="111" height="111" href="{{ top_artists.1.photo }}"/>
+        </g>
+        <g>
+            <rect x="1259.611" y="1036.688" width="134.293" height="134.293" rx="67.146" ry="67.146"/>
+            <image clip-path="url(#clippath-14)" x="1271.611" y="1048.688" width="111" height="111" href="{{ top_artists.2.photo }}"/>
+        </g>
+        <g>
+            <rect x="1259.611" y="1199.752" width="134.293" height="134.293" rx="67.146" ry="67.146"/>
+            <image clip-path="url(#clippath-15)" x="1271.611" y="1211.752" width="111" height="111" href="{{ top_artists.3.photo }}"/>
+        </g>
+        <g>
+            <rect x="1259.611" y="1364.246" width="134.293" height="134.293" rx="67.146" ry="67.146"/>
+            <image clip-path="url(#clippath-16)" x="1271.611" y="1376.246" width="111" height="111" href="{{ top_artists.4.photo }}"/>
+        </g>
+    </g>
+    <g class="fill-neutral">
+        <rect x="273.264" y="1628.6" width="188.319" height="188.319"/>
+        <image x="293.264" y="1648.6" width="148.319" height="148.319" href="{{ top_albums.0.album.photo }}"/>
+    </g>
+</svg>
+<div class="absolute inset-0 z-10 flex flex-col items-stretch justify-start text-left p-2 md:p-4 lg:p-8 display">
+    <h2 class="lg:!text-5xl">{{ user.username }}'s Listening the Last
+        {% if term == 'short' %}
+            4 Weeks:
+        {% elif term == 'medium' %}
+            6 Months:
+        {% else %}
+            Year:
+        {% endif %}
+    </h2>
+    <div class="absolute top-[30%] bottom-[20.5%] inset-x-[4%] grid grid-cols-summary grid-rows-5 justify-items-start items-center">
+        <p class="absolute bottom-full left-0">Top Tracks:</p>
+        <p class="absolute bottom-full left-1/2">Top Artists:</p>
+        {% for track in top_tracks %}
+            <h5 class="!font-display underline decoration-accent row-start-{{ forloop.counter }} col-start-1 justify-self-center">#{{ forloop.counter }}</h5>
+            <div class="row-start-{{ forloop.counter }} col-start-3 flex flex-col">
+                <small class="!leading-[0.5rem] md:!leading-3 lg:!leading-4">{{ track.title }}</small>
+                <small class="!leading-[0.5rem] md:!leading-3 lg:!leading-4 opacity-50 scale-90 origin-left">{% for artist in track.artists %}{% include 'comma.html' %}{{ artist.name }}{% endfor %}</small>
+            </div>
+        {% endfor %}
+        {% for artist in top_artists %}
+            <h5 class="!font-display underline decoration-secondary row-start-{{ forloop.counter }} col-start-4 justify-self-center">#{{ forloop.counter }}</h5>
+            <small class="row-start-{{ forloop.counter }} col-start-6 !leading-3 md:!leading-4 lg:!leading-5">{{ artist.name }}</small>
+        {% endfor %}
+    </div>
+    <div class="absolute bottom-[2%] top-[80.5%] left-[4%] right-1/2 flex flex-col">
+        <p>Top Album:</p>
+        <div class="grow pl-[28%] flex flex-col gap-0 items-stretch justify-center">
+            <h6 class="!leading-3 md:!leading-4 lg:!leading-5">{{ top_albums.0.album.title }}</h6>
+            <small class="!leading-[0.5rem] md:!leading-3 lg:!leading-4 opacity-50 scale-90 origin-left">
+                {% for artist in top_albums.0.album.artists %}{% include 'comma.html' %}{{ artist.name }}{% endfor %}
+            </small>
+            <small class="-mt-4 md:mt-0 hidden md:block">
+                {% if top_albums.0.album.type == 'album' %}
+                    Album
+                {% elif top_albums.0.album.type == 'single' %}
+                    Single
+                {% else %}
+                    EP
+                {% endif %}
+                | {{ top_albums.0.album.date }}
+            </small>
+        </div>
+    </div>
+    <div class="absolute bottom-[2%] top-[80.5%] left-1/2 right-[4%] flex flex-col items-start">
+        <p>Top Genre:</p>
+        <div class="grow flex flex-col justify-center">
+            <h2 class="text-primary bg-secondary !font-display-heading !font-medium !leading-[100%] p-1 md:p-1.5 lg:p-2">
+                {{ top_genres.0.name }}
+            </h2>
+        </div>
+    </div>
+</div>
+<script>
+    animations[10].start = () => {
+
+    }
+
+    animations[10].end = () => {
+
+    }
+</script>
