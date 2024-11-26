@@ -2,38 +2,40 @@
 {% load static %}
 
 {% block title %}{% if user.is_authenticated %}Stats{% else %}Home{% endif %}{% endblock %}
-{% block css %}{% endblock %}
+{% block css %}<link rel="stylesheet" href="https://use.typekit.net/lha8mkp.css">{% endblock %}
     
 {% block content %}
-    <span class="col-span-full flex flew-row items-center gap-1">
-        <progress value="100" max="100" class="progress opacity-50 h-1"></progress>
-        <progress value="100" max="100" class="progress opacity-50 h-1"></progress>
-        <progress value="100" max="100" class="progress opacity-50 h-1"></progress>
-        <progress value="70" max="100" class="progress h-[0.3125rem]"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
-        <progress value="0" max="100" class="progress opacity-50 h-1"></progress>
+    <span class="col-span-full flex flew-row items-center gap-1" id="indicators">
+        <progress value="0" max="100" class="progress"></progress>
+        <progress value="0" max="100" class="progress"></progress>
+        <progress value="0" max="100" class="progress"></progress>
+        <progress value="0" max="100" class="progress"></progress>
+        <progress value="0" max="100" class="progress"></progress>
+        <progress value="0" max="100" class="progress"></progress>
+        <progress value="0" max="100" class="progress"></progress>
+        <progress value="0" max="100" class="progress"></progress>
+        <progress value="0" max="100" class="progress"></progress>
+        <progress value="0" max="100" class="progress"></progress>
+        <progress value="0" max="100" class="progress"></progress>
     </span>
-    <div id="slides" class="my-16 row-start-2 col-start-1 col-span-4 md:col-start-2 md:col-span-6 lg:col-start-3 lg:col-span-8 aspect-square carousel">
-        <script>animations = Array.from({length: 11}, () => ({ start: () => {}, end: () => {} }))</script>
-        {% for slide in slides %}
-            <div class="carousel-item size-full overflow-hidden relative" data-theme="{{ slide.colors }}">
-                {% with "wrapped/wraps/s"|add:slide.number|add:slide.layout|add:".html" as template %}
-                    {% include template %}
-                {% endwith %}
-            </div>
-        {% endfor %}
+    <script>animations = Array.from({length: 11}, () => ({ start: () => {}, end: () => {} }))</script>
+    <div class="my-16 row-start-2 col-start-1 col-span-4 md:col-start-2 md:col-span-6 lg:col-start-3 lg:col-span-8 aspect-square overflow-x-hidden relative">
+        <div id="slides" class="size-full flex flex-row justify-start items-stretch gap-0 absolute">
+            {% for slide in slides %}
+                <div class="carousel-item size-full overflow-hidden relative" data-theme="{{ slide.colors }}">
+                    {% with "wrapped/wraps/s"|add:slide.number|add:slide.layout|add:".html" as template %}
+                        {% include template %}
+                    {% endwith %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
-    <button class="row-start-2 col-start-1 lg:col-start-2 my-16 mr-[-0.75rem] flex flex-col items-center justify-center arrow">
+    <button id="left" class="row-start-2 col-start-1 lg:col-start-2 my-16 mr-[-0.75rem] flex flex-col items-center justify-center arrow relative z-50">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 drop-shadow-lg">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
         </svg>
     </button>
-    <button class="row-start-2 col-start-4 md:col-start-8 lg:col-start-11 my-16 ml-[-0.75rem] flex flex-col items-center justify-center arrow">
+    <button id="right" class="row-start-2 col-start-4 md:col-start-8 lg:col-start-11 my-16 ml-[-0.75rem] flex flex-col items-center justify-center arrow relative z-50">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 drop-shadow-lg">
             <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
         </svg>
@@ -44,5 +46,4 @@
     <script></script>
     <script src="{% static 'wrapped/js/request.js' %}"></script>
     <script src="{% static 'wrapped/js/wrap.js' %}"></script>
-    <script>document.addEventListener('DOMContentLoaded', loadWrap)</script>
 {% endblock %}

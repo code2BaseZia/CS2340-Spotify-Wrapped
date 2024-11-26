@@ -154,4 +154,5 @@ class WrappedView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = WrappedSerializer(self.object, context={'request': self.request}).data
+        context['user'] = self.request.user
         return context
