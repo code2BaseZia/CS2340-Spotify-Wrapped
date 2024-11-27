@@ -15,7 +15,7 @@ function getCookie(name) {
 }
 
 async function getAuthenticationLink() {
-    const response = await fetch('http://localhost:8000/api/authenticate');
+    const response = await fetch('https://54ijdxhtxd.execute-api.us-east-1.amazonaws.com/production/api/authenticate');
     const json = await response.json();
 
     const link = document.getElementById('authLink');
@@ -23,7 +23,7 @@ async function getAuthenticationLink() {
 }
 
 async function getLinkToken() {
-    const response = await fetch('http://localhost:8000/api/link');
+    const response = await fetch('https://54ijdxhtxd.execute-api.us-east-1.amazonaws.com/production/api/link');
     const status = response.status;
 
     if (status === 200) {
@@ -33,12 +33,12 @@ async function getLinkToken() {
 }
 
 async function getStats(term) {
-    const response = await fetch(`http://localhost:8000/api/taste?term=${term}`);
+    const response = await fetch(`https://54ijdxhtxd.execute-api.us-east-1.amazonaws.com/production/api/taste?term=${term}`);
     return await response.json();
 }
 
 async function getProfilePicture() {
-    const response = await fetch('http://localhost:8000/api/picture');
+    const response = await fetch('https://54ijdxhtxd.execute-api.us-east-1.amazonaws.com/production/api/picture');
     const json = await response.json();
     return json.url;
 }
@@ -46,7 +46,7 @@ async function getProfilePicture() {
 async function createWrap(term) {
     const csrftoken = getCookie('csrftoken');
 
-    const response = await fetch('http://localhost:8000/api/wrap', {
+    const response = await fetch('https://54ijdxhtxd.execute-api.us-east-1.amazonaws.com/production/api/wrap', {
         method: 'POST',
         body: JSON.stringify({term}),
         headers: {

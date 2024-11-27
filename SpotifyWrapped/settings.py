@@ -86,11 +86,11 @@ WSGI_APPLICATION = 'SpotifyWrapped.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "spotifywrappedzappadatabase",
+        'NAME': "postgres",
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
-        'PORT': '5432',
+        'PORT': '6543',
     }
 }
 
