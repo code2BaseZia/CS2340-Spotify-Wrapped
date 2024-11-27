@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, RedirectView, FormView, DetailView
+from django.views.generic import CreateView, TemplateView, RedirectView, FormView, DetailView, ListView
 from django.contrib.messages.views import SuccessMessageMixin
 
 from api.serializers import WrappedSerializer
@@ -14,6 +14,8 @@ from django.shortcuts import redirect
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib import messages
+from django.utils import dateparse
+
 """def get_feedback(request):
     if request.method == 'POST':
         form = FeedbackForm(request.POST)
@@ -156,3 +158,20 @@ class WrappedView(DetailView):
         context = WrappedSerializer(self.object, context={'request': self.request}).data
         context['user'] = self.request.user
         return context
+
+class SavedView(ListView):
+    template_name = 'wrapped/pages/saved.html'
+
+    def get_context_data(self, **kwargs):
+        object_list = []
+        for object in self.object_list:
+            serialized = WrappedSerializer(object, context={'request': self.request}).data
+            serialized['created_at'] = dateparse.parse_datetime(serialized['created_at'])
+            object_list.append(serialized)
+        context = {'wraps': object_list}
+
+        context['user'] = self.request.user
+        return context
+
+    def get_queryset(self):
+        return self.request.user.profile.wraps.all()
