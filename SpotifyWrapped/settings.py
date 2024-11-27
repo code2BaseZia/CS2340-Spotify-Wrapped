@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv('DJANGO_KEY')
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost','e1zpsimne1.execute-api.us-east-1.amazonaws.com', '54ijdxhtxd.execute-api.us-east-1.amazonaws.com']
 
