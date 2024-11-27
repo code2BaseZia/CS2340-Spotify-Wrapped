@@ -18,14 +18,19 @@
         <progress value="0" max="100" class="progress"></progress>
         <progress value="0" max="100" class="progress"></progress>
     </span>
-    <script>animations = Array.from({length: 11}, () => ({ start: () => {}, end: () => {} }))</script>
+    <script>animations = Array.from({length: 11}, () => ({ preset: () => {}, start: () => {}, end: () => {} }))</script>
     <div class="my-16 row-start-2 col-start-1 col-span-4 md:col-start-2 md:col-span-6 lg:col-start-3 lg:col-span-8 aspect-square overflow-x-hidden relative">
         <div id="slides" class="size-full flex flex-row justify-start items-stretch gap-0 absolute">
             {% for slide in slides %}
                 <div class="carousel-item size-full overflow-hidden relative" data-theme="{{ slide.colors }}">
-                    {% with "wrapped/wraps/s"|add:slide.number|add:slide.layout|add:".html" as template %}
-                        {% include template %}
-                    {% endwith %}
+                {{ slide.number }}
+                    {% if slide.number == "1" %}
+                        {% include 'wrapped/wraps/s1v2.html' %}
+                    {% else %}
+                        {% with "wrapped/wraps/s"|add:slide.number|add:slide.layout|add:".html" as template %}
+                            {% include template %}
+                        {% endwith %}
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
@@ -43,7 +48,5 @@
 {% endblock %}
 
 {% block scripts %}
-    <script></script>
-    <script src="{% static 'wrapped/js/request.js' %}"></script>
     <script src="{% static 'wrapped/js/wrap.js' %}"></script>
 {% endblock %}
