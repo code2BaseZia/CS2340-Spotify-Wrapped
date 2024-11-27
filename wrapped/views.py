@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, RedirectView, FormView, DetailView
+from django.views.generic import CreateView, TemplateView, RedirectView, FormView, DetailView, ListView
 from django.contrib.messages.views import SuccessMessageMixin
 
 from api.serializers import WrappedSerializer
@@ -13,6 +13,8 @@ from .models import Feedback, SpotifyUserWrap
 from django.shortcuts import redirect
 from django.contrib.auth import logout
 from django.contrib import messages
+from django.contrib import messages
+from django.utils import dateparse
 
 """def get_feedback(request):
     if request.method == 'POST':
@@ -104,7 +106,7 @@ class AccountView(TemplateView, FormView):
 
         if current_password or new_password or confirm_password:
             if not (current_password and new_password and confirm_password):
-                form.add_error(None, 'Please fill in all password fields to change your password.')
+                messages.error(self.request, 'Please fill in all password fields to change your password.')
                 return self.form_invalid(form)
 
             if user.check_password(current_password):
@@ -112,11 +114,12 @@ class AccountView(TemplateView, FormView):
                     user.set_password(new_password)
                     update_session_auth_hash(self.request, user)
                 else:
-                    messages.error(self.request, "The new passwords do not match. Try again.")
+                    messages.error(self.request, 'The new passwords do not match.')
                     return self.form_invalid(form)
             else:
-                messages.error(self.request, "Your current password was entered incorrectly.")
+                messages.error(self.request, 'Your current password was entered incorrectly.')
                 return self.form_invalid(form)
+
         user.save()
         messages.success(self.request, "Your account information has been updated successfully!")
         return super().form_valid(form)
@@ -155,3 +158,20 @@ class WrappedView(DetailView):
         context = WrappedSerializer(self.object, context={'request': self.request}).data
         context['user'] = self.request.user
         return context
+
+class SavedView(ListView):
+    template_name = 'wrapped/pages/saved.html'
+
+    def get_context_data(self, **kwargs):
+        object_list = []
+        for object in self.object_list:
+            serialized = WrappedSerializer(object, context={'request': self.request}).data
+            serialized['created_at'] = dateparse.parse_datetime(serialized['created_at'])
+            object_list.append(serialized)
+        context = {'wraps': object_list}
+
+        context['user'] = self.request.user
+        return context
+
+    def get_queryset(self):
+        return self.request.user.profile.wraps.all()
