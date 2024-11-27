@@ -1,3 +1,5 @@
+console.log(animations)
+
 const container = document.getElementById("slides");
 const slides = container.children;
 const indicators = document.getElementById("indicators").getElementsByClassName("progress");
@@ -6,12 +8,13 @@ const buttons = {
     right: document.getElementById("right"),
 };
 
-let current = 0;
+let current = 2;
 let progress = 0;
 
 const audio = new Audio();
 
 function updateSlide() {
+    animations[current].preset()
     gsap.to(slides, {xPercent: current * -100, duration: 0.5, ease: 'power2.inOut', onComplete: animations[current].start()})
 }
 
@@ -70,4 +73,5 @@ for (let i = 0; i < indicators.length; i++) {
     indicators[i].addEventListener("click", () => goToSlide(i));
 }
 
-setInterval(updateProgress, 15);
+//setInterval(updateProgress, 15);
+updateSlide();
