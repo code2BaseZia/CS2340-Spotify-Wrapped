@@ -3,17 +3,22 @@ import daisyui from "daisyui";
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./templates/**/*.html", "./static/**/*.js"],
-  safelist: ['text-success', 'text-danger'],
+  safelist: ['text-success', 'text-danger', {pattern: /z-[1-3]0/} , {pattern: /row-start-[1-5]/}],
   theme: {
     extend: {
       fontFamily: {
         'title': ['area-normal', 'sans-serif'],
         'body': ['indivisible', 'sans-serif'],
+        'display': ['area-extended', 'sans-serif'],
+        'display-heading': ['futura-pt', 'sans-serif'],
+        'display-body': ['sztos-variable', 'sans-serif'],
       },
       gridTemplateColumns: {
         'content-lg': 'repeat(12, 4.5rem)',
         'content-md': 'repeat(8, 4.5rem)',
         'content-sm': 'repeat(4, 4.5rem)',
+        'genres': '11% max-content min-content 1fr',
+        'summary': '13% 10.5% 28% 13% 10.5% 25%'
       }
     },
   },
@@ -40,6 +45,68 @@ module.exports = {
           'primary': '#AF53C9',
           'secondary': '#F8AE4C',
         }
+      },
+      {
+        wrapped1: {
+          'base-100': '#000000',
+          'base-200': '#111111',
+          'base-300': '#222222',
+          'neutral': '#98CE00',
+          'accent': '#FFC600',
+          'primary': '#5800FF',
+          'secondary': '#E900FF',
+          'base-content': '#FFFFFF',
+        },
+        wrapped2: {
+          'base-100': '#000000',
+          'base-200': '#111111',
+          'base-300': '#222222',
+          'neutral': '#56E39F',
+          'accent': '#EBF400',
+          'primary': '#F72798',
+          'secondary': '#F57D1F',
+          'base-content': '#FFFFFF',
+        },
+        wrapped3: {
+          'base-100': '#1C2321',
+          'base-200': '#2D3432',
+          'base-300': '#3E4543',
+          'neutral': '#00F5FF',
+          'accent': '#FF6D28',
+          'primary': '#EA047E',
+          'secondary': '#FCE700',
+          'base-content': '#FFFFFF',
+        },
+        wrapped4: {
+          'base-100': '#1a0033',
+          'base-200': '#28004d',
+          'base-300': '#350066',
+          'neutral': '#7C00FE',
+          'accent': '#F5004F',
+          'primary': '#FFAF00',
+          'secondary': '#F9E400',
+          'base-content': '#FFFFFF',
+        },
+        wrapped5: {
+          'base-100': '#FFB84C',
+          'base-200': '#e6a545',
+          'base-300': '#cc933d',
+          'neutral': '#BFFFBC',
+          'accent': '#2CD3E1',
+          'primary': '#F266AB',
+          'secondary': '#A459D1',
+          'base-content': '#000000',
+        },
+        wrapped6: {
+          'base-100': '#FF85B3',
+          'base-200': '#e677a2',
+          'base-300': '#cc708f',
+          'neutral': '#F900BF',
+          'accent': '#73EEDC',
+          'primary': '#4700D8',
+          'secondary': '#9900F0',
+          'base-content': '#000000',
+        },
       }
     ]
   },

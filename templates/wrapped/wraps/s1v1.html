@@ -1,0 +1,63 @@
+{% load static %}
+{% load humanize %}
+
+<svg xmlns="http://www.w3.org/2000/svg" class="absolute z-0 inset-[-11.69%]" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 2048 2048">
+    <defs>
+        <clipPath id="clippath">
+            <rect x="6.95" y="630.95" width="1055.512" height="1055.512"/>
+        </clipPath>
+        <clipPath id="clippath-1">
+            <rect x="1050.388" y="337.505" width="984.613" height="984.613"/>
+        </clipPath>
+        <clipPath id="clippath-2">
+            <circle cx="1024" cy="1011.894" r="276.788"/>
+        </clipPath>
+        <linearGradient id="bg1" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop class="text-base-100" offset="0"/>
+            <stop class="text-base-300" offset="1"/>
+        </linearGradient>
+    </defs>
+    <style>
+        stop {
+            stop-color: currentColor;
+        }
+    </style>
+    <rect fill="url(#bg1)" x="194" y="194" width="1660" height="1660"/>
+    <g clip-path="url(#clippath)">
+        <image width="1832" height="1625" transform="translate(51.282 715.391) scale(.528)"
+               href="{% static 'wrapped/img/holo/1.png' %}"/>
+    </g>
+    <g clip-path="url(#clippath-1)">
+        <image width="1658" height="1697" transform="translate(1139.003 400.52) scale(.492)"
+               href="{% static 'wrapped/img/holo/2.png' %}"/>
+    </g>
+    <circle class="fill-accent opacity-70" cx="1174" cy="1011.894" r="276.788"/>
+    <circle class="fill-accent opacity-70" cx="874" cy="1011.894" r="276.788"/>
+    <circle class="fill-accent opacity-70" cx="1124" cy="1011.894" r="276.788"/>
+    <circle class="fill-accent opacity-70" cx="924" cy="1011.894" r="276.788"/>
+    <circle class="fill-accent opacity-70" cx="974" cy="1011.894" r="276.788"/>
+    <circle class="fill-accent opacity-70" cx="1074" cy="1011.894" r="276.788"/>
+    <g clip-path="url(#clippath-2)">
+        <image x="742.212" y="735.106" width="560" height="560" href="{{ top_artists.0.photo }}"/>
+    </g>
+</svg>
+<div class="absolute inset-0 z-10 flex flex-col items-stretch justify-between p-8 display text-center">
+    <h2>Introducing Your Top Artist</h2>
+    <div class="flex flex-col md:gap-10 lg:gap-12 lg:pb-8">
+        <div class="flex flex-col gap-0">
+            <h4>{{ top_artists.0.name }}</h4>
+            <h6 class="opacity-50 -mt-2">{{ top_artists.0.followers|intcomma }} Followers</h6>
+        </div>
+        <p class="underline decoration-accent">You had {{ tracks_by_top_artist }} of their tracks in your top 50</p>
+    </div>
+</div>
+<script>
+    animations[1].start = () => {
+
+    }
+
+    animations[1].end = () => {
+
+    }
+</script>
