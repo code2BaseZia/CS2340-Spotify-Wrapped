@@ -10,6 +10,21 @@
         {% block css %}{% endblock %}
     </head>
     <body class="h-screen flex flex-col items-stretch overflow-hidden">
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/TextPlugin.min.js"></script>
+        
+        <!-- The following plugins are only available for Club GSAP members.--> 
+        <script src="{% static 'wrapped/js/gsap/DrawSVGPlugin.min.js' %}"></script>
+        <script src="{% static 'wrapped/js/gsap/MorphSVGPlugin.min.js' %}"></script>
+        <script src="{% static 'wrapped/js/gsap/ScrollSmoother.min.js' %}"></script>
+        <script src="{% static 'wrapped/js/gsap/ScrambleTextPlugin.min.js' %}"></script>
+        <script src="{% static 'wrapped/js/gsap/SplitText.min.js' %}"></script>
+        
+        <script src="{% static 'wrapped/js/gsap.js' %}"></script>
+    
         <nav>
             <div class="navbar bg-base-200 font-title relative justify-between px-4">
                 <div class="absolute inset-0 flex justify-center z-0">
@@ -134,25 +149,10 @@
             </button>
         </main>
 
-        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-
-        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/TextPlugin.min.js"></script>
+        <script>placeholder = '{% static 'wrapped/img/placeholder.png' %}';</script>
         
-        <!-- The following plugins are only available for Club GSAP members.--> 
-        <script src="{% static 'wrapped/js/gsap/DrawSVGPlugin.min.js' %}"></script>
-        <script src="{% static 'wrapped/js/gsap/MorphSVGPlugin.min.js' %}"></script>
-        <script src="{% static 'wrapped/js/gsap/ScrollSmoother.min.js' %}"></script>
-        <script src="{% static 'wrapped/js/gsap/ScrambleTextPlugin.min.js' %}"></script>
-        <script src="{% static 'wrapped/js/gsap/SplitText.min.js' %}"></script>
-
-        <script>
-            placeholder = '{% static 'wrapped/img/placeholder.png' %}';
-        </script>
-
         <script src="{% static 'wrapped/js/globals.js' %}"></script>
-        <script src="{% static 'wrapped/js/gsap.js' %}"></script>
+        <script src="{% static 'wrapped/js/request.js' %}"></script>
         <script src="{% static 'wrapped/js/menu.js' %}"></script>
         <script src="{% static 'wrapped/js/theme.js' %}"></script>
         <script src="{% static 'wrapped/js/messages.js' %}"></script>
