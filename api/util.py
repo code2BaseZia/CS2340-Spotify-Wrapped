@@ -169,9 +169,29 @@ def create_items(user, tracks=None, artists=None, albums=None):
             get_or_create_album(user, album['id'], album)
     if tracks is not None:
         tracks_data = spotify_request(user, 'tracks', params={'ids': ','.join(tracks)})
-        features = spotify_request(user, 'audio-features', params={'ids': ','.join(tracks)})
+        # features = spotify_request(user, 'audio-features', params={'ids': ','.join(tracks)})
+        features = {
+        "acousticness": 0.00242,
+        "analysis_url": "https://api.spotify.com/v1/audio-analysis/2takcwOaAZWiXQijPHIx7B",
+        "danceability": 0.585,
+        "duration_ms": 237040,
+        "energy": 0.842,
+        "id": "2takcwOaAZWiXQijPHIx7B",
+        "instrumentalness": 0.00686,
+        "key": 9,
+        "liveness": 0.0866,
+        "loudness": -5.883,
+        "mode": 0,
+        "speechiness": 0.0556,
+        "tempo": 118.211,
+        "time_signature": 4,
+        "track_href": "https://api.spotify.com/v1/tracks/2takcwOaAZWiXQijPHIx7B",
+        "type": "audio_features",
+        "uri": "spotify:track:2takcwOaAZWiXQijPHIx7B",
+        "valence": 0.428
+        }
         for i in range(len(tracks)):
-            get_or_create_track(user, tracks[i], (tracks_data['tracks'][i], features['audio_features'][i]))
+            get_or_create_track(user, tracks[i], (tracks_data['tracks'][i], features))
 
 
 def calculate_top_albums_and_genres(tracks, artists):
