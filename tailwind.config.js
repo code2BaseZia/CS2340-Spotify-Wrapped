@@ -89,8 +89,8 @@ module.exports = {
         },
         wrapped5: {
           'base-100': '#171717',
-          'base-200': '#4A4A4A',
-          'base-300': '#7D7D7D',
+          'base-200': '#393939',
+          'base-300': '#5B5B5B',
           'neutral': '#FA239C',
           'accent': '#00CC99',
           'primary': '#172EFA',

@@ -121,11 +121,11 @@
     </div>
 </div>
 <script>
-    animations[6].start = () => {
-
+    animations[6].start = (callback) => {
+        setTimeout(callback, 1)
     }
-
-    animations[6].end = () => {
-
+    
+    animations[6].end = (callback) => {
+        setTimeout(callback, 1)
     }
 </script>

@@ -47,12 +47,12 @@
     </g>
 </svg>
 <div class="absolute inset-0 z-10 flex flex-col items-stretch justify-start text-left p-2 md:p-4 lg:p-6 gap-[3%] display">
-    <h3>Your listening explored so many genres. Here are your top 10:</h3>
+    <h3 id="e19">Your listening explored so many genres. Here are your top 10:</h3>
     <div class="grow shrink grid grid-cols-genres grid-rows-10 justify-items-start items-center gap-x-[2%]">
         {% for genre in top_genres %}
-            <h5 class="!font-display col-start-1 justify-self-center">#{{ forloop.counter }}</h5>
-            <h6 class="col-start-2 justify-self-start">{{ genre.name }}</h6>
-            <div class="col-start-3 avatar-group -space-x-4 lg:-space-x-5">
+            <h5 class="!font-display col-start-1 justify-self-center g25">#{{ forloop.counter }}</h5>
+            <h6 class="col-start-2 justify-self-start g26">{{ genre.name }}</h6>
+            <div class="col-start-3 avatar-group -space-x-4 lg:-space-x-5 g27">
                 {% for artist in genre.top_artists %}
                     {% widthratio forloop.counter0 2 20 as z %}
                     <div class="avatar border-transparent relative z-{{ 30|subtract:z|floatformat:0 }}">
@@ -62,18 +62,45 @@
                     </div>
                 {% endfor %}
             </div>
-            <div class="col-start-4 p-2 flex justify-start items-stretch place-self-stretch">
+            <div class="col-start-4 p-2 flex justify-start items-stretch place-self-stretch g28">
                 <span class="bg-accent" style="width: {% widthratio genre.freq 1 100 %}%;"></span>
             </div>
         {% endfor %}
     </div>
 </div>
 <script>
-    animations[9].start = () => {
-
+    const g25_28 = Array.from({length: 4}, (_, i) => document.getElementsByClassName(`g${25 + i}`))
+    
+    animations[9].start = (callback) => {
+        gsap.set(['#e19', ...g25_28], {clearProps: true})
+        
+        const tl = gsap.timeline({defaults: {duration: 0.5, ease: 'power2.out'}})
+        tl.from('#e19', {yPercent: -150}, 0.5)
+        tl.from(g25_28.map(i => i[0]), {y: 25, scale: 0.9, opacity: 0}, 0.7)
+        tl.from(g25_28.map(i => i[1]), {y: 25, scale: 0.9, opacity: 0}, 0.8)
+        tl.from(g25_28.map(i => i[2]), {y: 25, scale: 0.9, opacity: 0}, 0.9)
+        tl.from(g25_28.map(i => i[3]), {y: 25, scale: 0.9, opacity: 0}, 1.0)
+        tl.from(g25_28.map(i => i[4]), {y: 25, scale: 0.9, opacity: 0}, 1.1)
+        tl.from(g25_28.map(i => i[5]), {y: 25, scale: 0.9, opacity: 0}, 1.2)
+        tl.from(g25_28.map(i => i[6]), {y: 25, scale: 0.9, opacity: 0}, 1.3)
+        tl.from(g25_28.map(i => i[7]), {y: 25, scale: 0.9, opacity: 0}, 1.4)
+        tl.from(g25_28.map(i => i[8]), {y: 25, scale: 0.9, opacity: 0}, 1.5)
+        tl.from(g25_28.map(i => i[9]), {y: 25, scale: 0.9, opacity: 0, onComplete: callback}, 1.6)
     }
-
-    animations[9].end = () => {
-
+    
+    animations[9].end = (callback) => {
+        const tl = gsap.timeline({defaults: {duration: 0.5, ease: 'power2.in'}})
+        tl.to('#e19', {yPercent: -150, onComplete: callback}, 1.1)
+        tl.to(g25_28.map(i => i[0]), {y: 25, scale: 0.9, opacity: 0}, 1.0)
+        tl.to(g25_28.map(i => i[1]), {y: 25, scale: 0.9, opacity: 0}, 0.9)
+        tl.to(g25_28.map(i => i[2]), {y: 25, scale: 0.9, opacity: 0}, 0.8)
+        tl.to(g25_28.map(i => i[3]), {y: 25, scale: 0.9, opacity: 0}, 0.7)
+        tl.to(g25_28.map(i => i[4]), {y: 25, scale: 0.9, opacity: 0}, 0.6)
+        tl.to(g25_28.map(i => i[5]), {y: 25, scale: 0.9, opacity: 0}, 0.4)
+        tl.to(g25_28.map(i => i[6]), {y: 25, scale: 0.9, opacity: 0}, 0.3)
+        tl.to(g25_28.map(i => i[7]), {y: 25, scale: 0.9, opacity: 0}, 0.2)
+        tl.to(g25_28.map(i => i[8]), {y: 25, scale: 0.9, opacity: 0}, 0.1)
+        tl.to(g25_28.map(i => i[9]), {y: 25, scale: 0.9, opacity: 0}, 0)
+        tl.call(() => tl.time(0).kill(), [], 2.1)
     }
 </script>

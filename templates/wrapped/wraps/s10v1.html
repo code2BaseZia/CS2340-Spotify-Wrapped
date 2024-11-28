@@ -133,11 +133,11 @@
     </div>
 </div>
 <script>
-    animations[10].start = () => {
-
+    animations[10].start = (callback) => {
+        setTimeout(callback, 1)
     }
-
-    animations[10].end = () => {
-
+    
+    animations[10].end = (callback) => {
+        setTimeout(callback, 1)
     }
 </script>
