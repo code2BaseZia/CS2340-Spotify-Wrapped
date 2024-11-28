@@ -1,5 +1,5 @@
 const album_types = {
-    'single': 'Singe',
+    'single': 'Single',
     'compilation': 'EP',
     'album': 'Album'
 }

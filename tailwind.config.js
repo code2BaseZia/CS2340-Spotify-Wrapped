@@ -88,6 +88,16 @@ module.exports = {
           'base-content': '#FFFFFF',
         },
         wrapped5: {
+          'base-100': '#171717',
+          'base-200': '#393939',
+          'base-300': '#5B5B5B',
+          'neutral': '#FA239C',
+          'accent': '#00CC99',
+          'primary': '#172EFA',
+          'secondary': '#6600FF',
+          'base-content': '#FFFFFF',
+        },
+        wrapped6: {
           'base-100': '#FFB84C',
           'base-200': '#e6a545',
           'base-300': '#cc933d',
@@ -97,7 +107,7 @@ module.exports = {
           'secondary': '#A459D1',
           'base-content': '#000000',
         },
-        wrapped6: {
+        wrapped7: {
           'base-100': '#FF85B3',
           'base-200': '#e677a2',
           'base-300': '#cc708f',
