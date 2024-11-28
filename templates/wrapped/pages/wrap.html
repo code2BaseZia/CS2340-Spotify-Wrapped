@@ -1,5 +1,6 @@
 {% extends 'wrapped/index.html' %}
 {% load static %}
+{% load social_share %}
 
 {% block title %}{% if user.is_authenticated %}Stats{% else %}Home{% endif %}{% endblock %}
 {% block css %}<link rel="stylesheet" href="https://use.typekit.net/lha8mkp.css">{% endblock %}
@@ -40,6 +41,16 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
         </svg>
     </button>
+    <section id="share_twitter" class="col-span-full">
+        {% post_to_twitter "Take a look at my custom-made Spotify Wrapped using Spotify Wrapper!" object_or_url "Post to Twitter" %}
+    </section>
+    <section id="share_reddit" class="col-span-full">
+        {% post_to_reddit "Take a look at my custom-made Spotify Wrapped using Spotify Wrapper!" object_or_url "Post to Reddit"%}
+    </section>
+    <section id="share_clipboard" class="col-span-full">
+        {% copy_to_clipboard object_or_url "Copy to Clipboard" "button"%}
+    </section>
+    {% add_copy_script %}
 {% endblock %}
 
 {% block scripts %}
