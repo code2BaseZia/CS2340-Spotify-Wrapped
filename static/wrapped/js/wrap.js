@@ -4,15 +4,7 @@ const indicators = document.getElementById("indicators").getElementsByClassName(
 const buttons = {
     left: document.getElementById("left"),
     right: document.getElementById("right"),
-};
-const visibility = document.getElementById("visibility")
-const visibilityText = document.getElementById("visibilityText")
-
-visibility.checked = isPublic
-visibilityText.innerText = isPublic ? 'Public' : 'Private'
-
-const extraContainer = document.getElementsByClassName("extra-visibility")
-const extraVisibility = document.getElementById("extraVisibility")
+}
 
 let current = 0;
 let progress = 0;
@@ -36,25 +28,6 @@ audio.addEventListener('ended', () => {
     this.currentTime = 0;
     this.play();
 }, false);
-
-visibility.addEventListener('change', async (e) => {
-    isPublic = e.target.checked
-    await changeVisibility(id, isPublic)
-    visibilityText.innerText = isPublic ? 'Public' : 'Private'
-})
-extraVisibility.addEventListener('change', async (e) => {
-    visibility.click()
-})
-
-function updateModal() {
-    for (let extra of extraContainer) {
-        if (isPublic) {
-            extra.classList.add('hidden')
-        } else {
-            extra.classList.remove('hidden')
-        }
-    }
-}
 
 function updateSlide() {
     animations[current].start()
@@ -128,4 +101,3 @@ for (let i = 0; i < indicators.length; i++) {
 
 setInterval(updateProgress, 15);
 updateSlide()
-updateModal()

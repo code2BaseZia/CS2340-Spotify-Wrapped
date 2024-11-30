@@ -277,7 +277,7 @@ def find_ideal_track(key, features):
 
 
 def create_wrapped(user, term):
-    wrapped = SpotifyUserWrap(user=user.profile, term=term)
+    wrapped = SpotifyUserWrap(user=user.profile, term=term, public=False)
     wrapped.save()
 
     all_tracks = spotify_request(user, 'me/top/tracks', params={

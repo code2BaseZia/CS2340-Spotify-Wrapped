@@ -164,7 +164,7 @@ class WrappedView(DetailView):
     template_name = 'wrapped/pages/wrap.html'
 
     def get_object(self, queryset=None):
-        obj = super().get_queryset().first()
+        obj = SpotifyUserWrap.objects.get(pk=self.kwargs['pk'])
 
         if obj.user.user != self.request.user and not obj.public:
             raise Http404("This wrapped is private or does not exist")

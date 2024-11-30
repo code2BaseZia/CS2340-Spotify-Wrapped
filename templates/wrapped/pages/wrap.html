@@ -125,4 +125,7 @@
 
 {% block scripts %}
     <script src="{% static 'wrapped/js/wrap.js' %}"></script>
+    {% if owner == user.username %}
+        <script src="{% static 'wrapped/js/owner.js' %}"></script>
+    {% endif %}
 {% endblock %}
