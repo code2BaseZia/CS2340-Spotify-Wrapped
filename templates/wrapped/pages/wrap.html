@@ -28,7 +28,7 @@
         const id = {{ id }}
         let isPublic = {{ public|lower }}
     </script>
-    <div id="container" class="row-start-1 col-start-1 col-span-4 md:col-start-2 md:col-span-6 lg:col-start-3 lg:col-span-8 aspect-square overflow-x-hidden relative">
+    <div id="container" class="row-start-1 col-start-1 col-span-4 md:col-start-2 md:col-span-6 lg:col-start-3 lg:col-span-8 aspect-square overflow-x-hidden relative mt-10">
         <div id="slides" class="size-full flex flex-row justify-start items-stretch gap-0 absolute">
             {% for slide in slides %}
                 <div class="carousel-item size-full overflow-hidden relative" data-theme="{{ slide.colors }}">
