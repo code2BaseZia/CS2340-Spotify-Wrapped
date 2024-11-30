@@ -24,8 +24,8 @@
             {% for slide in slides %}
                 <div class="carousel-item size-full overflow-hidden relative" data-theme="{{ slide.colors }}">
                 {{ slide.number }}
-                    {% if slide.number == "1" %}
-                        {% include 'wrapped/wraps/s1v2.html' %}
+                    {% if slide.number == "0" %}
+                        {% include 'wrapped/wraps/s0v2.html' %}
                     {% else %}
                         {% with "wrapped/wraps/s"|add:slide.number|add:slide.layout|add:".html" as template %}
                             {% include template %}
