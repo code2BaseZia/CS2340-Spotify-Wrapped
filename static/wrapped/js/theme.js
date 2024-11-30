@@ -12,7 +12,7 @@ themeControl.addEventListener('change', (e) => {
     count++;
 
     if (count >= 10) {
-        const light = e.target.checked ? 95 : 5
+        const light = e.target.checked ? 90 : 10
         const int = e.target.checked ? -5 : 5
         const base = [Math.random() * 360, Math.random() * 25]
 

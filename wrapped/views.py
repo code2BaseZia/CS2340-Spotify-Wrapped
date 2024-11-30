@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, RedirectView, FormView, DetailView, ListView
+from django.views.generic import CreateView, TemplateView, RedirectView, FormView, DetailView, ListView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 
 from api.serializers import WrappedSerializer
@@ -15,6 +15,7 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib import messages
 from django.utils import dateparse
+from django.http.response import Http404
 
 """def get_feedback(request):
     if request.method == 'POST':
@@ -39,9 +40,17 @@ class IndexView(TemplateView):
     template_name = 'wrapped/pages/index.html'
 
     def get_context_data(self, **kwargs):
+        context = WrappedSerializer(SpotifyUserWrap.objects.first(), context={'request': self.request}).data
+        context['owner'] = context['user']
+        context['user'] = self.request.user
+
         if self.request.user.is_authenticated and self.request.user.profile.token is not None:
-            return {'linked': True}
-        return {'linked': False}
+            context['linked'] = True
+        else:
+            context['linked'] = False
+
+        return context
+
 
 class LogInView(LoginView):
     template_name = "wrapped/auth/login.html"
@@ -154,8 +163,17 @@ class WrappedView(DetailView):
     model = SpotifyUserWrap
     template_name = 'wrapped/pages/wrap.html'
 
+    def get_object(self, queryset=None):
+        obj = super().get_queryset().first()
+
+        if obj.user.user != self.request.user and not obj.public:
+            raise Http404("This wrapped is private or does not exist")
+
+        return obj
+
     def get_context_data(self, **kwargs):
         context = WrappedSerializer(self.object, context={'request': self.request}).data
+        context['owner'] = context['user']
         context['user'] = self.request.user
         return context
 
@@ -175,3 +193,8 @@ class SavedView(ListView):
 
     def get_queryset(self):
         return self.request.user.profile.wraps.all()
+
+
+class DeleteWrappedView(DeleteView):
+    model = SpotifyUserWrap
+    success_url = reverse_lazy('wrapped:saved')

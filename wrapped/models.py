@@ -44,7 +44,7 @@ class SpotifyUserWrap(models.Model):
     # When the user who generated these wraps deletes their account, the on_delete will delete their wraps
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='wraps')
     term = models.CharField(max_length=6, choices=TERMS)
-    public = models.BooleanField(default=True)
+    public = models.BooleanField(default=False)
 
     tracks_by_top_artist = models.PositiveIntegerField(default=0)
     top_track_by_top_artist = models.ForeignKey(SpotifyTrack, on_delete=models.CASCADE,
@@ -63,20 +63,7 @@ class SpotifyUserWrap(models.Model):
                                            blank=True, null=True)
     track_popularity = models.CharField(max_length=10, default='0000000000')
     average_popularity = models.FloatField(default=0)
-
-    ideal_key = models.IntegerField(default=0)
-    ideal_mode = models.IntegerField(default=0)
-    average_duration = models.IntegerField(default=0)
-    average_tempo = models.IntegerField(default=0)
-    average_loudness = models.FloatField(default=0)
-    average_danceability = models.FloatField(default=0)
-    average_energy = models.FloatField(default=0)
-    average_instrumentalness = models.FloatField(default=0)
-    average_speechiness = models.FloatField(default=0)
-    average_valence = models.FloatField(default=0)
-
-    ideal_track = models.ForeignKey(SpotifyTrack, on_delete=models.CASCADE,
-                                    related_name='ideal_track_wraps', blank=True, null=True)
+    game_complete = models.BooleanField(default=False)
 
 
 class TopTrackItem(models.Model):
@@ -134,6 +121,27 @@ class TopTrackOfAlbum(models.Model):
         ordering = ['order']
 
 
+class HighLowGameQuestion(models.Model):
+    wrapped = models.ForeignKey(SpotifyUserWrap, on_delete=models.CASCADE, related_name='highlow_game_questions')
+    track = models.ForeignKey(SpotifyTrack, on_delete=models.CASCADE)
+    rank = models.PositiveIntegerField()
+    order = models.PositiveIntegerField()
+    answer = models.IntegerField()
+
+    class Meta:
+        ordering = ['order']
+
+
+class GuessingGameQuestion(models.Model):
+    wrapped = models.ForeignKey(SpotifyUserWrap, on_delete=models.CASCADE, related_name='guess_game_questions')
+    track = models.ForeignKey(SpotifyTrack, on_delete=models.CASCADE)
+    rank = models.PositiveIntegerField()
+    order = models.PositiveIntegerField()
+
+    class Meta:
+        ordering = ['order']
+
+
 class WrappedSlide(models.Model):
     THEMES = (
         ('wrapped1', 'Default 1'),
@@ -142,6 +150,7 @@ class WrappedSlide(models.Model):
         ('wrapped4', 'Default 4'),
         ('wrapped5', 'Default 5'),
         ('wrapped6', 'Default 6'),
+        ('wrapped7', 'Default 7'),
     )
     LAYOUTS = (
         ('v1', 'Default 1'),
