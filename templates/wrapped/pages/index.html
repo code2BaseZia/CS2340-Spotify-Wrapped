@@ -4,6 +4,7 @@
 {% block title %}{% if user.is_authenticated %}Stats{% else %}Home{% endif %}{% endblock %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'wrapped/css/sliders.css' %}"></link>
+    <link rel="stylesheet" href="https://use.typekit.net/lha8mkp.css">
     <style>
         .home {
             font-weight: 600;
@@ -116,9 +117,27 @@
             <div class="card-body">
                 <h2 class="card-title">Wrapped</h2>
                 <div class="grow shrink relative flex flex-col items-center">
-                    <div class="aspect-square h-full relative z-20 scale-90"><div class="transition-transform bg-primary size-full hover:scale-110 duration-500 shadow-lg"></div></div>
-                    <div class="aspect-square h-full absolute z-10 scale-75 -translate-x-2/3 translate-y-1.5 hover:z-30"><div class="transition-all opacity-80 bg-secondary size-full hover:scale-125 hover:-translate-y-2 duration-500 shadow-lg hover:opacity-100"></div></div>
-                    <div class="aspect-square h-full absolute z-10 scale-75 translate-x-2/3 translate-y-1.5 hover:z-30"><div class="transition-all opacity-80 bg-accent size-full hover:scale-125 hover:-translate-y-2 duration-500 shadow-lg hover:opacity-100"></div></div>
+                    <div class="aspect-square h-full relative z-20 scale-90">
+                        <div class="transition-transform bg-primary size-full hover:scale-110 duration-500 shadow-lg relative">
+                            <div class="absolute -inset-[264px] scale-[.2] overflow-hidden" data-theme="wrapped1">
+                                {% include "wrapped/wraps/s0v1.html" %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="aspect-square h-full absolute z-10 scale-75 -translate-x-2/3 translate-y-1.5 hover:z-30">
+                        <div class="transition-all opacity-80 bg-secondary size-full hover:scale-125 hover:-translate-y-2 duration-500 shadow-lg hover:opacity-100 relative">
+                            <div class="absolute -inset-[264px] scale-[.2] overflow-hidden" data-theme="wrapped1">
+                                {% include "wrapped/wraps/s1v1.html" %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="aspect-square h-full absolute z-10 scale-75 translate-x-2/3 translate-y-1.5 hover:z-30">
+                        <div class="transition-all opacity-80 bg-accent size-full hover:scale-125 hover:-translate-y-2 duration-500 shadow-lg hover:opacity-100 relative">
+                            <div class="absolute -inset-[264px] scale-[.2] overflow-hidden" data-theme="wrapped1">
+                                {% include "wrapped/wraps/s3v1.html" %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-actions justify-center">
                     <button class="btn btn-primary create-wrapped min-w-36">Create Wrapped</button>
@@ -183,7 +202,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'wrapped/js/request.js' %}"></script>
     <script src="{% static 'wrapped/js/stats.js' %}"></script>
     <script src="{% static 'wrapped/js/shadow.js' %}"></script>
     <script>document.addEventListener('DOMContentLoaded', getAuthenticationLink)</script>
