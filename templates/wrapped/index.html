@@ -128,12 +128,10 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            <div class="grid-content w-full">
+            <div class="grid-content w-full overflow-visible min-h-[calc(100vh-6rem)]">
                 {% block content %}
                 {% endblock %}
             </div>
-
-        
             <button class="btn btn-primary fixed right-4 bottom-4 size-12 flex justify-center items-center rounded-full z-20" id="theme">
                 <label class="swap swap-rotate size-8">
                     <input type="checkbox" id="themeControl" />

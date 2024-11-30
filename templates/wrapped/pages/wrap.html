@@ -9,7 +9,7 @@
 {% endblock %}
     
 {% block content %}
-    <span class="col-span-full flex flew-row items-center gap-1" id="indicators">
+    <span class="absolute top-2 inset-x-2 col-span-full flex flew-row items-center gap-1" id="indicators">
         <progress value="0" max="100" class="progress"></progress>
         <progress value="0" max="100" class="progress"></progress>
         <progress value="0" max="100" class="progress"></progress>
@@ -28,7 +28,7 @@
         const id = {{ id }}
         let isPublic = {{ public|lower }}
     </script>
-    <div id="container" class="row-start-2 col-start-1 col-span-4 md:col-start-2 md:col-span-6 lg:col-start-3 lg:col-span-8 aspect-square overflow-x-hidden relative">
+    <div id="container" class="row-start-1 col-start-1 col-span-4 md:col-start-2 md:col-span-6 lg:col-start-3 lg:col-span-8 aspect-square overflow-x-hidden relative">
         <div id="slides" class="size-full flex flex-row justify-start items-stretch gap-0 absolute">
             {% for slide in slides %}
                 <div class="carousel-item size-full overflow-hidden relative" data-theme="{{ slide.colors }}">
@@ -39,24 +39,24 @@
             {% endfor %}
         </div>
     </div>
-    <button id="left" class="row-start-2 col-start-1 lg:col-start-2 my-16 mr-[-0.75rem] flex flex-col items-center justify-center arrow relative z-40">
+    <button id="left" class="row-start-1 col-start-1 lg:col-start-2 mr-[-0.75rem] flex flex-col items-center justify-center arrow relative z-40">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 drop-shadow-lg">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
         </svg>
     </button>
-    <button id="right" class="row-start-2 col-start-4 md:col-start-8 lg:col-start-11 my-16 ml-[-0.75rem] flex flex-col items-center justify-center arrow relative z-40">
+    <button id="right" class="row-start-1 col-start-4 md:col-start-8 lg:col-start-11 ml-[-0.75rem] flex flex-col items-center justify-center arrow relative z-40">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8 drop-shadow-lg">
             <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
         </svg>
     </button>
     {% if owner == user.username %}
-        <div class="col-start-1 md:col-start-2 lg:col-start-3 col-span-2 flex items-center justify-stretch row-start-3 gap-2 py-2">
+        <div class="col-start-1 md:col-start-2 lg:col-start-3 col-span-2 flex items-center justify-stretch row-start-2 gap-2 py-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 grow-0" id="volumeIcon">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
             </svg>
             <input type="range" min="0" max="100" value="0" class="grow text-accent" id="volume" />
         </div>
-        <div class="col-span-2 row-start-3 col-start-3 md:col-start-6 lg:col-start-9 flex justify-between">
+        <div class="col-span-2 row-start-2 col-start-3 md:col-start-6 lg:col-start-9 flex justify-between">
             <span class="flex flex-col items-center">
                 Visibility
                 <span class="grow flex flex-col items-center justify-center">
@@ -84,7 +84,7 @@
             </span>
         </div>
     {% else %}
-        <div class="col-span-full flex items-center justify-center row-start-3 gap-2 py-2">
+        <div class="col-span-full flex items-center justify-center row-start-2 gap-2 py-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 grow-0" id="volumeIcon">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
             </svg>
