@@ -1,3 +1,4 @@
+{% load math_filters %}
 {% load static %}
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 2048 2048" class="absolute z-0 inset-[-11.69%]">
@@ -38,29 +39,172 @@
         <image width="1692" height="1565" transform="translate(1430.386 1420.876) scale(.34)" href="{% static 'wrapped/img/holo/6.png' %}"/>
     </g>
 </svg>
-<div class="absolute inset-0 z-10 flex flex-col items-center justify-stretch p-4 display gap-[2.5%]">
-    <h2 class="text-center mt-2 md:mt-6 lg:mt-10 w-2/3 grow-0 shrink-0">Let's Play a Game!</h2>
-    <div class="w-full grow shrink flex items-stretch justify-start">
-        <div class="w-full flex flex-col items-center justify-center text-center">
-            <h4>Let's start with your #25 track:</h4>
-            <img class="my-4" src="{{ highlow_game_questions.0.track.album.photo }}" width="100" height="100"/>
-            <h5>{{ highlow_game_questions.0.track.title }}</h5>
-            <h6 class="opacity-50">{% for artist in highlow_game_questions.0.track.artists %}{% include 'comma.html' %}{{ artist.name }}{% endfor %}</h6>
-        </div>
-        {% for question in highlow_game_questions %}
-    
-        {% endfor %}
+<div class="absolute inset-0 z-10 flex flex-col items-center justify-stretch display gap-[2.5%]">
+    <script>
+        const answers = Array.from({length: 5}, () => 0)
+        const ranks = Array.from({length: 6}, () => 0)
+    </script>
+    <h2 class="text-center mt-2 md:mt-6 lg:mt-10 w-2/3 grow-0 shrink-0 pt-4 g29">Let's Play a Game!</h2>
+    <div id="steps" class="w-full grow shrink flex items-stretch justify-start g29">
+        {% if user.username == owner %}
+            {% if game_complete %}
+                <div class="w-full flex flex-col items-center justify-center text-center shrink-0 p-2">
+                    <h5>You Played the Higher/Lower Wrapped Game!</h5>
+                    <h6 class="mb-2">You got</h6>
+                    <h3 id="score">{{ score }}/5</h3>
+                    <h6>questions right!</h6>
+                </div>
+            {% else %}
+                <div class="w-full flex flex-col items-center justify-center text-center shrink-0 p-2" id="first">
+                    <h5>The higher/lower wrapped game!</h5>
+                    <p>In this game, we will show you two songs. You have to guess which one you listened to more. If you think
+                    you listened to the song on the right more, press higher, and if you think you listened to that one less than
+                    the song on the left, press lower.</p>
+                </div>
+                {% for question in highlow_game_questions %}
+                    {% if forloop.counter0 == 0 %}
+                        <div class="w-full flex flex-col items-center justify-center text-center shrink-0 p-2 question">
+                            <h5 class="grow">Let's start with your #25 track:</h5>
+                            <img class="my-4" src="{{ question.track.album.photo }}" width="100" height="100"/>
+                            <h6>{{ question.track.title }}</h6>
+                            <small class="opacity-50">{% for artist in question.track.artists %}{% include 'comma.html' %}{{ artist.name }}{% endfor %}</small>
+                        </div>
+                    {% else %}
+                        <div class="w-full flex flex-col items-center justify-center text-center shrink-0 p-2 question">
+                            <h5 class="grow">Is this track higher or lower than the one to its left?</h5>
+                            <img class="my-4" src="{{ question.track.album.photo }}" width="100" height="100"/>
+                            <h6>{{ question.track.title }}</h6>
+                            <small class="opacity-50">{% for artist in question.track.artists %}{% include 'comma.html' %}{{ artist.name }}{% endfor %}</small>
+                        </div>
+                        <script>answers[{{ forloop.counter0|subtract:1 }}] = {{ question.answer }}</script>
+                    {% endif %}
+                    <script>ranks[{{ forloop.counter0 }}] = {{ question.rank }}</script>
+                {% endfor %}
+                <div class="w-full flex flex-col items-center justify-center text-center shrink-0 p-2">
+                    <h5>Thanks for Playing!</h5>
+                    <h6 class="mb-2">You got</h6>
+                    <h3 id="score">5/5</h3>
+                    <h6>questions right!</h6>
+                </div>
+            {% endif %}
+        {% else %}
+            {% if game_complete %}
+                <div class="w-full flex flex-col items-center justify-center text-center shrink-0 p-2">
+                    <h4>{{ owner }} never completed the higher/lower wrapped game ):</h4>
+                </div>
+            {% else %}
+                <div class="w-full flex flex-col items-center justify-center text-center shrink-0 p-2">
+                    <h4>{{ owner }} played the Higher/Lower Wrapped Game</h4>
+                    <h6 class="mb-2">They got</h6>
+                    <h3 id="score">{{ score }}/5</h3>
+                    <h6>questions right!</h6>
+                </div>
+            {% endif %}
+        {% endif %}
     </div>
-    <div class="w-2/3"></div>
+    <div class="w-2/3 h-1/5 flex justify-center items-center gap-2 g29">
+        {% if not game_complete and user.username == owner %}
+            <button class="btn btn-neutral font-display-heading rounded-full min-h-0 h-min py-3 game-control" onclick="gameStart()">Lets go!</button>
+            <button class="btn btn-primary font-display-heading rounded-full min-h-0 h-min py-3 hidden game-control" onclick="answerQuestion(-1)">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 18.75 7.5-7.5 7.5 7.5" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 7.5-7.5 7.5 7.5" />
+                </svg>
+                Higher
+            </button>
+            <button class="btn btn-secondary font-display-heading rounded-full min-h-0 h-min py-3 hidden game-control" onclick="answerQuestion(1)">
+                Lower
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 5.25 7.5 7.5 7.5-7.5m-15 6 7.5 7.5 7.5-7.5" />
+                </svg>
+            </button>
+            <button class="btn btn-accent font-display-heading rounded-full min-h-0 h-min py-3 hidden game-control" onclick="presentQuestion()">Next</button>
+        {% endif %}
+    </div>
 </div>
 <script>
+    const questions = document.getElementsByClassName('question')
+    const controls = Array.from(document.getElementsByClassName('game-control'))
+    const scoreDisplay = document.getElementById('score')
+
+    let question = 0
+    let score = 0
     let gameComplete = {{ game_complete|lower }}
 
+    gsap.set(['#higher', '#lower', '#next'], {opacity:0})
+
+    function showControls(...indexes) {
+        controls.forEach((control, i) => {
+            if (indexes.includes(i)) {
+                control.classList.remove('hidden')
+            } else {
+                control.classList.add('hidden')
+            }
+        })
+    }
+
+    function gameStart() {
+        const tl = gsap.timeline()
+        tl.to(controls[0], { opacity: 0, duration: 0.5, onComplete: () => showControls(3)})
+        tl.to(controls[3], { opacity: 1, duration: 0.5 })
+        tl.to('#first', { 'margin-left': '-100%', duration: 1, ease: 'power2.inOut' }, 0)
+    }
+
+    function presentQuestion() {
+        if (question === 5) {
+            gameComplete = true
+            gsap.to('#first', { 'margin-left': '-700%', duration: 1, ease: 'power2.inOut' })
+            gsap.to(controls[3], { opacity: 0, duration: 0.5 })
+            showControls(-1)
+            scoreDisplay.innerHTML = `${score}/5`
+            completeGame({{ id }}, score)
+            return
+        }
+
+        const tl = gsap.timeline()
+        tl.to(controls[3], { opacity: 0, duration: 0.5, onComplete: () => showControls(1,2)})
+        tl.to(controls.slice(1, 3), { opacity: 1, duration: 0.5 })
+        tl.to(questions[question], { width: '50%', duration: 1, ease: 'power2.inOut' }, 0)
+        tl.to(questions[question + 1], { width: '50%', duration: 1, ease: 'power2.inOut' }, 0)
+    }
+
+    function answerQuestion(answer) {
+        const tl = gsap.timeline()
+        tl.to(controls.slice(1, 3), { opacity: 0, duration: 0.5, onComplete: () => showControls(3)})
+        tl.to(controls[3], { opacity: 1, duration: 0.5 })
+        tl.to(questions[question], { width: '100%', duration: 1, ease: 'power2.inOut' }, 0)
+
+        const correct = answers[question] === answer
+        question++
+        if (question === 5) controls[3].innerHTML = 'Finish'
+
+        tl.to(questions[question], { width: '100%', duration: 1, ease: 'power2.inOut' }, 0)
+        tl.to('#first', { 'margin-left': `-${question + 1}00%`, duration: 1, ease: 'power2.inOut' }, 0)
+
+        const [text] = questions[question].getElementsByTagName('h5');
+        const [title] = questions[question].getElementsByTagName('h6');
+        let body = (correct ? 'Thats right' : 'Nope') + `! "${title.innerHTML}" was your #${ranks[question] + 1} track.`;
+        if (correct) score++
+        tl.to(text, {opacity: 0, duration: 0.5, onComplete: () => {text.innerHTML = body}}, 0)
+        tl.to(text, {opacity: 1, duration: 0.5}, 0.5)
+    }
+    
+    const g29 = document.getElementsByClassName('g29')
+
     animations[6].start = (callback) => {
-        setTimeout(callback, 1)
+        gsap.set([...g29], {clearProps: true})
+        
+        const tl = gsap.timeline({defaults: {duration: 0.5, ease: 'power2.out'}})
+        tl.from(g29[0], {opacity: 0}, 0.5)
+        tl.from(g29[1], {opacity: 0}, 0.7)
+        tl.from(g29[2], {opacity: 0, onComplete: callback}, 0.9)
     }
     
     animations[6].end = (callback) => {
-        setTimeout(callback, 1)
+        const tl = gsap.timeline({defaults: {duration: 0.5, ease: 'power2.out'}})
+        tl.to(g29[0], {opacity: 0}, 0)
+        tl.to(g29[1], {opacity: 0, onComplete: callback}, 0.2)
+        tl.to(g29[2], {opacity: 0}, 0.4)
+        tl.call(() => tl.time(0).kill(), [], 1.2)
     }
 </script>

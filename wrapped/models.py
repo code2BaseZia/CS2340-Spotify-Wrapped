@@ -1,6 +1,7 @@
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from api.models import SpotifyToken, SpotifyArtist, SpotifyTrack, SpotifyAlbum
+from django.core.validators import MaxValueValidator
 from django.db import models
 import random
 
@@ -64,6 +65,7 @@ class SpotifyUserWrap(models.Model):
     track_popularity = models.CharField(max_length=10, default='0000000000')
     average_popularity = models.FloatField(default=0)
     game_complete = models.BooleanField(default=False)
+    score = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(5)])
 
 
 class TopTrackItem(models.Model):
