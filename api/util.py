@@ -2,11 +2,11 @@ from django.db import transaction
 
 from .models import SpotifyToken, SpotifyTrack, SpotifyArtist, SpotifyAlbum
 from wrapped.models import (SpotifyUserWrap, TopTrackItem, TopArtistItem, TopAlbumItem, TopGenreItem, TopArtistOfGenre,
-                            TopTrackOfAlbum, WrappedSlide)
+                            TopTrackOfAlbum, WrappedSlide, HighLowGameQuestion, GuessingGameQuestion)
 from django.utils import timezone
 from datetime import timedelta
 from requests import post, put, get
-import os
+import os, random
 from collections import Counter
 from django.db.models import Q
 from django.templatetags.static import static
@@ -143,15 +143,11 @@ def get_or_create_track(user, id, data=None):
     if tracks.exists():
         return tracks.first()
     else:
-        response, features = (spotify_request(user, 'tracks/' + id), spotify_request(user, 'audio-features/' + id)) if data is None else data
+        response = spotify_request(user, 'tracks/' + id) if data is None else data
 
         track = SpotifyTrack(id=id, title=response['name'], popularity=response['popularity'],
                              album=get_or_create_album(user, response['album']['id']), preview=response['preview_url'],
-                             url=response['external_urls']['spotify'], duration=features['duration_ms'],
-                             key=features['key'], mode=features['mode'], tempo=features['tempo'],
-                             loudness=features['loudness'],danceability=features['danceability'],
-                             energy=features['energy'], instrumentalness=features['instrumentalness'],
-                             speechiness=features['speechiness'], valence=features['valence'])
+                             url=response['external_urls']['spotify'])
         track.save()
         for item in response['artists']:
             track.artists.add(get_or_create_artist(user, item['id']))
@@ -169,29 +165,8 @@ def create_items(user, tracks=None, artists=None, albums=None):
             get_or_create_album(user, album['id'], album)
     if tracks is not None:
         tracks_data = spotify_request(user, 'tracks', params={'ids': ','.join(tracks)})
-        # features = spotify_request(user, 'audio-features', params={'ids': ','.join(tracks)})
-        features = {
-        "acousticness": 0.00242,
-        "analysis_url": "https://api.spotify.com/v1/audio-analysis/2takcwOaAZWiXQijPHIx7B",
-        "danceability": 0.585,
-        "duration_ms": 237040,
-        "energy": 0.842,
-        "id": "2takcwOaAZWiXQijPHIx7B",
-        "instrumentalness": 0.00686,
-        "key": 9,
-        "liveness": 0.0866,
-        "loudness": -5.883,
-        "mode": 0,
-        "speechiness": 0.0556,
-        "tempo": 118.211,
-        "time_signature": 4,
-        "track_href": "https://api.spotify.com/v1/tracks/2takcwOaAZWiXQijPHIx7B",
-        "type": "audio_features",
-        "uri": "spotify:track:2takcwOaAZWiXQijPHIx7B",
-        "valence": 0.428
-        }
         for i in range(len(tracks)):
-            get_or_create_track(user, tracks[i], (tracks_data['tracks'][i], features))
+            get_or_create_track(user, tracks[i], (tracks_data['tracks'][i]))
 
 
 def calculate_top_albums_and_genres(tracks, artists):
@@ -302,7 +277,7 @@ def find_ideal_track(key, features):
 
 
 def create_wrapped(user, term):
-    wrapped = SpotifyUserWrap(user=user.profile, term=term)
+    wrapped = SpotifyUserWrap(user=user.profile, term=term, public=False)
     wrapped.save()
 
     all_tracks = spotify_request(user, 'me/top/tracks', params={
@@ -335,39 +310,19 @@ def create_wrapped(user, term):
     track_popularity = [0, 0, 0, 0, 0]
     average_popularity = 0
 
-    keys = Counter()
-    average_features = {
-        'duration': 0,
-        'tempo': 0,
-        'loudness': 0,
-        'danceability': 0,
-        'energy': 0,
-        'instrumentalness': 0,
-        'speechiness': 0,
-        'valence': 0
-    }
-
     rank_factor = 1
+
+    api_tracks = []
 
     for track in all_tracks['items']:
         api_track = get_or_create_track(user, track['id'])
+        api_tracks.append(api_track)
 
         popularity = api_track.popularity
         track_popularity[get_popularity_rank(popularity)] += 1
         average_popularity += popularity
         if most_popular_track is None or popularity > most_popular_track.popularity:
             most_popular_track = api_track
-
-        average_features['duration'] += api_track.duration * rank_factor
-        average_features['tempo'] += api_track.tempo * rank_factor
-        average_features['loudness'] += api_track.loudness * rank_factor
-        average_features['danceability'] += api_track.danceability * rank_factor
-        average_features['energy'] += api_track.energy * rank_factor
-        average_features['instrumentalness'] += api_track.instrumentalness * rank_factor
-        average_features['speechiness'] += api_track.speechiness * rank_factor
-        average_features['valence'] += api_track.valence * rank_factor
-
-        keys[(api_track.key, api_track.mode)] += rank_factor
 
         rank_factor -= .02
 
@@ -397,14 +352,33 @@ def create_wrapped(user, term):
 
     average_popularity /= 50
 
-    average_features['duration'] /= 25.5
-    average_features['tempo'] /= 25.5
-    average_features['loudness'] /= 25.5
-    average_features['danceability'] /= 25.5
-    average_features['energy'] /= 25.5
-    average_features['instrumentalness'] /= 25.5
-    average_features['speechiness'] /= 25.5
-    average_features['valence'] /= 25.5
+    top_index = 24
+    intervals = [16, 8, 4, 2, 1]
+    answer = 0
+
+    highlow_track = HighLowGameQuestion(wrapped=wrapped, track=api_tracks[top_index], rank=24, order=0, answer=answer)
+    highlow_track.save()
+
+    for i in range(len(intervals)):
+        if random.random() < 0.5:
+            top_index -= intervals[i]
+            answer = -1
+            if top_index < 5:
+                top_index += 2 * intervals[i]
+                answer = 1
+        else:
+            top_index += intervals[i]
+            answer = 1
+            if top_index >= 50:
+                top_index -= 2 * intervals[i]
+                answer = -1
+        highlow_track = HighLowGameQuestion(wrapped=wrapped, track=api_tracks[top_index], rank=top_index, order=i+1, answer=answer)
+        highlow_track.save()
+
+    for i in range(5):
+        guess_track = api_tracks[random.randint(10 * i, 10 * i + 9)]
+        guess_item = GuessingGameQuestion(wrapped=wrapped, track=guess_track, rank=top_index, order=i)
+        guess_item.save()
 
     wrapped.tracks_by_top_artist = tracks_by_top_artist
     wrapped.top_track_by_top_artist = top_track_by_top_artist
@@ -414,21 +388,6 @@ def create_wrapped(user, term):
     wrapped.most_popular_track = most_popular_track
     wrapped.track_popularity = ''.join([f'{frq:02}' for frq in track_popularity])
     wrapped.average_popularity = average_popularity
-
-    ideal_key = keys.most_common()[0][0]
-
-    wrapped.ideal_key = ideal_key[0]
-    wrapped.ideal_mode = ideal_key[1]
-    wrapped.average_duration = average_features['duration']
-    wrapped.average_tempo = average_features['tempo']
-    wrapped.average_loudness = average_features['loudness']
-    wrapped.average_danceability = average_features['danceability']
-    wrapped.average_energy = average_features['energy']
-    wrapped.average_instrumentalness = average_features['instrumentalness']
-    wrapped.average_speechiness = average_features['speechiness']
-    wrapped.average_valence = average_features['valence']
-
-    wrapped.ideal_track = find_ideal_track(ideal_key, average_features)
 
     for i in range(11):
         slide = WrappedSlide(wrapped=wrapped, number=i)

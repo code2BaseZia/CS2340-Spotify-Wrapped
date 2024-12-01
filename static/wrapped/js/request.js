@@ -58,3 +58,16 @@ async function createWrap(term) {
 
     return json.id;
 }
+
+async function changeVisibility(id, visibility) {
+    const csrftoken = getCookie('csrftoken');
+
+    const response = await fetch(`http://localhost:8000/api/wrap/${id}/visibility`, {
+        method: 'POST',
+        body: JSON.stringify({public: visibility}),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            'X-CSRFToken': csrftoken
+        }
+    });
+}

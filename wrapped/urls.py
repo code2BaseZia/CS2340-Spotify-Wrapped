@@ -1,7 +1,7 @@
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from .views import IndexView, SignUpView, LogInView, LinkTokenView, ResetPasswordView, ResetPasswordConfirmView, \
-    DeveloperContactView, FeedbackView, AccountView, WrappedView, SavedView
+    DeveloperContactView, FeedbackView, AccountView, WrappedView, SavedView, DeleteWrappedView
 
 app_name = 'wrapped'
 
@@ -16,6 +16,7 @@ urlpatterns = [
     path("feedback/", FeedbackView.as_view(), name="feedback"),
     path("account/", AccountView.as_view(), name="account"),
     path("wrap/<int:pk>", WrappedView.as_view(), name="wrap"),
+    path("wrap/<int:pk>/delete", DeleteWrappedView.as_view(), name="delete"),
     path('', include('django.contrib.auth.urls')),
     path("saved/", SavedView.as_view(), name="saved"),
 

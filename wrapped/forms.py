@@ -2,6 +2,7 @@ from django import forms
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import ValidationError
 
 from wrapped.models import Feedback
 
@@ -41,4 +42,20 @@ class AccountForm(forms.Form):
     current_password = forms.CharField(widget=forms.PasswordInput, required=False)
     new_password = forms.CharField(widget=forms.PasswordInput, required=False)
     confirm_password = forms.CharField(widget=forms.PasswordInput, required=False)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+
+        current_password = cleaned_data.get('current_password')
+        new_password = cleaned_data.get('new_password')
+        confirm_password = cleaned_data.get('confirm_password')
+
+        if new_password or confirm_password:
+            if not current_password:
+                raise ValidationError("Current password is required to change the password.")
+            if new_password != confirm_password:
+                raise ValidationError("New password and confirm password must match.")
+
+        return cleaned_data
+
 

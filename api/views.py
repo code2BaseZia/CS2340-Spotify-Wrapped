@@ -169,3 +169,29 @@ class ProfilePicture(APIView):
             return Response({'url': image}, status=status.HTTP_200_OK)
         except:
             return Response({'message': 'Failed to get profile picture'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class Visibility(APIView):
+    authentication_classes = [SessionAuthentication]
+
+    def post(self, request, id, format=None):
+        wrap = get_wrap_by_id(request.user, id)
+        if not wrap.user.user == request.user:
+            return Response({'message': 'Only the owner can set visibility'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        wrap.public = request.data['public']
+        wrap.save()
+        return Response({'message': 'Visibility updated, public: ' + str(request.data['public'])}, status=status.HTTP_200_OK)
+
+
+class Game(APIView):
+    authentication_classes = [SessionAuthentication]
+
+    def post(self, request, id, format=None):
+        wrap = get_wrap_by_id(request.user, id)
+        if not wrap.user.user == request.user:
+            return Response({'message': 'Only the owner can complete the game'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        wrap.game_complete = True
+        wrap.save()
+        return Response({'message': 'Game successfully marked complete'}, status=status.HTTP_200_OK)

@@ -16,7 +16,8 @@ Including another URLconf
 """
 
 from django.urls import path
-from .views import AuthURL, spotify_callback, IsAuthenticated, LinkSpotifyToken, UserStats, UserWrapped, SingleWrapped, ProfilePicture
+from .views import (AuthURL, spotify_callback, IsAuthenticated, LinkSpotifyToken, UserStats, UserWrapped, SingleWrapped,
+                    ProfilePicture, Visibility, Game)
 
 
 urlpatterns = [
@@ -27,5 +28,7 @@ urlpatterns = [
     path('taste', UserStats.as_view()),
     path('wrap', UserWrapped.as_view()),
     path('wrap/<int:id>', SingleWrapped.as_view(), name='wrap'),
+    path('wrap/<int:id>/visibility', Visibility.as_view()),
+    path('wrap/<int:id>/game', Game.as_view()),
     path('picture', ProfilePicture.as_view()),
 ]

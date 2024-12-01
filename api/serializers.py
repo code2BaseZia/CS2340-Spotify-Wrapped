@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from wrapped.models import (SpotifyUserWrap, TopTrackItem, TopArtistItem, TopAlbumItem, TopGenreItem, TopArtistOfGenre,
-                            TopTrackOfAlbum, WrappedSlide)
+                            TopTrackOfAlbum, WrappedSlide, HighLowGameQuestion, GuessingGameQuestion)
 from .models import SpotifyTrack, SpotifyArtist, SpotifyAlbum
 
 
@@ -113,6 +113,20 @@ class ModeSerializer(serializers.CharField):
         return 'M' if instance == 1 else 'm'
 
 
+class HighLowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HighLowGameQuestion
+        exclude = ('order',)
+        depth = 2
+
+
+class GuessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GuessingGameQuestion
+        exclude = ('order',)
+        depth = 2
+
+
 class WrappedSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.user.username', read_only=True)
     url = serializers.HyperlinkedIdentityField(view_name='wrapped:wrap', lookup_field='pk')
@@ -123,8 +137,8 @@ class WrappedSerializer(serializers.ModelSerializer):
     slides = SlidesSerializer(many=True, read_only=True)
     track_popularity = PopularitySerializer(read_only=True)
     max_popularity = MaxPopularitySerializer(source='track_popularity', read_only=True)
-    ideal_key = KeySerializer(read_only=True)
-    ideal_mode = ModeSerializer(read_only=True)
+    highlow_game_questions = HighLowSerializer(many=True, read_only=True)
+    guess_game_questions = GuessSerializer(many=True, read_only=True)
 
     class Meta:
         model = SpotifyUserWrap
