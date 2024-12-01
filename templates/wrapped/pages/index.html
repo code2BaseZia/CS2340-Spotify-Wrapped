@@ -4,6 +4,7 @@
 {% block title %}{% if user.is_authenticated %}Stats{% else %}Home{% endif %}{% endblock %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'wrapped/css/sliders.css' %}"></link>
+    <link rel="stylesheet" href="https://use.typekit.net/lha8mkp.css">
     <style>
         .home {
             font-weight: 600;
@@ -12,36 +13,42 @@
 {% endblock %}
     
 {% block content %}
+    <script>const animations = Array.from({length: 11}, () => ({ start: () => {}, end: () => {}}))</script>
     {% if not user.is_authenticated %}
-        <div class="col-span-full space-y-16">
-            <section id="main-section" class="flex flex-col items-center mt-16">
-                <h1 class="text-4xl font-bold text-center mb-4 pt-4">A better way to track music</h1>
-                <p class="text-lg mb-8 max-w-3xl mx-auto text-center">
-                    Discover your music journey with personalized insights and custom wraps.
-                </p>
-                <a href="{% url 'wrapped:signup' %}" class="btn btn-primary">Try it Free</a>
-            </section>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-                <div class="card bg-base-200 shadow-xl">
-                    <div class="card-body">
-                        <h2 class="card-title">Track Your Favorites</h2>
-                        <p>See your top tracks, artists, and genres.</p>
-                    </div>
-                </div>
-                <div class="card bg-base-200 shadow-xl">
-                    <div class="card-body">
-                        <h2 class="card-title">Create Custom Wraps</h2>
-                        <p>Generate unique visualizations of your music taste.</p>
-                    </div>
-                </div>
-                <div class="card bg-base-200 shadow-xl">
-                    <div class="card-body">
-                        <h2 class="card-title">Share Your Music Story</h2>
-                        <p>Show off your musical journey with friends.</p>
-                    </div>
-                </div>
+        <section id="main-section" class="flex flex-col items-center row-start-1 col-span-full">
+            <h1 class="text-4xl font-bold text-center mb-4 pt-4">A better way to track music</h1>
+            <p class="text-lg mb-8 max-w-3xl mx-auto text-center">
+                Discover your music journey with personalized insights and custom wraps.
+            </p>
+        </section>
+        <div id="container" class="row-start-2 col-start-1 col-span-4 md:col-start-2 md:col-span-6 lg:col-start-3 lg:col-span-8 aspect-square overflow-x-hidden relative">
+            <div class="carousel-item size-full overflow-hidden relative" data-theme="wrapped2">
+                {% include 'wrapped/wraps/s10v1.html' %}
             </div>
         </div>
+        <section class="col-span-full flex justify-center">
+            <a href="{% url 'wrapped:signup' %}" class="btn btn-primary">Try it Free</a>
+        </section>
+        <section class="col-span-full flex flex-col md:flex-row md:justify-stretch md:basis-1/4 gap-4">
+            <div class="card bg-base-200 shadow-xl grow shrink">
+                <div class="card-body">
+                    <h2 class="card-title">Track Your Favorites</h2>
+                    <p>See your top tracks, artists, and genres.</p>
+                </div>
+            </div>
+            <div class="card bg-base-200 shadow-xl grow shrink">
+                <div class="card-body">
+                    <h2 class="card-title">Create Custom Wraps</h2>
+                    <p>Generate unique visualizations of your music taste.</p>
+                </div>
+            </div>
+            <div class="card bg-base-200 shadow-xl grow shrink">
+                <div class="card-body">
+                    <h2 class="card-title">Share Your Music Story</h2>
+                    <p>Show off your musical journey with friends.</p>
+                </div>
+            </div>
+        </section>
     {% elif linked %}
         <div class="card bg-base-200 col-start-1 row-start-1 col-span-4 md:col-span-5 lg:col-span-6 shadow-xl h-72">
             <div class="card-body max-h-full p-2">
@@ -144,9 +151,27 @@
             <div class="card-body">
                 <h2 class="card-title">Wrapped</h2>
                 <div class="grow shrink relative flex flex-col items-center">
-                    <div class="aspect-square h-full relative z-20 scale-90"><div class="transition-transform bg-primary size-full hover:scale-110 duration-500 shadow-lg"></div></div>
-                    <div class="aspect-square h-full absolute z-10 scale-75 -translate-x-2/3 translate-y-1.5 hover:z-30"><div class="transition-all opacity-80 bg-secondary size-full hover:scale-125 hover:-translate-y-2 duration-500 shadow-lg hover:opacity-100"></div></div>
-                    <div class="aspect-square h-full absolute z-10 scale-75 translate-x-2/3 translate-y-1.5 hover:z-30"><div class="transition-all opacity-80 bg-accent size-full hover:scale-125 hover:-translate-y-2 duration-500 shadow-lg hover:opacity-100"></div></div>
+                    <div class="aspect-square h-full relative z-20 scale-90">
+                        <div class="transition-transform bg-primary size-full hover:scale-110 duration-500 shadow-lg relative">
+                            <div class="absolute -inset-[264px] scale-[.2] overflow-hidden" data-theme="wrapped1">
+                                {% include "wrapped/wraps/s0v1.html" %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="aspect-square h-full absolute z-10 scale-75 -translate-x-2/3 translate-y-1.5 hover:z-30">
+                        <div class="transition-all opacity-80 bg-secondary size-full hover:scale-125 hover:-translate-y-2 duration-500 shadow-lg hover:opacity-100 relative">
+                            <div class="absolute -inset-[264px] scale-[.2] overflow-hidden" data-theme="wrapped1">
+                                {% include "wrapped/wraps/s1v1.html" %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="aspect-square h-full absolute z-10 scale-75 translate-x-2/3 translate-y-1.5 hover:z-30">
+                        <div class="transition-all opacity-80 bg-accent size-full hover:scale-125 hover:-translate-y-2 duration-500 shadow-lg hover:opacity-100 relative">
+                            <div class="absolute -inset-[264px] scale-[.2] overflow-hidden" data-theme="wrapped1">
+                                {% include "wrapped/wraps/s3v1.html" %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-actions justify-center">
                     <button class="btn btn-primary create-wrapped min-w-36">Create Wrapped</button>

@@ -24,40 +24,67 @@
         }
     </style>
     <rect fill="url(#bg1)" x="194" y="194" width="1660" height="1660"/>
-    <g clip-path="url(#clippath)" class="float-3">
-        <image width="1832" height="1625" transform="translate(51.282 715.391) scale(.528)"
-               href="{% static 'wrapped/img/holo/1.png' %}"/>
+    <g class="g2">
+        <g clip-path="url(#clippath)" class="float-3">
+            <image width="1832" height="1625" transform="translate(51.282 715.391) scale(.528)"
+                   href="{% static 'wrapped/img/holo/1.png' %}"/>
+        </g>
     </g>
-    <g clip-path="url(#clippath-1)" class="float-10">
-        <image width="1658" height="1697" transform="translate(1139.003 400.52) scale(.492)"
-               href="{% static 'wrapped/img/holo/2.png' %}"/>
+    <g class="g2">
+        <g clip-path="url(#clippath-1)" class="float-10">
+            <image width="1658" height="1697" transform="translate(1139.003 400.52) scale(.492)"
+                   href="{% static 'wrapped/img/holo/2.png' %}"/>
+        </g>
     </g>
-    <circle class="fill-accent opacity-70" cx="1174" cy="1011.894" r="276.788"/>
-    <circle class="fill-accent opacity-70" cx="874" cy="1011.894" r="276.788"/>
-    <circle class="fill-accent opacity-70" cx="1124" cy="1011.894" r="276.788"/>
-    <circle class="fill-accent opacity-70" cx="924" cy="1011.894" r="276.788"/>
-    <circle class="fill-accent opacity-70" cx="974" cy="1011.894" r="276.788"/>
-    <circle class="fill-accent opacity-70" cx="1074" cy="1011.894" r="276.788"/>
+    <circle class="fill-accent opacity-70 g3" cx="1174" cy="1011.894" r="276.788"/>
+    <circle class="fill-accent opacity-70 g3" cx="874" cy="1011.894" r="276.788"/>
+    <circle class="fill-accent opacity-70 g3" cx="1124" cy="1011.894" r="276.788"/>
+    <circle class="fill-accent opacity-70 g3" cx="924" cy="1011.894" r="276.788"/>
+    <circle class="fill-accent opacity-70 g3" cx="974" cy="1011.894" r="276.788"/>
+    <circle class="fill-accent opacity-70 g3" cx="1074" cy="1011.894" r="276.788"/>
     <g clip-path="url(#clippath-2)">
-        <image x="742.212" y="735.106" width="560" height="560" href="{{ top_artists.0.photo }}"/>
+        <image id="e1" x="742.212" y="735.106" width="560" height="560" href="{{ top_artists.0.photo }}"/>
     </g>
 </svg>
 <div class="absolute inset-0 z-10 flex flex-col items-stretch justify-between p-8 display text-center">
-    <h2>Introducing Your Top Artist</h2>
+    <h2 id="e0">Introducing Your Top Artist</h2>
     <div class="flex flex-col md:gap-10 lg:gap-12 lg:pb-8">
-        <div class="flex flex-col gap-0">
+        <div class="flex flex-col gap-0" id="e2">
             <h4>{{ top_artists.0.name }}</h4>
             <h6 class="opacity-50 -mt-2">{{ top_artists.0.followers|intcomma }} Followers</h6>
         </div>
-        <p class="underline decoration-accent">You had {{ tracks_by_top_artist }} of their tracks in your top 50</p>
+        <p class="underline decoration-accent" id="e3">You had {{ tracks_by_top_artist }} of their tracks in your top 50</p>
     </div>
 </div>
 <script>
-    animations[1].start = () => {
+    const g2 = document.getElementsByClassName('g2')
+    const g3 = document.getElementsByClassName('g3')
 
+    animations[1].start = (callback) => {
+        gsap.set([...g2, ...g3, '#e0', '#e1', '#e2', '#e3'], {clearProps: true})
+        
+        const tl = gsap.timeline({defaults: {duration: 0.5, ease: 'power2.out'}})
+        tl.from(g2[0], {attr:{transform: 'translate(-800, 0)'}}, 0.2)
+        tl.from(g2[1], {attr:{transform: 'translate(800, 0)'}}, 0.2)
+        tl.from('#e0', {opacity: 0}, 0.7)
+        tl.from('#e1', {opacity: 0}, 1.1)
+        tl.from('#e2', {opacity: 0}, 1.7)
+        tl.from('#e3', {opacity: 0, onComplete: callback}, 2.1)
+        tl.from(g3, {opacity: 0, duration: 0.5}, 1.4)
+        tl.from(g3[0], {attr: {transform: 'translate(-150, 0)'}}, 1.4)
+        tl.from(g3[1], {attr: {transform: 'translate(150, 0)'}}, 1.4)
+        tl.from(g3[2], {attr: {transform: 'translate(-100, 0)'}}, 1.4)
+        tl.from(g3[3], {attr: {transform: 'translate(100, 0)'}}, 1.4)
+        tl.from(g3[4], {attr: {transform: 'translate(50, 0)'}}, 1.4)
+        tl.from(g3[5], {attr: {transform: 'translate(-50, 0)'}}, 1.4)
     }
 
-    animations[1].end = () => {
-
+    animations[1].end = (callback) => {
+        const tl = gsap.timeline({defaults: {duration: 0.5, ease: 'power2.in'}})
+        tl.to(g2[0], {attr:{transform: 'translate(-800, 0)'}}, 0.3)
+        tl.to(g2[1], {attr:{transform: 'translate(800, 0)'}}, 0.3)
+        tl.to(g3, {opacity: 0}, 0)
+        tl.to(['#e0', '#e1', '#e2', '#e3'], {opacity: 0, onComplete: callback}, 0)
+        tl.call(() => tl.time(0).kill(), [], 1)
     }
 </script>

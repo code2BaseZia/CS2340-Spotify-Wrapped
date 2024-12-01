@@ -1,10 +1,13 @@
 {% extends "wrapped/index.html" %}
 {% load static %}
 {% block title %}Help{% endblock %}
-{% block css %}{% endblock %}
-
-{% load social_share %}
-
+{% block css %}
+    <style>
+        .help {
+            font-weight: 600;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
     <div class="col-span-full space-y-16">
@@ -17,12 +20,6 @@
                 experience. No matter the time of year, anyone can get real-time data on their listening habits.
             </p>
         </section>
-        
-        
-{#      <section id="share" class="col-span-full">#}
-        {# {% post_to_twitter "Take a look at my custom-made Spotify Wrapped using Spotify Wrapper!" object_or_url "Post to Twitter" %} #}          
-{#      </section>#}
-        
         
         <!-- Meet the Team Section -->
         <section id="meet-the-team-section" class="col-span-full">

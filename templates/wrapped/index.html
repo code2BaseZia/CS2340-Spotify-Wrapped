@@ -4,27 +4,29 @@
 <html lang="en" data-theme="spotifyDark">
     <head>
         <meta charset="UTF-8">
-        <title>Spotify Wrapped</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Spotify Wrapper</title>
         <link rel="stylesheet" href="https://use.typekit.net/qym2xky.css">
         <link rel="stylesheet" href="{% static 'wrapped/css/index.css' %}">
         {% block css %}{% endblock %}
     </head>
     <body class="h-screen flex flex-col items-stretch overflow-hidden">
+        <script src="https://colorjs.io/dist/color.global.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollToPlugin.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/TextPlugin.min.js"></script>
-        
-        <!-- The following plugins are only available for Club GSAP members.--> 
+
+        <!-- The following plugins are only available for Club GSAP members.-->
         <script src="{% static 'wrapped/js/gsap/DrawSVGPlugin.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/MorphSVGPlugin.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/ScrollSmoother.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/ScrambleTextPlugin.min.js' %}"></script>
         <script src="{% static 'wrapped/js/gsap/SplitText.min.js' %}"></script>
-        
+
         <script src="{% static 'wrapped/js/gsap.js' %}"></script>
-    
+
         <nav>
             <div class="navbar bg-base-200 font-title relative justify-between px-4">
                 <div class="absolute inset-0 flex justify-center z-0">
@@ -46,11 +48,10 @@
                                 Home
                             {% endif %}
                         </a></li>
-                        <li class="explore"><a class="pt-3" href="{% url 'wrapped:home' %}">Explore</a></li>
                         {% if user.is_authenticated %}
                             <li class="saved"><a class="pt-3" href="{% url 'wrapped:saved' %}">Saved</a></li>
                         {% endif %}
-                        <li class="help"><a class="pt-3" href="{% url 'wrapped:developer' %}">Help</a></li>
+                        <li class="help"><a class="pt-3" href="{% url 'wrapped:developer' %}">Contact</a></li>
                     </ul>
                 </div>
                 <div class="hidden md:flex flex-row z-10 gap-2">
@@ -69,7 +70,6 @@
                                 </svg>
                             </summary>
                             <ul class="menu dropdown-content rounded-lg bg-base-200 !mt-5 p-2 w-max right-0 z-50 gap-1">
-                                <li><a href="{% url 'wrapped:home' %}" class="pt-3">Profile</a></li>
                                 <li><a href="{% url 'wrapped:account' %}" class="pt-3">Account</a></li>
                                 <li>
                                     <form method="post" action="{% url 'wrapped:logout' %}" class="p-0 flex flex-col items-stretch hover:bg-error hover:bg-opacity-20 active:!bg-error active:!bg-opacity-40">
@@ -85,7 +85,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div id="menu" class="lg:hidden bg-base-200 absolute inset-x-0 top-16 h-0 overflow-hidden z-10">
+            <div id="menu" class="lg:hidden bg-base-200 absolute inset-x-0 top-16 h-0 overflow-hidden z-50">
                 <ul class="menu menu-vertical px-2 gap-2 items-stretch">
                     <li class="home"><a href="{% url 'wrapped:home' %}">
                         {% if user.is_authenticated %}
@@ -94,13 +94,11 @@
                             Home
                         {% endif %}
                     </a></li>
-                    <li class="explore"><a href="{% url 'wrapped:home' %}">Explore</a></li>
                     {% if user.is_authenticated %}
                         <li class="saved"><a href="{% url 'wrapped:saved' %}">Saved</a></li>
                     {% endif %}
-                    <li class="help"><a href="{% url 'wrapped:home' %}">Help</a></li>
+                    <li class="help"><a href="{% url 'wrapped:developer' %}">Contact</a></li>
                     {% if user.is_authenticated %}
-                        <li><a href="{% url 'wrapped:home' %}">Profile</a></li>
                         <li><a href="{% url 'wrapped:account' %}">Account</a></li>
                         <li><a href="{% url 'wrapped:logout' %}" class="text-error hover:bg-error hover:bg-opacity-20 active:!text-error active:!bg-error active:!bg-opacity-40">Log Out</a></li>
                     {% else %}
@@ -130,12 +128,10 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            <div class="grid-content w-full">
+            <div class="grid-content w-full overflow-visible min-h-[calc(100vh-6rem)]">
                 {% block content %}
                 {% endblock %}
             </div>
-
-        
             <button class="btn btn-primary fixed right-4 bottom-4 size-12 flex justify-center items-center rounded-full z-20" id="theme">
                 <label class="swap swap-rotate size-8">
                     <input type="checkbox" id="themeControl" />
@@ -150,7 +146,7 @@
         </main>
 
         <script>placeholder = '{% static 'wrapped/img/placeholder.png' %}';</script>
-        
+
         <script src="{% static 'wrapped/js/globals.js' %}"></script>
         <script src="{% static 'wrapped/js/request.js' %}"></script>
         <script src="{% static 'wrapped/js/menu.js' %}"></script>

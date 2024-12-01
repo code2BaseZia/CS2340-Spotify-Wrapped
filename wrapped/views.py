@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, RedirectView, FormView, DetailView, ListView
+from django.views.generic import CreateView, TemplateView, RedirectView, FormView, DetailView, ListView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 
 from api.serializers import WrappedSerializer
@@ -15,6 +15,8 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from django.contrib import messages
 from django.utils import dateparse
+from django.http.response import Http404
+import json
 
 """def get_feedback(request):
     if request.method == 'POST':
@@ -39,9 +41,59 @@ class IndexView(TemplateView):
     template_name = 'wrapped/pages/index.html'
 
     def get_context_data(self, **kwargs):
+        context = {
+            'id': 6, 'owner': 'denaye', 'user': self.request.user,
+            'top_tracks': [
+                {
+                    'title': 'Old money bitch',
+                    'artists': [{'name': 'underscores'}],
+                    'album': {'photo': 'https://i.scdn.co/image/ab67616d0000b27347b648a27c23040d19a045e9'}
+                },
+                {
+                    'title': 'Stupid (Can’t run from the urge)',
+                    'artists': [{'name': 'underscores'}],
+                    'album': {'photo': 'https://i.scdn.co/image/ab67616d0000b273bb7ef31b81938dc605b9f2fa'}
+                },
+                {
+                    'title': "That's My Floor",
+                    'artists': [{'name': 'Magdalena Bay'}],
+                    'album': {'photo': 'https://i.scdn.co/image/ab67616d0000b2735a2ff617de4e51a9a214b56a'}
+                },
+                {
+                    'title': 'are you mad',
+                    'artists': [{'name': 'webcage'}],
+                    'album': {'photo': 'https://i.scdn.co/image/ab67616d0000b273ecff50fb08ce44db4fd14bf8'}
+                },
+                {
+                    'title': 'Girls and boys',
+                    'artists': [{'name': 'underscores'}],
+                    'album': {'photo': 'https://i.scdn.co/image/ab67616d0000b27349ba4c893019f404b4c50b49'}
+                }
+            ],
+            'top_artists': [
+                {'name': 'underscores', 'photo': 'https://i.scdn.co/image/ab6761610000e5ebde8dfaf8e64fee65ef479e68'},
+                {'name': 'Charli xcx', 'photo': 'https://i.scdn.co/image/ab6761610000e5eb936885667ef44c306483c838'},
+                {'name': 'Magdalena Bay', 'photo': 'https://i.scdn.co/image/ab6761610000e5eb64584f6175cff36d2d8c57d1'},
+                {'name': 'NIKI', 'photo': 'https://i.scdn.co/image/ab6761610000e5eb0654e511623cba4e0e9e2f0c'},
+                {'name': 'Chappell Roan', 'photo': 'https://i.scdn.co/image/ab6761610000e5ebcde5a0d57c1b79de5fce6bee'}
+            ],
+            'top_albums': [{
+                'album': {
+                    'title': 'BRAT',
+                    'artists': [{'name': 'Charli xcx'}],
+                    'photo': 'https://i.scdn.co/image/ab67616d0000b27388e3822cccfb8f2832c70c2e'
+                }
+            }],
+            'top_genres': [{'name': 'indie pop'}]
+        }
+
         if self.request.user.is_authenticated and self.request.user.profile.token is not None:
-            return {'linked': True}
-        return {'linked': False}
+            context['linked'] = True
+        else:
+            context['linked'] = False
+
+        return context
+
 
 class LogInView(LoginView):
     template_name = "wrapped/auth/login.html"
@@ -154,8 +206,17 @@ class WrappedView(DetailView):
     model = SpotifyUserWrap
     template_name = 'wrapped/pages/wrap.html'
 
+    def get_object(self, queryset=None):
+        obj = SpotifyUserWrap.objects.get(pk=self.kwargs['pk'])
+
+        if obj.user.user != self.request.user and not obj.public:
+            raise Http404("This wrapped is private or does not exist")
+
+        return obj
+
     def get_context_data(self, **kwargs):
         context = WrappedSerializer(self.object, context={'request': self.request}).data
+        context['owner'] = context['user']
         context['user'] = self.request.user
         return context
 
@@ -175,3 +236,8 @@ class SavedView(ListView):
 
     def get_queryset(self):
         return self.request.user.profile.wraps.all()
+
+
+class DeleteWrappedView(DeleteView):
+    model = SpotifyUserWrap
+    success_url = reverse_lazy('wrapped:saved')
