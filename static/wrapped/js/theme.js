@@ -1,7 +1,7 @@
 const themeButton = document.getElementById('theme');
 const themeControl = document.getElementById('themeControl')
 
-let count = 0;
+let count = parseInt(sessionStorage.getItem('count')) || 0;
 
 function setTheme(theme, colors=null) {
     if (theme === 'dark') {
@@ -16,7 +16,7 @@ function setTheme(theme, colors=null) {
         themeButton.classList.remove('btn-primary')
         themeControl.checked = false
     }
-    if (theme === 'random') {
+    if (colors) {
         document.documentElement.style.setProperty('--b1', colors.b1)
         document.documentElement.style.setProperty('--b2', colors.b2)
         document.documentElement.style.setProperty('--b3', colors.b3)
@@ -42,6 +42,9 @@ function toLchStr(color) {
 
 themeControl.addEventListener('change', (e) => {
     count++;
+    sessionStorage.setItem('count', count)
+
+    let randomTheme = null;
 
     if (count >= 10) {
         const light = e.target.checked ? 90 : 10
@@ -57,7 +60,7 @@ themeControl.addEventListener('change', (e) => {
         const s = new Color('hsl', [Math.random() * 360, Math.random() * 75 + 25, Math.random() * 75 + 25])
         const c = new Color('hsl', [0, 0, e.target.checked ? 0 : 100])
 
-        const randomTheme = {
+        randomTheme = {
             b1: toLchStr(b1),
             b2: toLchStr(b2),
             b3: toLchStr(b3),
@@ -67,25 +70,17 @@ themeControl.addEventListener('change', (e) => {
             s: toLchStr(s),
             c: toLchStr(c)
         }
-
-        setTheme('random', randomTheme)
-        return
     }
 
     if (!e.target.checked) {
-        setTheme('light')
+        setTheme('light', randomTheme)
     } else {
-        setTheme('dark')
+        setTheme('dark', randomTheme)
     }
 })
 
 document.addEventListener('DOMContentLoaded', (e) => {
     const currentTheme = sessionStorage.getItem('theme')
-    if (currentTheme === 'random') {
-        const themeColors = JSON.parse(sessionStorage.getItem('randomTheme'))
-        setTheme('random', themeColors)
-    }
-    else {
-        setTheme(currentTheme)
-    }
+    const randomTheme = JSON.parse(sessionStorage.getItem('randomTheme') || null)
+    setTheme(currentTheme, randomTheme)
 })
