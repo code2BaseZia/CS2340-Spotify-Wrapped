@@ -25,7 +25,10 @@ visibility.addEventListener('change', async (e) => {
 })
 
 extraVisibility.addEventListener('change', async (e) => {
-    visibility.click()
+    visibility.checked = isPublic
+    isPublic = e.target.checked
+    await changeVisibility(id, isPublic)
+    visibilityText.innerText = isPublic ? 'Public' : 'Private'
 })
 
 updateModal()
