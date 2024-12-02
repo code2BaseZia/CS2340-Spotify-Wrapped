@@ -25,8 +25,8 @@ visibility.addEventListener('change', async (e) => {
 })
 
 extraVisibility.addEventListener('change', async (e) => {
-    visibility.checked = isPublic
     isPublic = e.target.checked
+    visibility.checked = isPublic
     await changeVisibility(id, isPublic)
     visibilityText.innerText = isPublic ? 'Public' : 'Private'
 })

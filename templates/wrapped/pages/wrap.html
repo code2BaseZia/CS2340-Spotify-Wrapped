@@ -24,7 +24,7 @@
     </span>
     <script>
         const animations = Array.from({length: 11}, () => ({ start: () => {}, end: () => {}}))
-        const tracks = ['{{ top_track_in_top_album.preview }}', '{{ top_track_by_top_artist.preview }}', '{{ top_track_by_top_artist.preview }}', '{{ top_tracks.0.preview }}', '{{ top_tracks.0.preview }}', '{{ most_popular_track.preview }}', '{{ most_popular_track.preview }}', '{{ top_track_in_top_album.preview }}', '{{ top_track_in_top_album.preview }}', '{{ top_track_by_top_artist_of_top_genre.preview }}', '{{ top_track_by_top_artist_of_top_genre.preview }}']
+        const tracks = ['{{ top_track_in_top_album.preview }}', '{{ top_track_by_top_artist.preview }}', '{{ top_track_by_top_artist.preview }}', '{{ top_tracks.0.preview }}', '{{ top_tracks.0.preview }}', '{{ most_popular_track.preview }}', '{{ highlow_game_questions.0.track.preview }}', '{{ top_track_in_top_album.preview }}', '{{ top_track_in_top_album.preview }}', '{{ top_track_by_top_artist_of_top_genre.preview }}', '{{ top_track_by_top_artist_of_top_genre.preview }}']
         const id = {{ id }}
         let isPublic = {{ public|lower }}
     </script>
