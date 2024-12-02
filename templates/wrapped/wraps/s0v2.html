@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" class="absolute z-0 inset-[-11.69%]">
+    <defs>
+        <filter id="blur1" x="-10%" y="-10%" width="120%" height="120%">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+            <feGaussianBlur stdDeviation="430" result="effect1_foregroundBlur"></feGaussianBlur>
+        </filter>
+    </defs>
+    <rect width="2048" height="2048" class="fill-secondary"></rect>
+    <g filter="url(#blur1)">
+        <circle cx="1473" cy="2005" class="fill-accent" r="956"></circle>
+        <circle cx="1114" cy="641" class="fill-secondary" r="956"></circle>
+        <circle cx="509" cy="33" class="fill-accent" r="956"></circle>
+        <circle cx="715" cy="1177" class="fill-accent" r="956"></circle>
+        <circle cx="162" cy="1749" class="fill-secondary" r="956"></circle>
+        <circle cx="1993" cy="1102" class="fill-accent" r="956"></circle>
+    </g>
+</svg>
+<div class="absolute inset-0 z-20 flex flex-col items-stretch justify-between p-8 display">
+    <h1 class="text-left g1 mt-8">
+        Your
+        {% if term == 'short' %}
+            4 Week
+        {% elif term == 'medium' %}
+            6 Month
+        {% else %}
+            1 Year
+        {% endif %}
+        Wrapped
+    </h1>
+    <h1 class="text-right g1 -mt-8">Ready?</h1>
+</div>
