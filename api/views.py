@@ -193,5 +193,6 @@ class Game(APIView):
             return Response({'message': 'Only the owner can complete the game'}, status=status.HTTP_401_UNAUTHORIZED)
 
         wrap.game_complete = True
+        wrap.score = request.data['score']
         wrap.save()
         return Response({'message': 'Game successfully marked complete'}, status=status.HTTP_200_OK)

@@ -71,3 +71,16 @@ async function changeVisibility(id, visibility) {
         }
     });
 }
+
+async function completeGame(id, score) {
+    const csrftoken = getCookie('csrftoken');
+
+    const response = await fetch(`http://localhost:8000/api/wrap/${id}/game`, {
+        method: 'POST',
+        body: JSON.stringify({score}),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            'X-CSRFToken': csrftoken
+        }
+    });
+}
