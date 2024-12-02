@@ -32,14 +32,9 @@
         <div id="slides" class="size-full flex flex-row justify-start items-stretch gap-0 absolute">
             {% for slide in slides %}
                 <div class="carousel-item size-full overflow-hidden relative" data-theme="{{ slide.colors }}">
-                    {{ slide.number }}
-                    {% if slide.number == "2" %}
-                        {% include 'wrapped/wraps/s2v2.html' %}
-                    {% else %}
-                        {% with "wrapped/wraps/s"|add:slide.number|add:slide.layout|add:".html" as template %}
-                            {% include template %}
-                        {% endwith %}
-                    {% endif %}
+                    {% with "wrapped/wraps/s"|add:slide.number|add:slide.layout|add:".html" as template %}
+                        {% include template %}
+                    {% endwith %}
                 </div>
             {% endfor %}
         </div>
