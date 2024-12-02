@@ -62,7 +62,7 @@ async function createWrap(term) {
 async function changeVisibility(id, visibility) {
     const csrftoken = getCookie('csrftoken');
 
-    const response = await fetch(`http://localhost:8000/api/wrap/${id}/visibility`, {
+    const response = await fetch(`ttps://54ijdxhtxd.execute-api.us-east-1.amazonaws.com/production/api/wrap/${id}/visibility`, {
         method: 'POST',
         body: JSON.stringify({public: visibility}),
         headers: {
@@ -75,7 +75,7 @@ async function changeVisibility(id, visibility) {
 async function completeGame(id, score) {
     const csrftoken = getCookie('csrftoken');
 
-    const response = await fetch(`http://localhost:8000/api/wrap/${id}/game`, {
+    const response = await fetch(`ttps://54ijdxhtxd.execute-api.us-east-1.amazonaws.com/production/api/wrap/${id}/game`, {
         method: 'POST',
         body: JSON.stringify({score}),
         headers: {
