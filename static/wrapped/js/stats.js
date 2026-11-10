@@ -142,9 +142,9 @@ function updateStats(data) {
                                 ${artist.name}
                             </a>
                         </div>
-                        <div class="text-sm opacity-50">
+                        ${artist.followers ? `<div class="text-sm opacity-50">
                             ${artist.followers.total.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")} followers
-                        </div>
+                        </div>` : ''}
                     </div>
                 </div>
             </td>

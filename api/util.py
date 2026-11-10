@@ -15,7 +15,8 @@ BASE_URL = 'https://api.spotify.com/v1/'
 
 
 def get_user_tokens(session_id=None, user=None):
-    if user is not None:
+    # Anonymous (logged-out) users have no profile, so fall back to the session token
+    if user is not None and user.is_authenticated:
         return user.profile.token
     if session_id is not None:
         user_tokens = SpotifyToken.objects.filter(session=session_id)
@@ -54,7 +55,7 @@ def is_spotify_authenticated(session_id=None, user=None):
     expiry = tokens.expires_in
 
     if expiry <= timezone.now():
-        refresh_spotify_token(tokens, user)
+        return refresh_spotify_token(tokens, user)
 
     return True
 
@@ -68,12 +69,24 @@ def refresh_spotify_token(tokens, user=None):
         'client_secret': os.getenv('SPOTIFY_CLIENT_SECRET'),
     }).json()
 
+    if 'error' in response or response.get('expires_in') is None:
+        # Spotify refused the refresh (bad/revoked refresh token or wrong client id/secret).
+        # Log it and treat the user as not linked so they can reconnect Spotify.
+        print('Spotify token refresh failed:', response)
+        # Unlink the dead token so the site asks the user to log in with Spotify again
+        if user is not None and user.is_authenticated and user.profile.token_id == tokens.pk:
+            user.profile.token = None
+            user.profile.save(update_fields=['token'])
+        return False
+
     access_token = response.get('access_token')
     token_type = response.get('token_type')
     expires_in = response.get('expires_in')
+    # Spotify sometimes issues a new refresh token; keep the old one if it doesn't
+    refresh_token = response.get('refresh_token', refresh_token)
 
-    # If this doesn't work, he changes the method to use session_id instead of passing in tokens
     update_or_create_user_tokens(tokens.session, access_token, token_type, expires_in, refresh_token, user)
+    return True
 
 
 def link_user_token(session_id, user):
@@ -83,8 +96,8 @@ def link_user_token(session_id, user):
 
     expiry = tokens.expires_in
 
-    if expiry <= timezone.now():
-        refresh_spotify_token(tokens, user)
+    if expiry <= timezone.now() and not refresh_spotify_token(tokens, user):
+        return False
 
     profile = user.profile
     profile.token = tokens
@@ -116,20 +129,22 @@ def get_or_create_artist(user, id, data=None):
     else:
         response = spotify_request(user, 'artists/' + id) if data is None else data
         image = static('wrapped/img/placeholder.png') if len(response['images']) == 0 else response['images'][0]['url']
-        artist = SpotifyArtist(id=id, name=response['name'], followers=response['followers']['total'],
-                               photo=image, popularity=response['popularity'], url=response['external_urls']['spotify'])
+        artist = SpotifyArtist(id=id, name=response['name'],
+                               followers=(response.get('followers') or {}).get('total', 0),
+                               photo=image, popularity=response.get('popularity') or 0,
+                               url=response['external_urls']['spotify'])
         artist.save()
         return artist
 
 
 def get_or_create_album(user, id, data=None):
-    albums = SpotifyTrack.objects.filter(id=id)
+    albums = SpotifyAlbum.objects.filter(id=id)
     if albums.exists():
         return albums.first()
     else:
         response = spotify_request(user, 'albums/' + id) if data is None else data
         image = static('wrapped/img/placeholder.png') if len(response['images']) == 0 else response['images'][0]['url']
-        album = SpotifyAlbum(id=id, title=response['name'], photo=image, popularity=response['popularity'],
+        album = SpotifyAlbum(id=id, title=response['name'], photo=image, popularity=response.get('popularity') or 0,
                              url=response['external_urls']['spotify'], type=response['album_type'],
                              date=response['release_date'], total_tracks=response['tracks']['total'])
         album.save()
@@ -145,8 +160,8 @@ def get_or_create_track(user, id, data=None):
     else:
         response = spotify_request(user, 'tracks/' + id) if data is None else data
 
-        track = SpotifyTrack(id=id, title=response['name'], popularity=response['popularity'],
-                             album=get_or_create_album(user, response['album']['id']), preview=response['preview_url'],
+        track = SpotifyTrack(id=id, title=response['name'], popularity=response.get('popularity') or 0,
+                             album=get_or_create_album(user, response['album']['id']), preview=response.get('preview_url'),
                              url=response['external_urls']['spotify'])
         track.save()
         for item in response['artists']:
@@ -154,24 +169,22 @@ def get_or_create_track(user, id, data=None):
         return track
 
 
-def create_items(user, tracks=None, artists=None, albums=None):
-    if artists is not None:
-        artists_data = spotify_request(user, 'artists', params={'ids': ','.join(artists)})
-        for artist in artists_data['artists']:
-            get_or_create_artist(user, artist['id'], artist)
-    if albums is not None:
-        albums_data = spotify_request(user, 'albums', params={'ids': ','.join(albums)})
-        for album in albums_data['albums']:
-            get_or_create_album(user, album['id'], album)
-    if tracks is not None:
-        tracks_data = spotify_request(user, 'tracks', params={'ids': ','.join(tracks)})
-        for i in range(len(tracks)):
-            get_or_create_track(user, tracks[i], (tracks_data['tracks'][i]))
+def create_items(user, tracks=None, artists=None, albums=None, artist_data=None, track_data=None):
+    # Spotify removed the batch endpoints (GET /artists?ids=...) for Development Mode apps,
+    # so reuse the objects we already got from /me/top/* and fetch anything else one at a time.
+    artist_data = {a['id']: a for a in (artist_data or [])}
+    track_data = {t['id']: t for t in (track_data or [])}
+    for artist_id in artists or []:
+        get_or_create_artist(user, artist_id, artist_data.get(artist_id))
+    for album_id in albums or []:
+        get_or_create_album(user, album_id)
+    for track_id in tracks or []:
+        get_or_create_track(user, track_id, track_data.get(track_id))
 
 
 def calculate_top_albums_and_genres(tracks, artists):
     album_count = Counter()
-    album_ids = [track['album']['id'] for track in tracks if track['album']['total_tracks'] > 1]
+    album_ids = [track['album']['id'] for track in tracks if track['album'].get('total_tracks', 0) > 1]
     rank_factor = 1
     for album_id in album_ids:
         album_count[album_id] += rank_factor
@@ -182,7 +195,7 @@ def calculate_top_albums_and_genres(tracks, artists):
     genre_count = Counter()
     rank_factor = 1
     for artist in artists:
-        for genre in artist['genres']:
+        for genre in artist.get('genres') or []:
             genre_count[genre] += rank_factor
         rank_factor -= .02
 
@@ -191,40 +204,53 @@ def calculate_top_albums_and_genres(tracks, artists):
     return top_albums, top_genres
 
 
-def add_top_tracks_and_artists(user, wrapped, tracks, artists):
-    top_tracks, top_artists = [], []
+def add_top_tracks(user, wrapped, tracks):
+    top_tracks = []
     for i in range(5):
         track = get_or_create_track(user, tracks[i]['id'])
         top_track = TopTrackItem(wrapped=wrapped, track=track, order=i)
         top_tracks.append(track.id)
 
+        top_track.save()
+
+    return top_tracks
+
+
+def add_top_artists(user, wrapped, artists):
+    top_artists = []
+    for i in range(5):
         artist = get_or_create_artist(user, artists[i]['id'])
         top_artist = TopArtistItem(wrapped=wrapped, artist=artist, order=i)
         top_artists.append(artist.id)
 
-        top_track.save()
         top_artist.save()
 
-    return top_tracks, top_artists
+    return top_artists
 
 
-def add_top_albums_and_genres(user, wrapped, albums, genres):
-    for i in range(4):
+def add_top_albums(user, wrapped, albums):
+    count = min(4, len(albums))
+    for i in range(count):
         album_item = TopAlbumItem(wrapped=wrapped, album=get_or_create_album(user, albums[i][0]), order=i)
         album_item.save()
 
-    for i in range(10):
+    return [albums[i][0] for i in range(count)]
+
+
+def add_top_genres(wrapped, genres):
+    # Spotify may not return genres anymore, so there can be fewer than 10 (or none)
+    for i in range(min(10, len(genres))):
         frequency = genres[i][1] / genres[0][1]
         genre_item = TopGenreItem(wrapped=wrapped, name=genres[i][0], freq=frequency, order=i)
         genre_item.save()
 
-    return [albums[i][0] for i in range(4)], [x[0] for x in genres]
+    return [x[0] for x in genres]
 
 
 def get_top_artists_per_genre(user, wrapped, artists, genres):
     top_artists_of_genre = [[], [], [], [], [], [], [], [], [], []]
     for artist in artists:
-        intersection = set(artist['genres']) & set(genres)
+        intersection = set(artist.get('genres') or []) & set(genres)
         if len(intersection) > 0:
             api_artist = get_or_create_artist(user, artist['id'])
             for item in intersection:
@@ -292,10 +318,13 @@ def create_wrapped(user, term):
 
     all_albums, all_genres = calculate_top_albums_and_genres(all_tracks['items'], all_artists['items'])
 
-    create_items(user=user, tracks=[track['id'] for track in all_tracks['items']], artists=[artist['id'] for artist in all_artists['items']], albums=[x[0] for x in all_albums])
+    create_items(user=user, tracks=[track['id'] for track in all_tracks['items']], artists=[artist['id'] for artist in all_artists['items']], albums=[x[0] for x in all_albums],
+                 artist_data=all_artists['items'], track_data=all_tracks['items'])
 
-    tracks, artists = add_top_tracks_and_artists(user, wrapped, all_tracks['items'], all_artists['items'])
-    albums, genres = add_top_albums_and_genres(user, wrapped, all_albums, all_genres)
+    tracks = add_top_tracks(user, wrapped, all_tracks['items'])
+    artists = add_top_artists(user, wrapped, all_artists['items'])
+    albums = add_top_albums(user, wrapped, all_albums)
+    genres = add_top_genres(wrapped, all_genres)
     genre_artists = get_top_artists_per_genre(user, wrapped, all_artists['items'], genres)
 
     tracks_by_top_artist = 0
@@ -331,7 +360,7 @@ def create_wrapped(user, term):
             if top_track_by_top_artist is None:
                 top_track_by_top_artist = api_track
 
-        if any([artist['id'] == genre_artists[0][0].id for artist in track['artists']]):
+        if genre_artists[0] and any([artist['id'] == genre_artists[0][0].id for artist in track['artists']]):
             if top_track_by_top_artist_of_top_genre is None:
                 top_track_by_top_artist_of_top_genre = api_track
 

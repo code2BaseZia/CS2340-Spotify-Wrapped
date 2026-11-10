@@ -42,6 +42,11 @@ def spotify_callback(request, format=None):
     expires_in = response.get('expires_in')
     error = response.get('error')
 
+    if error or expires_in is None:
+        # Usually means REDIRECT_URI doesn't exactly match the one registered in the Spotify dashboard
+        print('Spotify login failed:', response)
+        return redirect('wrapped:home')
+
     if request.session.exists(request.session.session_key):
         request.session.create()
     update_or_create_user_tokens(request.session.session_key, access_token, token_type, expires_in, refresh_token)
@@ -95,17 +100,16 @@ class UserStats(APIView):
 
         top_albums, top_genres = calculate_top_albums_and_genres(tracks['items'], artists['items'])
 
-        albums = spotify_request(request.user, 'albums', params={
-            'ids': ','.join([album[0] for album in top_albums])
-        })
+        # GET /albums?ids=... was removed for Development Mode apps, so fetch each album on its own
+        albums = {'albums': [spotify_request(request.user, 'albums/' + album[0]) for album in top_albums]}
 
         for item in tracks['items']:
-            item['album'].pop('available_markets')
-            item.pop('available_markets')
+            item['album'].pop('available_markets', None)
+            item.pop('available_markets', None)
 
         for item in albums['albums']:
-            item.pop('available_markets')
-            item.pop('tracks')
+            item.pop('available_markets', None)
+            item.pop('tracks', None)
 
         response = {
             'tracks': tracks['items'], 'artists': artists['items'],

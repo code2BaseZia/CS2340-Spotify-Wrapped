@@ -15,15 +15,18 @@ function getCookie(name) {
 }
 
 async function getAuthenticationLink() {
-    const response = await fetch('http://localhost:8000/api/authenticate');
+    // The "Log in With Spotify" button only exists when the account isn't linked yet
+    const link = document.getElementById('authLink');
+    if (!link) return;
+
+    const response = await fetch('/api/authenticate');
     const json = await response.json();
 
-    const link = document.getElementById('authLink');
     link.setAttribute('href', json.url);
 }
 
 async function getLinkToken() {
-    const response = await fetch('http://localhost:8000/api/link');
+    const response = await fetch('/api/link');
     const status = response.status;
 
     if (status === 200) {
@@ -33,12 +36,18 @@ async function getLinkToken() {
 }
 
 async function getStats(term) {
-    const response = await fetch(`http://localhost:8000/api/taste?term=${term}`);
+    const response = await fetch(`/api/taste?term=${term}`);
+    if (response.status === 401) {
+        // Spotify link expired or user logged out: reload so the page shows the right login prompt
+        window.location.replace('/wrapped/');
+        return new Promise(() => {});
+    }
     return await response.json();
 }
 
 async function getProfilePicture() {
-    const response = await fetch('http://localhost:8000/api/picture');
+    const response = await fetch('/api/picture');
+    if (!response.ok) return null;
     const json = await response.json();
     return json.url;
 }
@@ -46,7 +55,7 @@ async function getProfilePicture() {
 async function createWrap(term) {
     const csrftoken = getCookie('csrftoken');
 
-    const response = await fetch('http://localhost:8000/api/wrap', {
+    const response = await fetch('/api/wrap', {
         method: 'POST',
         body: JSON.stringify({term}),
         headers: {
@@ -62,7 +71,7 @@ async function createWrap(term) {
 async function changeVisibility(id, visibility) {
     const csrftoken = getCookie('csrftoken');
 
-    const response = await fetch(`http://localhost:8000/api/wrap/${id}/visibility`, {
+    const response = await fetch(`/api/wrap/${id}/visibility`, {
         method: 'POST',
         body: JSON.stringify({public: visibility}),
         headers: {
@@ -75,7 +84,7 @@ async function changeVisibility(id, visibility) {
 async function completeGame(id, score) {
     const csrftoken = getCookie('csrftoken');
 
-    const response = await fetch(`http://localhost:8000/api/wrap/${id}/game`, {
+    const response = await fetch(`/api/wrap/${id}/game`, {
         method: 'POST',
         body: JSON.stringify({score}),
         headers: {

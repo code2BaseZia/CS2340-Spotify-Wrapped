@@ -51,7 +51,7 @@
     <div class="flex flex-col md:gap-10 lg:gap-12 lg:pb-8">
         <div class="flex flex-col gap-0" id="e2">
             <h4>{{ top_artists.0.name }}</h4>
-            <h6 class="opacity-50 -mt-2">{{ top_artists.0.followers|intcomma }} Followers</h6>
+            {% if top_artists.0.followers %}<h6 class="opacity-50 -mt-2">{{ top_artists.0.followers|intcomma }} Followers</h6>{% endif %}
         </div>
         <p class="underline decoration-accent" id="e3">You had {{ tracks_by_top_artist }} of their tracks in your top 50</p>
     </div>

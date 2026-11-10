@@ -3,6 +3,8 @@ from django.contrib.auth.views import LoginView, PasswordResetView, PasswordRese
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, RedirectView, FormView, DetailView, ListView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from api.util import is_spotify_authenticated
 
 from api.serializers import WrappedSerializer
 from api.util import get_wrap_by_id
@@ -87,7 +89,9 @@ class IndexView(TemplateView):
             'top_genres': [{'name': 'indie pop'}]
         }
 
-        if self.request.user.is_authenticated and self.request.user.profile.token is not None:
+        # Check the token actually works (and refresh it), not just that one was saved at some point
+        if self.request.user.is_authenticated and self.request.user.profile.token is not None \
+                and is_spotify_authenticated(user=self.request.user):
             context['linked'] = True
         else:
             context['linked'] = False
@@ -131,7 +135,7 @@ class DeveloperContactView(TemplateView):
     template_name = "wrapped/pages/help.html"
 
 
-class AccountView(TemplateView, FormView):
+class AccountView(LoginRequiredMixin, TemplateView, FormView):
     template_name = "wrapped/pages/account.html"
     form_class = AccountForm
     success_url = reverse_lazy("wrapped:account")
@@ -220,7 +224,7 @@ class WrappedView(DetailView):
         context['user'] = self.request.user
         return context
 
-class SavedView(ListView):
+class SavedView(LoginRequiredMixin, ListView):
     template_name = 'wrapped/pages/saved.html'
 
     def get_context_data(self, **kwargs):
@@ -238,6 +242,6 @@ class SavedView(ListView):
         return self.request.user.profile.wraps.all()
 
 
-class DeleteWrappedView(DeleteView):
+class DeleteWrappedView(LoginRequiredMixin, DeleteView):
     model = SpotifyUserWrap
     success_url = reverse_lazy('wrapped:saved')
