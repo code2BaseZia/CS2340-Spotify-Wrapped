@@ -3010,7 +3010,7 @@
         <p>Top Genre:</p>
         <div class="grow flex flex-col justify-center">
             <h2 class="text-primary bg-secondary !font-display-heading !font-medium !leading-[100%] p-1 md:p-1.5 lg:p-2">
-                {{ top_genres.0.name }}
+                {{ top_genres.0.name|default:"Unknown" }}
             </h2>
         </div>
     </div>
